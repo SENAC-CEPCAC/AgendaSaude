@@ -32,11 +32,11 @@
     <div id="root">
       <div id="app-root" class="min-h-screen bg-[#f8fafc] text-slate-800 font-sans antialiased flex">
         
-        <!-- Mobile Sidebar Backdrop Overlay -->
-        <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/40 z-25 hidden lg:hidden transition-opacity duration-300"></div>
+        <!-- Mobile Sidebar Backdrop Overlay (Removido lg:hidden) -->
+        <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/40 z-40 hidden transition-opacity duration-300"></div>
 
-       <!-- LEFT SIDEBAR - Deep Slate Navigation -->
-        <aside id="sidebar" class="fixed top-0 left-0 bottom-0 w-64 bg-[#0a0f1d] border-r border-slate-800 flex flex-col justify-between text-slate-300 z-30 transition-transform duration-300 transform lg:translate-x-0 lg:flex">
+        <!-- LEFT SIDEBAR - Deep Slate Navigation (Alterado para iniciar escondido via -translate-x-full e removido comportamento lg: fixo) -->
+        <aside id="sidebar" class="fixed top-0 left-0 bottom-0 w-64 bg-[#0a0f1d] border-r border-slate-800 flex flex-col justify-between text-slate-300 z-50 transition-transform duration-300 transform -translate-x-full">
           <div>
             <!-- Logo / Brand Header -->
             <div id="brand-header" class="p-6 border-b border-slate-800/80 flex items-center justify-between">
@@ -49,8 +49,8 @@
                   <p id="brand-role" class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Administrador</p>
                 </div>
               </div>
-              <!-- Close menu button for mobile -->
-              <button id="mobile-menu-close" class="p-1 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg lg:hidden transition-colors cursor-pointer">
+              <!-- Close menu button (Removido lg:hidden) -->
+              <button id="mobile-menu-close" class="p-1 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors cursor-pointer">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="x" aria-hidden="true" class="lucide lucide-x w-5 h-5"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
               </button>
             </div>
@@ -113,14 +113,14 @@
           </div>
         </aside>
 
-        <!-- MAIN CONTAINER WORKSPACE -->
-        <main id="main-content" class="flex-1 lg:ml-64 min-h-screen flex flex-col">
+        <!-- MAIN CONTAINER WORKSPACE (Removido lg:ml-64 para ocupar toda a largura por padrão) -->
+        <main id="main-content" class="flex-1 min-h-screen flex flex-col">
           
           <!-- TOP BAR / HEADER -->
           <header id="top-bar" class="h-16 bg-white border-b border-slate-100 px-6 flex items-center justify-between sticky top-0 z-20 shadow-sm">
             <div class="flex items-center gap-3">
-              <!-- Menu Toggle Button for mobile screens -->
-              <button id="mobile-menu-toggle" class="p-2 -ml-2 text-slate-500 hover:text-slate-600 hover:bg-slate-50 rounded-lg lg:hidden transition-colors cursor-pointer">
+              <!-- Menu Toggle Button (Removido lg:hidden) -->
+              <button id="mobile-menu-toggle" class="p-2 -ml-2 text-slate-500 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-colors cursor-pointer">
                 <i data-lucide="menu" class="w-5 h-5"></i>
               </button>
 
@@ -170,13 +170,17 @@
       function openSidebar() {
         sidebar.classList.remove('-translate-x-full');
         sidebarOverlay.classList.remove('hidden');
-        sidebarOverlay.classList.add('opacity-100');
+        setTimeout(() => {
+          sidebarOverlay.classList.add('opacity-100');
+        }, 10);
       }
 
       function closeSidebar() {
         sidebar.classList.add('-translate-x-full');
         sidebarOverlay.classList.remove('opacity-100');
-        sidebarOverlay.classList.add('hidden');
+        setTimeout(() => {
+          sidebarOverlay.classList.add('hidden');
+        }, 300);
       }
 
       if (mobileMenuToggle && mobileMenuClose && sidebar && sidebarOverlay) {
