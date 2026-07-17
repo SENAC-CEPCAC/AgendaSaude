@@ -2,85 +2,64 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=<di<>, initial-scale=1.0">
-        <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
     <title>Document</title>
 </head>
-<body>
-    <div class="caixas">
-    <p>Dados da Coleta</p> 
-    
-    <ul class="dados-coleta">
-        <li>Data da Coleta<br>
-            <input type="date">
-        </li>
-        <li>Motivo do Exame<br>
-            <select></select>
-        </li>
-        <li>Ultima Mestruação <br>
-            <input>
-        </li>
-    </ul>
+
+<body class="bg-gray">
+    <div class="border-2 border-solid m-20  bg-white">
+    <P class="titulo"> DADOS DA COLETA</P><br>
+    <div class="grid grid-cols-3 gap-20">
+   <div class="dados-coleta border-2 border-solid">Data da coleta:<br>
+  <input type="date"></div>
+  <div class="dados-coleta border-2 border-solid">Motivo do exame:<br>
+    <select></select></div>
+  <div class="dados-coleta border-2 border-solid">Última mestruação:<br>
+    <input type="date"></div>
+  </div>
+  </div>
+
+
+     <div class="border-2 border-solid m-20 gap+5 bg-white">
+     <section class="titulo"><p>HISTÓRICO</p></section><br>
+    <div class="grid grid-cols-4">
+  <div class="border-2 border-solid">Fez preventivo antes?
+    <input type="checkbox"></div>
+  <div class="border-2 border-solid">Está grávida?
+    <input type="checkbox"></div>
+  <div class="border-2 border-solid">Usa DIU?
+    <input type="checkbox"></div>
+  <div class="border-2 border-solid">Usa pílula?
+    <input type="checkbox"></div>
+  <div class="border-2 border-solid">Usa hormônio menopausa?
+    <input type="checkbox"></div>
+  <div class="border-2 border-solid">Já fez radioterapia?
+    <input type="checkbox"></div>
+  <div class="border-2 border-solid">Teve sangramento após relação?
+    <input type="checkbox"></div>
+  <div class="border-2 border-solid">Sangramento após menopausa?
+    <input type="checkbox"></div>  
+    <p class="border-2 border-solid">Ano do último preventivo:<br>    
+        <input>
+    </p>
     </div>
+     </div>
+   
 
-    <div class="caixas">
-     <p> Histórico </p>
-    <ul class="historico">
-        
-        <li>Fez preventivo antes?
-            <input type="checkbox">
-        </li>
+  <div class="border-2 border-solid m-20 bg-white">
+ <section class="titulo"><p>Exame de colo:</p></section><br>
+  <div class="flex space-x-4">
+  <div class="border-2 border-solid">Inspeção de colo:
+    <select></select>
+  </div>
+  <div class="border-2 border-solid">Sinais de DST observados:<br>
+    <input>
+  </div>
+</div>
+</div>   
 
-        <li>Está grávida?
-            <input type="checkbox">
-        </li>
-
-        <li>Usa DIU?
-            <input type="checkbox">
-        </li>
-
-        <li>Usa pílula?
-            <input type="checkbox">
-        </li>
-
-        <li>Usa hormônio menopausa?
-            <input type="checkbox">
-        </li>
-
-        <li>Já fez radioterapia?
-            <input type="checkbox">
-        </li>
-
-        <li>Tem sangramento pós relação?
-            <input type="checkbox">
-        </li>
-
-        <li>Sangramento após menopausa?
-            <input type="checkbox">
-        </li>
-
-        <section id="ano-preventivo">Ano do último preventivo?<br>
-            <input>
-        </section>
-    </ul>
-
-    </div>
-
-    <div class="caixas">
-        <p>Exame:</p>
-        <ul class="exame">
-          <li>Inspeção do colo
-            <select>
-                 <option value="">Selecione...</option>
-                  <option value="">Sem alteração</option>
-            </select>
-          </li>
-
-          <li>Sinais de DST observados:<br>
-            <input>
-          </li>
-        </ul>
-    </div>
 
 </body>
 </html>
