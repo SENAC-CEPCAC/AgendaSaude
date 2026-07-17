@@ -1,0 +1,42 @@
+.dados-coleta {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+
+}
+
+.caixas{
+  border: 1px solid #ccc;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 20px;
+
+}
+
+.historico{
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px;
+
+}
+
+.exame{
+    display: flex;
+    justify-content: space-between;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#ano-preventivo{
+    margin-left: 10px;
+    margin-top: 50px;
+}
