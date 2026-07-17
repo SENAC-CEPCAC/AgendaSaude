@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR">
+    <head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Novo Agendamento - Seleção</title>
+<!-- Google Fonts: Inter & Material Symbols -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed-dim": "#ffb692",
+                        "surface-container-lowest": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed-variant": "#114686",
+                        "surface-container": "#ededf3",
+                        "primary-fixed": "#d6e3ff",
+                        "secondary": "#785a00",
+                        "outline-variant": "#c3c6d2",
+                        "inverse-on-surface": "#f0f0f6",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e2e2e8",
+                        "primary-fixed-dim": "#a9c7ff",
+                        "surface-container-highest": "#e2e2e8",
+                        "surface-container-low": "#f3f3f9",
+                        "on-background": "#1a1c20",
+                        "on-primary": "#ffffff",
+                        "background": "#f9f9ff",
+                        "tertiary-container": "#6d2b01",
+                        "secondary-fixed": "#ffdf9d",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#341100",
+                        "inverse-primary": "#a9c7ff",
+                        "on-primary-container": "#82abf2",
+                        "primary": "#002856",
+                        "surface-dim": "#d9d9e0",
+                        "on-primary-fixed": "#001b3d",
+                        "surface-tint": "#325ea0",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed-dim": "#f9bd00",
+                        "on-tertiary-container": "#f29261",
+                        "surface": "#f9f9ff",
+                        "primary-container": "#003e7e",
+                        "secondary-container": "#fdc008",
+                        "on-secondary": "#ffffff",
+                        "on-surface-variant": "#434750",
+                        "outline": "#737781",
+                        "on-secondary-fixed": "#251a00",
+                        "on-tertiary-fixed-variant": "#773207",
+                        "surface-container-high": "#e8e8ee",
+                        "on-surface": "#1a1c20",
+                        "surface-bright": "#f9f9ff",
+                        "tertiary": "#4a1b00",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#5b4300",
+                        "on-secondary-container": "#6c5000",
+                        "inverse-surface": "#2f3035",
+                        "tertiary-fixed": "#ffdbcb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "lg": "24px",
+                        "gutter": "16px",
+                        "margin": "20px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "md": "16px",
+                        "sm": "8px"
+                    },
+                    "fontFamily": {
+                        "h3": ["Inter"],
+                        "label-bold": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "h2": ["Inter"],
+                        "label-md": ["Inter"],
+                        "h1": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h3": ["20px", { "lineHeight": "28px", "letterSpacing": "0em", "fontWeight": "600" }],
+                        "label-bold": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "h2": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0em", "fontWeight": "500" }],
+                        "h1": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen flex flex-col relative selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Transactional Header (Nav Shell Suppressed) -->
+<header class="sticky top-0 z-50 w-full bg-surface-container-lowest/90 backdrop-blur-md border-b border-surface-variant px-margin h-16 flex items-center justify-between">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors active:scale-95 text-on-surface" type="button">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<h1 class="font-h3 text-h3 text-primary truncate max-w-[200px]">Novo Agendamento</h1>
+<div class="w-10 h-10"></div> <!-- Spacer for centering -->
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full max-w-md mx-auto px-margin pb-32 flex flex-col gap-xl pt-md">
+<!-- Progress Stepper -->
+<div class="flex-none bg-surface-container-lowest pt-sm pb-md border-b border-surface-variant shadow-sm z-10">
+<div class="flex justify-between items-center mb-xs">
+<span class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Passo 1 de 3</span>
+<span class="font-label-bold text-label-bold text-primary">1. Seleção</span>
+</div>
+<div class="w-full h-[4px] bg-surface-variant rounded-full overflow-hidden">
+<div class="w-1/3 h-full bg-secondary-container rounded-full relative">
+<!-- Glow effect on progress -->
+<div class="absolute inset-0 bg-white/30 w-1/3 blur-[2px] animate-pulse"></div>
+</div>
+</div>
+</div>
+<!-- Dropdown: Especialidade -->
+<section class="flex flex-col gap-sm">
+<h2 class="font-h2 text-h2 text-on-background">Escolha a Especialidade</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-unit">Selecione o tipo de atendimento que você precisa.</p>
+<button class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex items-center justify-between text-left focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary-fixed transition-all shadow-sm" type="button">
+<span class="font-body-md text-body-md text-on-surface-variant">Selecione a especialidade...</span>
+<span class="material-symbols-outlined text-outline">keyboard_arrow_down</span>
+</button>
+</section>
+<!-- List: Unidade Móvel Próxima -->
+<section class="flex flex-col gap-sm">
+<div class="flex items-center justify-between mb-unit">
+<h2 class="font-h2 text-h2 text-on-background">Unidade Móvel Próxima</h2>
+<button class="p-2 text-primary hover:bg-primary-fixed rounded-full transition-colors flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-[20px]">my_location</span>
+</button>
+</div>
+<div class="flex flex-col gap-gutter">
+<!-- Card 1: Selected State -->
+<label class="cursor-pointer group relative">
+<input checked="" class="peer sr-only" name="unidade" type="radio"/>
+<div class="bg-primary-fixed border-2 border-primary rounded-lg p-md flex gap-gutter items-center transition-all shadow-sm">
+<!-- Thumbnail -->
+<div class="w-16 h-16 shrink-0 rounded bg-surface-container overflow-hidden relative">
+<img class="w-full h-full object-cover" data-alt="A sleek, modern mobile health clinic vehicle parked in a bright, clean urban plaza. The vehicle is white with subtle deep blue branding accents, reflecting the Corporate/Modern healthcare aesthetic. The lighting is sunny and optimistic, creating a sense of approachability and professional care. High-resolution, photorealistic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxEj0-ecMsREj9JA1xp2_b0-YArZhVDER53vC0AWqTMkd7d1IUp4QjNtZLrcI6wES3ZxNcRrccHyZwHyI1WKQpUpKAGz1mnyzIMOxnl9LeCHyPy1as-XWn--35cVnQ9xMEn8IXToZ4VRxWCnfoQDlfMwnBCugW5fxWbTslUVOtDHH-yUvl7jqp6CZkLgdKWvEmqcyAD9dGmUGFmzOh7WhDMUbaxT9cA9Zja2Ob7olQ6wHkC9Q1HpaOfGg88NpJW5kNpYq3MtEOehM"/>
+</div>
+<!-- Info -->
+<div class="flex-1 flex flex-col gap-xs">
+<div class="flex justify-between items-start">
+<h3 class="font-h3 text-h3 text-on-background leading-tight">Unidade Móvel Centro</h3>
+<span class="bg-primary text-on-primary font-label-bold text-label-bold px-2 py-0.5 rounded-full whitespace-nowrap">1.2 km</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">Praça da República, s/n - Centro</p>
+<div class="flex items-center gap-xs mt-1">
+<span class="w-2 h-2 rounded-full bg-[#10b981]"></span>
+<span class="font-label-md text-label-md text-[#10b981]">Aberta agora</span>
+</div>
+</div>
+<!-- Radio indicator -->
+<div class="w-6 h-6 rounded-full border-2 border-primary flex items-center justify-center shrink-0">
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+</div>
+</div>
+</label>
+<!-- Card 2: Default State -->
+<label class="cursor-pointer group relative">
+<input class="peer sr-only" name="unidade" type="radio"/>
+<div class="bg-surface-container-lowest border border-surface-variant rounded-lg p-md flex gap-gutter items-center transition-all shadow-sm hover:border-outline peer-focus-visible:ring-2 peer-focus-visible:ring-primary">
+<!-- Thumbnail -->
+<div class="w-16 h-16 shrink-0 rounded bg-surface-container overflow-hidden relative flex items-center justify-center text-outline">
+<span class="material-symbols-outlined text-[32px]">rv_hookup</span>
+</div>
+<!-- Info -->
+<div class="flex-1 flex flex-col gap-xs">
+<div class="flex justify-between items-start">
+<h3 class="font-h3 text-h3 text-on-background leading-tight">Unidade Zona Sul</h3>
+<span class="bg-surface-container-highest text-on-surface-variant font-label-bold text-label-bold px-2 py-0.5 rounded-full whitespace-nowrap">3.5 km</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">Av. das Nações, 1500 - Estacionamento Supermercado</p>
+<div class="flex items-center gap-xs mt-1">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+<span class="font-label-md text-label-md text-outline">Fechada temporariamente</span>
+</div>
+</div>
+<!-- Radio indicator -->
+<div class="w-6 h-6 rounded-full border-2 border-outline-variant flex items-center justify-center shrink-0 group-hover:border-outline transition-colors">
+<div class="w-3 h-3 rounded-full bg-transparent"></div>
+</div>
+</div>
+</label>
+</div>
+</section>
+</main>
+<!-- Bottom Action Area -->
+<div class="fixed bottom-0 left-0 w-full bg-surface-container-lowest/95 backdrop-blur-md border-t border-surface-variant p-margin pb-[calc(20px+env(safe-area-inset-bottom))] flex justify-center z-40 shadow-[0_-4px_12px_rgba(0,40,86,0.04)]">
+<div class="w-full max-w-md">
+<button class="w-full h-12 bg-primary text-on-primary font-label-bold text-label-bold rounded-full flex items-center justify-center hover:bg-primary/90 active:scale-[0.98] transition-all uppercase tracking-wider" type="button">
+                Continuar
+            </button>
+</div>
+</div>
+</body>
+</html>
