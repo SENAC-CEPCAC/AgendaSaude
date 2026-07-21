@@ -9,7 +9,6 @@ const colaboradores = [
     { nome: "Vinicius", matricula: "111.222.333-44", email: "vinicius@email.com" }
 ];
 
-// Função para renderizar a tabela com Tailwind CSS puro
 function renderTable(data) {
     const tbody = document.getElementById('colaboradoresTable');
     tbody.innerHTML = '';
@@ -34,12 +33,10 @@ function renderTable(data) {
         `;
         tbody.appendChild(tr);
     });
-    
-    // Recarrega os ícones dinâmicos inseridos via JavaScript
+        
     lucide.createIcons();
 }
 
-// Função de busca simples
 document.getElementById('searchInput').addEventListener('input', function(e) {
     const query = e.target.value.toLowerCase();
     const filtered = colaboradores.filter(c => 
@@ -50,7 +47,6 @@ document.getElementById('searchInput').addEventListener('input', function(e) {
     renderTable(filtered);
 });
 
-// Ações mockadas para simulação
 function desativar(id) {
     alert("Desativar colaborador: " + colaboradores[id].nome);
 }
@@ -67,5 +63,4 @@ function mudarPagina(direcao) {
     alert("Mudar página: " + direcao);
 }
 
-// Renderização inicial
 renderTable(colaboradores);
