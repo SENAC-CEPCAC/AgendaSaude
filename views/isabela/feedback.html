@@ -150,6 +150,136 @@
               </div>
             </div>
           </header>
+
+
+
+<!--Inicio feedback-->
+
+ <form class="w-full max-w-xl mx-auto">
+ 
+    <!-- Cabeçalho -->
+    <div class="flex flex-col items-center text-center mb-6">
+      <div class="w-9 h-9 rounded-full bg-white shadow-sm mb-5"></div>
+      <h1 class="text-2xl font-bold text-gray-900">Como foi seu atendimento?</h1>
+
+    </div>
+ 
+    <!-- Avaliação em estrelas -->
+    <div class="flex flex-col items-center mb-8">
+      <p class="font-semibold text-gray-900 mb-3">Avalie sua experiência</p>
+      <div class="star-row" title="Avaliação geral">
+        <input class="star-input" type="radio" name="estrelas" id="star5" value="5">
+        <label class="star-label" for="star5">★</label>
+        <input class="star-input" type="radio" name="estrelas" id="star4" value="4">
+        <label class="star-label" for="star4">★</label>
+        <input class="star-input" type="radio" name="estrelas" id="star3" value="3">
+        <label class="star-label" for="star3">★</label>
+        <input class="star-input" type="radio" name="estrelas" id="star2" value="2">
+        <label class="star-label" for="star2">★</label>
+        <input class="star-input" type="radio" name="estrelas" id="star1" value="1">
+        <label class="star-label" for="star1">★</label>
+      </div>
+    </div>
+ 
+    <hr class="border-gray-300 mb-6">
+ 
+    <!-- Itens de pontuação -->
+    <div class="mb-2">
+      <div class="flex items-center justify-between py-2">
+        <span class="text-sm text-gray-700">Pontue os itens abaixo</span>
+        <div class="flex gap-3"></div>
+      </div>
+ 
+      <!-- Tempo de espera -->
+      <div class="flex items-center justify-between py-2">
+        <span class="text-gray-800">Tempo de espera</span>
+        <div class="flex gap-3">
+          <input class="score-input" type="radio" name="tempo_espera" id="te1" value="ruim">
+          <label class="score-label" for="te1"></label>
+          <input class="score-input" type="radio" name="tempo_espera" id="te2" value="medio">
+          <label class="score-label" for="te2"></label>
+          <input class="score-input" type="radio" name="tempo_espera" id="te3" value="bom">
+          <label class="score-label" for="te3"></label>
+        </div>
+      </div>
+ 
+      <!-- Atendimento da equipe -->
+      <div class="flex items-center justify-between py-2">
+        <span class="text-gray-800">Atendimento da equipe</span>
+        <div class="flex gap-3">
+          <input class="score-input" type="radio" name="atendimento_equipe" id="ae1" value="ruim">
+          <label class="score-label" for="ae1"></label>
+          <input class="score-input" type="radio" name="atendimento_equipe" id="ae2" value="medio">
+          <label class="score-label" for="ae2"></label>
+          <input class="score-input" type="radio" name="atendimento_equipe" id="ae3" value="bom">
+          <label class="score-label" for="ae3"></label>
+        </div>
+      </div>
+ 
+      <!-- Clareza das informações -->
+      <div class="flex items-center justify-between py-2">
+        <span class="text-gray-800">Clareza das informações</span>
+        <div class="flex gap-3">
+          <input class="score-input" type="radio" name="clareza_info" id="ci1" value="ruim">
+          <label class="score-label" for="ci1"></label>
+          <input class="score-input" type="radio" name="clareza_info" id="ci2" value="medio">
+          <label class="score-label" for="ci2"></label>
+          <input class="score-input" type="radio" name="clareza_info" id="ci3" value="bom">
+          <label class="score-label" for="ci3"></label>
+        </div>
+      </div>
+ 
+      <!-- Facilidade de agendamento -->
+      <div class="flex items-center justify-between py-2">
+        <span class="text-gray-800">Facilidade de agendamento</span>
+        <div class="flex gap-3">
+          <input class="score-input" type="radio" name="facilidade_agendamento" id="fa1" value="ruim">
+          <label class="score-label" for="fa1"></label>
+          <input class="score-input" type="radio" name="facilidade_agendamento" id="fa2" value="medio">
+          <label class="score-label" for="fa2"></label>
+          <input class="score-input" type="radio" name="facilidade_agendamento" id="fa3" value="bom">
+          <label class="score-label" for="fa3"></label>
+        </div>
+      </div>
+ 
+      <!-- Comentário (linha com marcadores, igual ao layout original) -->
+      <div class="flex items-center justify-between py-2">
+        <span class="text-gray-800">Comentário (opcional)</span>
+        <div class="flex gap-3">
+          <input class="score-input" type="radio" name="comentario_opcao" id="co1" value="ruim">
+          <label class="score-label" for="co1"></label>
+          <input class="score-input" type="radio" name="comentario_opcao" id="co2" value="medio">
+          <label class="score-label" for="co2"></label>
+          <input class="score-input" type="radio" name="comentario_opcao" id="co3" value="bom">
+          <label class="score-label" for="co3"></label>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- Campo de comentário -->
+    <div class="mt-4">
+      <textarea
+        name="comentario"
+        rows="4"
+        placeholder="Conte um pouco mais sobre a sua experiência"
+        class="w-full rounded-xl border border-gray-300 p-4 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0B3B66] focus:border-transparent resize-none"
+      ></textarea>
+    </div>
+ 
+    <!-- Botão de envio -->
+    <button
+      type="submit"
+      class="w-full mt-6 bg-[#0B3B66] hover:bg-[#0a3357] text-white font-medium py-3.5 rounded-full transition-colors"
+    >
+      Enviar avaliação
+    </button>
+ 
+  </form>
+
+
+
+<!--Fim feedback-->
+
         </main>
       
       </div>
