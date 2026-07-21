@@ -1,7 +1,6 @@
-    // Initialize Lucide icons on load
+    
       lucide.createIcons();
-
-      // Mobile Sidebar Toggle Logic
+      
       const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
       const mobileMenuClose = document.getElementById('mobile-menu-close');
       const sidebar = document.getElementById('sidebar');

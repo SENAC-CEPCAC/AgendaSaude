@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Colaborador</title>
+    <title>Paciente</title>
     
     <!-- Google Fonts: Inter & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     
     <script src="./js/auth.js"></script>
-    <script>validarAcesso(3); // Exige Nível 1 no mínimo</script>
+    <script>validarAcesso(2); // Exige Nível 1 no mínimo</script>
 
     <!-- Tailwind CSS Play CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -90,12 +90,12 @@
                 <span>Unidades Móveis</span>
               </a>
 
-              <a id="nav-patients" href="#patients" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all font-medium text-sm">
+              <a href="colaborador.html" id="nav-patients" href="#patients" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all font-medium text-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="users-round" aria-hidden="true" class="lucide lucide-users-round w-4.5 h-4.5 text-slate-500"><path d="M18 21a8 8 0 0 0-16 0"></path><circle cx="10" cy="8" r="5"></circle><path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3"></path></svg>
-                <span>Colaborador</span>
+                <span  >Colaborador</span>
               </a>
 
-              <a href="paciente.html" id="nav-patients" href="#patients" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all font-medium text-sm">
+              <a id="nav-patients" href="#patients" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all font-medium text-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="users-round" aria-hidden="true" class="lucide lucide-users-round w-4.5 h-4.5 text-slate-500"><path d="M18 21a8 8 0 0 0-16 0"></path><circle cx="10" cy="8" r="5"></circle><path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3"></path></svg>
                 <span>Pacientes</span>
               </a>
@@ -212,7 +212,7 @@
             <main id="main-content" class="flex-1 min-h-screen flex flex-col p-8 max-w-7xl mx-auto w-full space-y-6">
               
               <!-- TITULO DA PAGINA -->
-              <h1 class="text-2xl font-bold uppercase tracking-wide text-[#0f172a]">Colaborador</h1>
+              <h1 class="text-2xl font-bold uppercase tracking-wide text-[#0f172a]">PACIENTE</h1>
 
               <!-- BARRA DE FILTROS -->
               <div class="bg-white rounded-xl border border-slate-100 p-6 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
@@ -223,7 +223,7 @@
                 
                 <div class="flex items-center gap-3 w-full md:w-auto justify-end">
                   <select class="bg-white border border-slate-200 text-slate-600 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-sky-500 transition-all cursor-pointer">
-                    <option value="">Filtrar Colaborador</option>
+                    <option value="">Filtrar Paciente</option>
                   </select>
                   <button class="bg-[#00478f] hover:bg-[#00366d] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2 px-5 py-3.5 rounded-xl shadow-md shadow-blue-900/10 transition-all cursor-pointer" onclick="cadastrarColaborador()">
                     <i data-lucide="calendar-check" class="w-4 h-4"></i> Cadastrar
@@ -236,8 +236,8 @@
                 <table class="w-full text-left border-collapse">
                   <thead>
                     <tr class="bg-slate-50 border-b border-slate-100 text-[11px] font-bold tracking-wider text-slate-500 uppercase">
-                      <th class="py-4 px-6 w-[25%]">Colaborador</th>
-                      <th class="py-4 px-6 w-[20%]">Matricula</th>
+                      <th class="py-4 px-6 w-[25%]">PACIENTE</th>
+                      <th class="py-4 px-6 w-[20%]">CPF</th>
                       <th class="py-4 px-6 w-[25%]">Email</th>
                       <th class="py-4 px-6 w-[30%] text-center">Ações</th>
                     </tr>
