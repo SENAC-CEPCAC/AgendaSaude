@@ -155,13 +155,13 @@
 
 <!--Inicio feedback-->
 
- <form class="w-full max-w-xl mx-auto">
+ 
+  
+   <form class="w-full max-w-xl mx-auto">
  
     <!-- Cabeçalho -->
     <div class="flex flex-col items-center text-center mb-6">
-      <div class="w-9 h-9 rounded-full bg-white shadow-sm mb-5"></div>
       <h1 class="text-2xl font-bold text-gray-900">Como foi seu atendimento?</h1>
-
     </div>
  
     <!-- Avaliação em estrelas -->
@@ -185,21 +185,33 @@
  
     <!-- Itens de pontuação -->
     <div class="mb-2">
+ 
+      <!-- Cabeçalho das colunas -->
       <div class="flex items-center justify-between py-2">
-        <span class="text-sm text-gray-700">Pontue os itens abaixo</span>
-        <div class="flex gap-3"></div>
+        <span class="font-semibold text-gray-900">Pontue os itens abaixo</span>
+        <div class="flex gap-3 text-xs text-gray-500">
+          <span class="w-10 text-center">Fácil</span>
+          <span class="w-10 text-center">Regular</span>
+          <span class="w-10 text-center">Difícil</span>
+        </div>
       </div>
  
       <!-- Tempo de espera -->
       <div class="flex items-center justify-between py-2">
         <span class="text-gray-800">Tempo de espera</span>
         <div class="flex gap-3">
-          <input class="score-input" type="radio" name="tempo_espera" id="te1" value="ruim">
-          <label class="score-label" for="te1"></label>
-          <input class="score-input" type="radio" name="tempo_espera" id="te2" value="medio">
-          <label class="score-label" for="te2"></label>
-          <input class="score-input" type="radio" name="tempo_espera" id="te3" value="bom">
-          <label class="score-label" for="te3"></label>
+          <div class="w-10 flex justify-center">
+            <input class="score-input" type="radio" name="tempo_espera" id="te1" value="muito_facil">
+            <label class="score-label" for="te1"></label>
+          </div>
+          <div class="w-10 flex justify-center">
+            <input class="score-input" type="radio" name="tempo_espera" id="te2" value="regular">
+            <label class="score-label" for="te2"></label>
+          </div>
+          <div class="w-10 flex justify-center">
+            <input class="score-input" type="radio" name="tempo_espera" id="te3" value="dificil">
+            <label class="score-label" for="te3"></label>
+          </div>
         </div>
       </div>
  
@@ -207,12 +219,18 @@
       <div class="flex items-center justify-between py-2">
         <span class="text-gray-800">Atendimento da equipe</span>
         <div class="flex gap-3">
-          <input class="score-input" type="radio" name="atendimento_equipe" id="ae1" value="ruim">
-          <label class="score-label" for="ae1"></label>
-          <input class="score-input" type="radio" name="atendimento_equipe" id="ae2" value="medio">
-          <label class="score-label" for="ae2"></label>
-          <input class="score-input" type="radio" name="atendimento_equipe" id="ae3" value="bom">
-          <label class="score-label" for="ae3"></label>
+          <div class="w-10 flex justify-center">
+            <input class="score-input" type="radio" name="atendimento_equipe" id="ae1" value="muito_facil">
+            <label class="score-label" for="ae1"></label>
+          </div>
+          <div class="w-10 flex justify-center">
+            <input class="score-input" type="radio" name="atendimento_equipe" id="ae2" value="regular">
+            <label class="score-label" for="ae2"></label>
+          </div>
+          <div class="w-10 flex justify-center">
+            <input class="score-input" type="radio" name="atendimento_equipe" id="ae3" value="dificil">
+            <label class="score-label" for="ae3"></label>
+          </div>
         </div>
       </div>
  
@@ -220,12 +238,18 @@
       <div class="flex items-center justify-between py-2">
         <span class="text-gray-800">Clareza das informações</span>
         <div class="flex gap-3">
-          <input class="score-input" type="radio" name="clareza_info" id="ci1" value="ruim">
-          <label class="score-label" for="ci1"></label>
-          <input class="score-input" type="radio" name="clareza_info" id="ci2" value="medio">
-          <label class="score-label" for="ci2"></label>
-          <input class="score-input" type="radio" name="clareza_info" id="ci3" value="bom">
-          <label class="score-label" for="ci3"></label>
+          <div class="w-10 flex justify-center">
+            <input class="score-input" type="radio" name="clareza_info" id="ci1" value="muito_facil">
+            <label class="score-label" for="ci1"></label>
+          </div>
+          <div class="w-10 flex justify-center">
+            <input class="score-input" type="radio" name="clareza_info" id="ci2" value="regular">
+            <label class="score-label" for="ci2"></label>
+          </div>
+          <div class="w-10 flex justify-center">
+            <input class="score-input" type="radio" name="clareza_info" id="ci3" value="dificil">
+            <label class="score-label" for="ci3"></label>
+          </div>
         </div>
       </div>
  
@@ -233,31 +257,25 @@
       <div class="flex items-center justify-between py-2">
         <span class="text-gray-800">Facilidade de agendamento</span>
         <div class="flex gap-3">
-          <input class="score-input" type="radio" name="facilidade_agendamento" id="fa1" value="ruim">
-          <label class="score-label" for="fa1"></label>
-          <input class="score-input" type="radio" name="facilidade_agendamento" id="fa2" value="medio">
-          <label class="score-label" for="fa2"></label>
-          <input class="score-input" type="radio" name="facilidade_agendamento" id="fa3" value="bom">
-          <label class="score-label" for="fa3"></label>
-        </div>
-      </div>
- 
-      <!-- Comentário (linha com marcadores, igual ao layout original) -->
-      <div class="flex items-center justify-between py-2">
-        <span class="text-gray-800">Comentário (opcional)</span>
-        <div class="flex gap-3">
-          <input class="score-input" type="radio" name="comentario_opcao" id="co1" value="ruim">
-          <label class="score-label" for="co1"></label>
-          <input class="score-input" type="radio" name="comentario_opcao" id="co2" value="medio">
-          <label class="score-label" for="co2"></label>
-          <input class="score-input" type="radio" name="comentario_opcao" id="co3" value="bom">
-          <label class="score-label" for="co3"></label>
+          <div class="w-10 flex justify-center">
+            <input class="score-input" type="radio" name="facilidade_agendamento" id="fa1" value="muito_facil">
+            <label class="score-label" for="fa1"></label>
+          </div>
+          <div class="w-10 flex justify-center">
+            <input class="score-input" type="radio" name="facilidade_agendamento" id="fa2" value="regular">
+            <label class="score-label" for="fa2"></label>
+          </div>
+          <div class="w-10 flex justify-center">
+            <input class="score-input" type="radio" name="facilidade_agendamento" id="fa3" value="dificil">
+            <label class="score-label" for="fa3"></label>
+          </div>
         </div>
       </div>
     </div>
  
-    <!-- Campo de comentário -->
-    <div class="mt-4">
+    <!-- Comentário -->
+    <div class="mt-6">
+      <p class="text-gray-800 mb-2">Comentário (opcional)</p>
       <textarea
         name="comentario"
         rows="4"
@@ -275,6 +293,8 @@
     </button>
  
   </form>
+ 
+   
 
 
 
