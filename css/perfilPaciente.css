@@ -1,20 +1,22 @@
 
 .login-paciente{
-        font-family: 'Inter', sans-serif;
-        margin-left: 20px;
-
+            font-family: 'Inter', sans-serif;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
 }
+
 .email{
     margin-top: 25px;
 }
 .lembrar{
 
-    margin-top: 50px; 
+    
 }
 .butao{
     display: flex;
 }
 
 .esqueci{
-    margin-bottom: 10px;
+
 }
