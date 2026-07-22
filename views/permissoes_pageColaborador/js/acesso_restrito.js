@@ -1,19 +1,164 @@
-lucide.createIcons();
+import { createModalController } from './modal.js';
+
+const usuariosIniciais = [
+  { username: "gestor",   password: "123", nivel: 4, ativo: true },
+  { username: "gabriel",  password: "123", nivel: 3, ativo: true },
+  { username: "mateus",   password: "123", nivel: 3, ativo: true },
+  { username: "william",  password: "123", nivel: 1, ativo: true },
+  { username: "rafael",   password: "123", nivel: 1, ativo: true },
+  { username: "isabela",  password: "123", nivel: 2, ativo: true },
+  { username: "vinicius", password: "123", nivel: 2, ativo: true }
+];
+
+function garantirUsuariosPadrao(listaAtual = []) {
+  const lista = Array.isArray(listaAtual) ? listaAtual : [];
+  const usuariosMap = new Map();
+
+  lista.forEach((usuario) => {
+    if (usuario?.username) {
+      usuariosMap.set(usuario.username.toLowerCase(), {
+        ...usuario,
+        username: usuario.username
+      });
+    }
+  });
+
+  usuariosIniciais.forEach((usuarioPadrao) => {
+    const chave = usuarioPadrao.username.toLowerCase();
+    const existente = usuariosMap.get(chave);
+
+    usuariosMap.set(chave, {
+      ...(existente || {}),
+      username: existente?.username || usuarioPadrao.username,
+      password: usuarioPadrao.password,
+      nivel: usuarioPadrao.nivel,
+      ativo: usuarioPadrao.ativo
+    });
+  });
+
+  return Array.from(usuariosMap.values());
+}
+
+function obterUsuarios() {
+  const local = localStorage.getItem('listaUsuarios');
+  let lista = [];
+
+  if (local) {
+    try {
+      lista = JSON.parse(local);
+    } catch (error) {
+      lista = [];
+    }
+  }
+
+  const usuariosNormalizados = garantirUsuariosPadrao(lista);
+  const precisaSalvar = JSON.stringify(usuariosNormalizados) !== local;
+
+  if (precisaSalvar) {
+    localStorage.setItem('listaUsuarios', JSON.stringify(usuariosNormalizados));
+  }
+
+  return usuariosNormalizados;
+}
+
+function obterUsuarioLogado() {
+  const local = localStorage.getItem('userLogado');
+  if (!local) return null;
+  try {
+    return JSON.parse(local);
+  } catch {
+    return null;
+  }
+}
+
+function redirecionarPorNivel(nivel) {
+  if (nivel === 1) return window.location.href = 'n1_pagina.html';
+  if (nivel === 2) return window.location.href = 'paciente.html';
+  if (nivel === 3) return window.location.href = 'colaborador.html';
+  return window.location.href = 'acesso_restrito.html';
+}
+
+function verificarAcessoPagina() {
+  const usuario = obterUsuarioLogado();
+  const pagina = window.location.pathname.split('/').pop() || 'index.html';
+
+  if (!usuario) {
+    if (pagina !== 'index.html' && pagina !== 'login.html') {
+      window.location.href = 'index.html';
+    }
+    return;
+  }
+
+  if (pagina === 'index.html' || pagina === 'login.html') {
+    redirecionarPorNivel(usuario.nivel);
+    return;
+  }
+
+  const permissoesPorPagina = {
+    'acesso_restrito.html': 4,
+    'colaborador.html': 3,
+    'paciente.html': 2
+  };
+
+  const nivelMinimo = permissoesPorPagina[pagina];
+  if (nivelMinimo && usuario.nivel < nivelMinimo) {
+    redirecionarPorNivel(usuario.nivel);
+  }
+}
+
+function configurarLogin() {
+  const form = document.getElementById('loginForm');
+  if (!form) return;
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const userIn = document.getElementById('username').value.toLowerCase().trim();
+    const passIn = document.getElementById('password').value;
+
+    const lista = obterUsuarios();
+    const userFound = lista.find(u => u.username.toLowerCase() === userIn && u.password === passIn);
+
+    if (!userFound) {
+      document.getElementById('errorMessage').textContent = 'Usuário ou senha inválidos!';
+      return;
+    }
+
+    if (userFound.ativo === false) {
+      document.getElementById('errorMessage').textContent = 'Acesso desativado! Fale com o administrador.';
+      return;
+    }
+
+    localStorage.setItem('userLogado', JSON.stringify({
+      username: userFound.username,
+      nivel: userFound.nivel
+    }));
+
+    redirecionarPorNivel(userFound.nivel);
+  });
+}
+
+verificarAcessoPagina();
+configurarLogin();
+
+window.lucide?.createIcons?.();
 
 // Dados padrão iniciais
 const padraoColaboradores = [
-  { nome: "Gestor",   permissao: "N4", email: "gestor@email.com",    ativo: true },
-  { nome: "Gabriel",  permissao: "N3", email: "gabriel@email.com",  ativo: true },
-  { nome: "Mateus",   permissao: "N3", email: "mateus@email.com",   ativo: true },
-  { nome: "William",  permissao: "N1", email: "william@email.com",  ativo: true },
-  { nome: "Rafael",   permissao: "N1", email: "rafael@email.com",   ativo: true },
-  { nome: "Isabela",  permissao: "N2", email: "isabela@email.com",  ativo: true },
-  { nome: "Vinicius", permissao: "N2", email: "vinicius@email.com", ativo: true }
+  { nome: "Gestor",   permissao: "N4", email: "gestor@email.com",   cidade: "Salvador",         ativo: true },
+  { nome: "Gabriel",  permissao: "N3", email: "gabriel@email.com",  cidade: "Camaçari",         ativo: true },
+  { nome: "Mateus",   permissao: "N3", email: "mateus@email.com",   cidade: "Feira de Santana", ativo: true },
+  { nome: "William",  permissao: "N1", email: "william@email.com",  cidade: "Lençois",          ativo: true },
+  { nome: "Rafael",   permissao: "N1", email: "rafael@email.com",   cidade: "Feira de Santana", ativo: true },
+  { nome: "Isabela",  permissao: "N2", email: "isabela@email.com",  cidade: "Camaçari",         ativo: true },
+  { nome: "Vinicius", permissao: "N2", email: "vinicius@email.com", cidade: "Salvador",         ativo: true }
 ];
 
 // Sincronização inicial entre "colaboradores" e "listaUsuarios"
 function inicializarDados() {
-  if (!localStorage.getItem('listaUsuarios')) {
+  const colaboradoresExistentes = JSON.parse(localStorage.getItem('colaboradoresData'));
+  const usuariosExistentes = JSON.parse(localStorage.getItem('listaUsuarios'));
+
+  if (!usuariosExistentes) {
     const listaIniciada = padraoColaboradores.map(c => ({
       username: c.nome.toLowerCase(),
       password: "123",
@@ -21,10 +166,30 @@ function inicializarDados() {
       ativo: c.ativo
     }));
     localStorage.setItem('listaUsuarios', JSON.stringify(listaIniciada));
+  } else {
+    const atualizados = padraoColaboradores.map(c => {
+      const usuario = usuariosExistentes.find(u => u.username === c.nome.toLowerCase());
+      return {
+        username: c.nome.toLowerCase(),
+        password: usuario?.password || "123",
+        nivel: parseInt(c.permissao.replace("N", "")),
+        ativo: usuario?.ativo ?? c.ativo
+      };
+    });
+    localStorage.setItem('listaUsuarios', JSON.stringify(atualizados));
   }
 
-  if (!localStorage.getItem('colaboradoresData')) {
+  if (!colaboradoresExistentes) {
     localStorage.setItem('colaboradoresData', JSON.stringify(padraoColaboradores));
+  } else {
+    const atualizados = padraoColaboradores.map(c => {
+      const colab = colaboradoresExistentes.find(item => item.nome === c.nome);
+      return {
+        ...c,
+        ativo: colab?.ativo ?? c.ativo
+      };
+    });
+    localStorage.setItem('colaboradoresData', JSON.stringify(atualizados));
   }
 }
 
@@ -60,6 +225,7 @@ function renderTable(data) {
       <td class="py-4 px-6 font-bold text-slate-800">${colab.nome}</td>
       <td class="py-4 px-6 text-slate-500 font-semibold">${colab.permissao}</td>
       <td class="py-4 px-6 text-slate-500">${colab.email}</td>
+      <td class="py-4 px-6 text-slate-500">${colab.cidade || ''}</td>
       <td class="py-4 px-6">
         <div class="flex items-center justify-center gap-2">
           <button onclick="toggleStatus(${index})" class="${isAtivo ? 'bg-rose-600 hover:bg-rose-700' : 'bg-emerald-600 hover:bg-emerald-700'} text-white text-[10px] font-bold uppercase tracking-wider px-3 py-2 rounded-lg shadow-sm transition-all cursor-pointer">
@@ -94,156 +260,51 @@ function toggleStatus(id) {
   renderTable(colaboradores);
 }
 
-function fecharModal() {
-  document.getElementById('cadastrarModal')?.remove();
-}
-
-// Alterar Nível (N1, N2, N3, N4)
-function editar(id) {
-  const colaboradores = obterColaboradores();
-  const usuarios = obterUsuariosSistema();
-  const colab = colaboradores[id];
-
-  if (!colab) return;
-
-  fecharModal();
-
-  const modal = document.createElement('div');
-  modal.id = 'cadastrarModal';
-  modal.className = 'fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4';
-  modal.innerHTML = `
-    <div class="bg-white rounded-xl shadow-2xl border border-slate-100 max-w-md w-full p-6 space-y-4">
-      <div class="flex justify-between items-center border-b pb-3">
-        <h3 class="text-lg font-bold text-slate-800">Alterar Permissão</h3>
-        <button type="button" onclick="fecharModal()" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
-      </div>
-      <form id="formAlterarPermissao" class="space-y-3">
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Permissão</label>
-          <select id="novoNivel" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-sm">
-            <option value="1" ${colab.permissao === 'N1' ? 'selected' : ''}>N1 - Paciente</option>
-            <option value="2" ${colab.permissao === 'N2' ? 'selected' : ''}>N2 - Operador</option>
-            <option value="3" ${colab.permissao === 'N3' ? 'selected' : ''}>N3 - Colaborador</option>
-            <option value="4" ${colab.permissao === 'N4' ? 'selected' : ''}>N4 - Administrador</option>
-          </select>
-        </div>
-        <div class="flex justify-end gap-2 pt-3 border-t">
-          <button type="button" onclick="fecharModal()" class="px-4 py-2 bg-slate-100 text-slate-600 text-xs font-bold rounded-lg hover:bg-slate-200">Cancelar</button>
-          <button type="submit" class="px-4 py-2 bg-[#00478f] text-white text-xs font-bold rounded-lg hover:bg-[#00366d]">Salvar</button>
-        </div>
-      </form>
-    </div>
-  `;
-
-  document.body.appendChild(modal);
-
-  document.getElementById('formAlterarPermissao').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const nivel = parseInt(document.getElementById('novoNivel').value);
-
-    colab.permissao = `N${nivel}`;
-
-    const idxUser = usuarios.findIndex(u => u.username.toLowerCase() === colab.nome.toLowerCase());
-    if (idxUser !== -1) {
-      usuarios[idxUser].nivel = nivel;
-    }
-
-    salvarColaboradores(colaboradores);
-    salvarUsuariosSistema(usuarios);
-    renderTable(colaboradores);
-    fecharModal();
-  });
-}
-
-// Modal de Cadastro
-function cadastrarColaborador() {
-  document.getElementById('cadastrarModal')?.remove();
-
-  const modal = document.createElement('div');
-  modal.id = 'cadastrarModal';
-  modal.className = 'fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4';
-  modal.innerHTML = `
-    <div class="bg-white rounded-xl shadow-2xl border border-slate-100 max-w-md w-full p-6 space-y-4">
-      <div class="flex justify-between items-center border-b pb-3">
-        <h3 class="text-lg font-bold text-slate-800">Cadastrar Novo Colaborador</h3>
-        <button onclick="document.getElementById('cadastrarModal').remove()" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
-      </div>
-      <form id="formNovoColaborador" class="space-y-3">
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Nome / Usuário</label>
-          <input type="text" id="novoNome" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-sm" required>
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Email</label>
-          <input type="email" id="novoEmail" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-sm" required>
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Senha</label>
-          <input type="password" id="novaSenha" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-sm" required>
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Permissão</label>
-          <select id="novoNivel" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-sm">
-            <option value="1">N1 - Paciente</option>
-            <option value="2">N2 - Operador</option>
-            <option value="3">N3 - Colaborador</option>
-            <option value="4">N4 - Administrador</option>
-          </select>
-        </div>
-        <div class="flex justify-end gap-2 pt-3 border-t">
-          <button type="button" onclick="document.getElementById('cadastrarModal').remove()" class="px-4 py-2 bg-slate-100 text-slate-600 text-xs font-bold rounded-lg hover:bg-slate-200">Cancelar</button>
-          <button type="submit" class="px-4 py-2 bg-[#00478f] text-white text-xs font-bold rounded-lg hover:bg-[#00366d]">Salvar</button>
-        </div>
-      </form>
-    </div>
-  `;
-
-  document.body.appendChild(modal);
-
-  document.getElementById('formNovoColaborador').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const nome = document.getElementById('novoNome').value.trim();
-    const email = document.getElementById('novoEmail').value.trim();
-    const senha = document.getElementById('novaSenha').value;
-    const nivel = parseInt(document.getElementById('novoNivel').value);
-
-    const colaboradores = obterColaboradores();
-    const usuarios = obterUsuariosSistema();
-
-    // Adiciona colaborador na tabela
-    colaboradores.push({
-      nome: nome,
-      permissao: `N${nivel}`,
-      email: email,
-      ativo: true
-    });
-
-    // Adiciona credencial no login
-    usuarios.push({
-      username: nome.toLowerCase(),
-      password: senha,
-      nivel: nivel,
-      ativo: true
-    });
-
-    salvarColaboradores(colaboradores);
-    salvarUsuariosSistema(usuarios);
-    renderTable(colaboradores);
-
-    document.getElementById('cadastrarModal').remove();
-  });
-}
-
-// Filtro de Busca
-document.getElementById('searchInput')?.addEventListener('input', function(e) {
-  const query = e.target.value.toLowerCase();
-  const colaboradores = obterColaboradores();
-  const filtered = colaboradores.filter(c => 
-    c.nome.toLowerCase().includes(query) || 
-    c.email.toLowerCase().includes(query)
-  );
-  renderTable(filtered);
+const { fecharModal, editar, cadastrarColaborador } = createModalController({
+  obterColaboradores,
+  obterUsuariosSistema,
+  salvarColaboradores,
+  salvarUsuariosSistema,
+  renderTable
 });
 
-// Renderização Inicial
-renderTable(obterColaboradores());
+window.toggleStatus = toggleStatus;
+window.fecharModal = fecharModal;
+window.editar = editar;
+window.cadastrarColaborador = cadastrarColaborador;
+
+// Filtro de Busca
+const colaboradoresTable = document.getElementById('colaboradoresTable');
+if (colaboradoresTable) {
+  const filterFieldEl = document.getElementById('filterField');
+  if (filterFieldEl) {
+    document.getElementById('searchInput')?.addEventListener('input', function(e) {
+      const query = e.target.value.toLowerCase();
+      const field = filterFieldEl.value || 'colaborador';
+      const colaboradores = obterColaboradores();
+      const filtered = colaboradores.filter(c => {
+        switch (field) {
+          case 'colaborador':
+            return c.nome.toLowerCase().includes(query);
+          case 'permissao':
+            return c.permissao.toLowerCase().includes(query);
+          case 'email':
+            return c.email.toLowerCase().includes(query);
+          case 'cidade':
+            return (c.cidade || '').toLowerCase().includes(query);
+          case 'acoes':
+            return (`${c.ativo !== false ? 'desativar' : 'ativar'} alterar`).includes(query);
+          default:
+            return c.nome.toLowerCase().includes(query) ||
+                   c.permissao.toLowerCase().includes(query) ||
+                   c.email.toLowerCase().includes(query) ||
+                   (c.cidade || '').toLowerCase().includes(query);
+        }
+      });
+      renderTable(filtered);
+    });
+  }
+
+  // Renderização Inicial
+  renderTable(obterColaboradores());
+}
