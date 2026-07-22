@@ -21,10 +21,7 @@ function renderTable(data) {
             <td class="py-4 px-6 text-slate-500">${colab.matricula}</td>
             <td class="py-4 px-6 text-slate-500">${colab.email}</td>
             <td class="py-4 px-6">
-                <div class="flex items-center justify-center gap-2">
-                    <button class="bg-[#00478f] hover:bg-[#00366d] text-white text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 px-3 py-2 rounded-lg shadow-sm transition-all cursor-pointer" onclick="desativar(${index})">
-                        <i data-lucide="calendar-check" class="w-3.5 h-3.5"></i> Desativar
-                    </button>
+                <div class="flex items-center justify-center gap-2">                    
                     <button class="bg-[#00478f] hover:bg-[#00366d] text-white text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 px-3 py-2 rounded-lg shadow-sm transition-all cursor-pointer" onclick="editar(${index})">
                         <i data-lucide="calendar-check" class="w-3.5 h-3.5"></i> Editar
                     </button>
