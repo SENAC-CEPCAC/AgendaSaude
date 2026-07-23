@@ -128,7 +128,7 @@
     <!-- Transactional Header (Nav Shell Suppressed) -->
     <header class="sticky top-0 z-50 w-full bg-surface-container-lowest/90 backdrop-blur-md border-b border-surface-variant px-margin h-16 flex items-center justify-between">
 
-        <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors active:scale-95 text-on-surface" type="button">
+        <button id="btn-voltar" aria-label="Voltar" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors active:scale-95 text-on-surface" type="button">
             <span class="material-symbols-outlined text-[24px]">arrow_back</span>
         </button>
 
@@ -141,16 +141,19 @@
         <!-- Main Content Canvas -->
         <main class="flex-1 w-full max-w-md mx-auto px-margin pb-32 flex flex-col gap-xl pt-md">
 
+            <!-- Container onde as etapas serão injetadas via JS -->
+            <div id="etapas-container"></div>
+
             <!-- Progress Stepper -->
             <div class="flex-none pt-sm pb-md border-surface-variant z-10">
                 <div class="flex justify-between items-center mb-xs">
-                    <span class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Passo 1 de 3</span>
-                    <span class="font-label-bold text-label-bold text-primary">1. Seleção</span>
+                    <span id="texto-passo" class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Passo 1 de 3</span>
+                    <span id="titulo-passo" class="font-label-bold text-label-bold text-primary">1. Seleção</span>
                 </div>
 
                 <div class="w-full h-[4px] bg-surface-variant rounded-full overflow-hidden">
 
-                    <div class="w-1/3 h-full bg-secondary-container rounded-full relative">
+                    <div id="barra-progresso" class="w-1/3 h-full bg-secondary-container rounded-full relative">
                         <!-- Glow effect on progress -->
                         <div class="absolute inset-0 bg-white/30 w-1/3 blur-[2px] animate-pulse"></div>
                     </div>
@@ -251,10 +254,18 @@
                 </div>
 
             </section>
-
+            <!-- Conteúdo das etapas será injetado dentro de #etapas-container -->
         </main>
 
         <!-- Bottom Action Area -->
-        <footer class="fixed bottom-0 left-0 w-full p-margin flex justify-center z-40" class="footer"></footer>
+        <footer class="fixed bottom-0 left-0 w-full p-margin flex justify-center z-40 footer__flx_agendamento">
+            <div class="w-full max-w-md">
+                <button id="btn-continuar" class="w-full h-12 bg-primary text-on-primary font-label-bold text-label-bold rounded-full flex items-center justify-center hover:bg-primary/90 active:scale-[0.98] transition-all uppercase tracking-wider" type="button">
+                Continuar
+                </button>
+            </div>
+        </footer>
+
+        <script type="module" src="./js/modulos/fluxo_etapas.js"></script>
     </body>
 </html>
