@@ -51,19 +51,20 @@
     </header>
 
     <main class="min-h-screen flex flex-col items-center my-[86px]">
-        <section class="max-w-96 my-4 px-3 p-6 bg-branco rounded-lg border border-gray-200 shadow-sm hero">
 
-            <article class="items-center">
+        <section class="max-w-[80%] w-[80%] my-4 hero">
 
-                <div class="flex flex-col gap-4 h-fit place-self-center">
+            <article class="max-h-[620px] w-full px-3 p-6 bg-branco rounded-lg border border-gray-200 shadow-sm grid grid-rows-2 gap-6 items-center ">
+
+                <div class="max-w-3/4 flex flex-col gap-4 h-fit place-self-center items-center">
 
                     <h1 class="font-sans font-bold text-center text-[26px] text-azul hero_conteudo">Sua Saúde Onde Você Estiver
                     </h1>
-                    <p class="font-sans text-center text-[16px] text-cinza-escuro">
+                    <p class="max-w-[410px] font-sans text-center text-[16px] text-cinza-escuro">
                         Agendamento rápido, unidades móveis de confiança e atendimento especializado com agilidade e praticidade.
                     </p>
 
-                    <div class="flex flex-col gap-3 w-full hero_conteudo_btns">
+                    <div class="max-w-[300px] flex flex-col gap-3 w-full hero_conteudo_btns">
                         <button class="w-full h-fit px-4 py-2.5 border-[1.5px] rounded-lg border border-azul font-sans font-normal text-[14px] hero_conteudo_btn_cadastrese hover:bg-azul hover:text-azul bg-transparent hover:bg-azul/15 transition-colors" data-url="http://127.0.0.1:5500/AgendaSaude/views/loginP/loginP.html">
                             Cadastre-se
                         </button>
@@ -72,8 +73,48 @@
                         </button>
                     </div>
                 </div>
+                
+                <div class="max-w-[430px] w-full h-full flex items-center justify-center overflow-hidden">
+                    <img src="https://cdnsesc.azureedge.net/assets/2021/09/sescsaudeimg.jpeg" alt="" class="max-w-[430px] w-full h-full object-cover rounded-lg">
+                </div>
+
             </article>
+
+            
         </section>
+        
+        <div class="max-w-96 my-4 px-3 p-3 bg-branco rounded-lg border border-gray-200 shadow-sm grid grid-rows-2 gap-6 items-center content-center">
+            <svg width="64" height="72" viewBox="0 0 64 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="64" height="64" rx="32" fill="#D6E3FF"/>
+                <path d="M26.6663 45.3337L27.9997 36.0003H21.333L33.333 18.667H35.9997L34.6663 29.3337H42.6663L29.333 45.3337H26.6663Z" fill="#001B3D"/>
+            </svg>
+
+            <h3 class="font-sans font-semibold text-[18px] text-azul">Missão</h3>
+
+            <p class="font-sans text-[14px] text-cinza-escuro">Proporcionar acesso ágil e confiável a serviços de saúde, promovendo bem-estar e qualidade de vida para todos.</p>
+        </div>
+
+        <div class="max-w-96 my-4 px-3 p-6 bg-branco rounded-lg border border-gray-200 shadow-sm grid grid-rows-2 gap-6 items-center">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="64" height="64" rx="32" fill="#FFDF9D"/>
+                <path d="M30.8502 46C30.228 46 29.6446 45.8667 29.1002 45.6C28.5558 45.3333 28.0946 44.9556 27.7169 44.4667L20.4502 35.2333L21.0835 34.5667C21.528 34.1 22.0613 33.8222 22.6835 33.7333C23.3058 33.6444 23.8835 33.7667 24.4169 34.1L26.8835 35.6V24.6667C26.8835 24.2889 27.0113 23.9722 27.2669 23.7167C27.5224 23.4611 27.8391 23.3333 28.2169 23.3333C28.5946 23.3333 28.9169 23.4611 29.1835 23.7167C29.4502 23.9722 29.5835 24.2889 29.5835 24.6667V31.3333H39.5502C40.6613 31.3333 41.6057 31.7222 42.3835 32.5C43.1613 33.2778 43.5502 34.2222 43.5502 35.3333V40.6667C43.5502 42.1333 43.028 43.3889 41.9835 44.4333C40.9391 45.4778 39.6835 46 38.2169 46H30.8502ZM22.4502 28C22.1613 27.5111 21.9391 26.9833 21.7835 26.4167C21.628 25.85 21.5502 25.2667 21.5502 24.6667C21.5502 22.8222 22.2002 21.25 23.5002 19.95C24.8002 18.65 26.3724 18 28.2169 18C30.0613 18 31.6335 18.65 32.9335 19.95C34.2335 21.25 34.8835 22.8222 34.8835 24.6667C34.8835 25.2667 34.8058 25.85 34.6502 26.4167C34.4946 26.9833 34.2724 27.5111 33.9835 28L31.6835 26.6667C31.8613 26.3556 31.9946 26.0389 32.0835 25.7167C32.1724 25.3944 32.2169 25.0444 32.2169 24.6667C32.2169 23.5556 31.828 22.6111 31.0502 21.8333C30.2724 21.0556 29.328 20.6667 28.2169 20.6667C27.1058 20.6667 26.1613 21.0556 25.3835 21.8333C24.6058 22.6111 24.2169 23.5556 24.2169 24.6667C24.2169 25.0444 24.2613 25.3944 24.3502 25.7167C24.4391 26.0389 24.5724 26.3556 24.7502 26.6667L22.4502 28Z" fill="#251A00"/>
+            </svg>
+
+            <h3 class="font-sans font-semibold text-[18px] text-azul">Visão</h3>
+
+            <p class="font-sans text-[14px] text-cinza-escuro">Ser referência em soluções de saúde digital, reconhecida pela excelência no atendimento e inovação tecnológica.</p>
+        </div>
+
+        <div class="max-w-96 my-4 px-3 p-6 bg-branco rounded-lg border border-gray-200 shadow-sm grid grid-rows-2 gap-6 items-center">
+            <svg width="64" height="72" viewBox="0 0 64 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="64" height="64" rx="32" fill="#FFDBCB"/>
+                <path d="M27.4663 46L24.933 41.7333L20.133 40.6667L20.5997 35.7333L17.333 32L20.5997 28.2667L20.133 23.3333L24.933 22.2667L27.4663 18L31.9997 19.9333L36.533 18L39.0663 22.2667L43.8663 23.3333L43.3997 28.2667L46.6663 32L43.3997 35.7333L43.8663 40.6667L39.0663 41.7333L36.533 46L31.9997 44.0667L27.4663 46ZM30.5997 36.7333L38.133 29.2L36.2663 27.2667L30.5997 32.9333L27.733 30.1333L25.8663 32L30.5997 36.7333Z" fill="#341100"/>
+            </svg>
+
+            <h3 class="font-sans font-semibold text-[18px] text-azul">Valores</h3>
+
+            <p class="font-sans text-[14px] text-cinza-escuro">Compromisso com a saúde, ética, inovação, acessibilidade e foco no paciente.</p>
+        </div>
     </main>
     <script src="../../js/home/reacoes.js"></script>
 </body>
