@@ -1,11 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Página Inicial - Agenda Saúde </title>
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Injeta duas customizações no ecossistema do Tailwind -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            //1. Variaveis de cores personalizadas
+            colors:{
+                'azul': '#004c99',
+                'amarelo': '#f6be00',
+                'cinza-escuro': '#747678',
+                'cinza-claro': '#d0d0ce',
+                'branco': '#fafafa', 
+            },
+            //2. Fontes personalizadas
+            fontFamily: {
+              sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+              mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+            },
+            //3. Espaçamento de 18px [ p-4.5 ]
+            spacing: {
+              '4.5': '1.125rem', // 18px mapping for perfect compatibility
+            }
+          }
+        }
+      }
+    </script>
 </head>
-<body>
-    
+<!--CSS GLOBAL-->
+<body class="bg-cinza-claro">
+    <!--CSS GLOBAL-->
+    <header class="top-0 fixed h-12 w-full z-40  items-center px-5 bg-branco shadow-lg" >
+        <div class="max-w-6xl h-full flex items-center content-center mx-auto place-content-between cx_titulo_header_paciente">
+            <!--CSS GLOBAL-->
+            <p class="w-fit text-azul text-18px font-sans font-bold texto_logo">Agenda Saúde</p>
+
+            <button class="rounded-md w-fit h-fit px-3 py-1 border-[1.5px] border-solid border-azul font-sans text-[14px] text-azul bg-branco header_btn_entrar hover:bg-azul hover:text-branco" login-url="../../views/loginP/loginP.html">Entrar</button>
+        </div>
+        
+    </header>
+
+    <main class="min-h-screen flex flex-col items-center my-[86px]">
+        <section class="max-w-96 my-4 px-3 p-6 bg-branco rounded-lg border border-gray-200 shadow-sm hero">
+
+            <article class="items-center">
+
+                <div class="flex flex-col gap-4 h-fit place-self-center">
+
+                    <h1 class="font-sans font-bold text-center text-[26px] text-azul hero_conteudo">Sua Saúde Onde Você Estiver
+                    </h1>
+                    <p class="font-sans text-center text-[16px] text-cinza-escuro">
+                        Agendamento rápido, unidades móveis de confiança e atendimento especializado com agilidade e praticidade.
+                    </p>
+
+                    <div class="flex flex-col gap-3 w-full hero_conteudo_btns">
+                        <button class="w-full h-fit px-4 py-2.5 border-[1.5px] rounded-lg border border-azul font-sans font-normal text-[14px] hero_conteudo_btn_cadastrese hover:bg-azul hover:text-azul bg-transparent hover:bg-azul/15 transition-colors" data-url="http://127.0.0.1:5500/AgendaSaude/views/loginP/loginP.html">
+                            Cadastre-se
+                        </button>
+                        <button class="rounded-lg w-full h-fit px-4 py-2.5 border-[1.5px] border border-azul font-sans font-normal text-[14px] text-branco bg-azul hero_conteudo_btn_entrar hover:bg-branco hover:text-azul hover:opacit-90 transition-opacity" login-url="../../views/loginP/loginP.html">
+                            Entrar
+                        </button>
+                    </div>
+                </div>
+            </article>
+        </section>
+    </main>
+    <script src="../../js/home/reacoes.js"></script>
 </body>
 </html>
