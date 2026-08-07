@@ -11,3 +11,6 @@ Route::get('/novasenha', function () {
 Route::get('/recuperacao', function () {
     return view('login.recuperacaoP');
 });
+Route::get('/', function () {
+    return view('ListaAgendamento.listaAgendamento');
+});
