@@ -86,6 +86,11 @@
 <body class="bg-background text-on-background font-body-md antialiased min-h-screen flex flex-col relative selection:bg-primary-fixed selection:text-on-primary-fixed">
 
 <x-header_flx_agendamento></x-header_flx_agendamento>
-<!--{{$slot}}-->
 
+    <!-- Main Content Canvas -->
+    <main class="flex-1 w-full max-w-md mx-auto px-margin pb-32 flex flex-col gap-xl pt-md">
+
+        {{$slot}}
+
+    </main>
 </body>
