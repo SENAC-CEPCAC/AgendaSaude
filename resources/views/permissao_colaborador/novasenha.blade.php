@@ -16,9 +16,11 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
-        
-        <div class="login-paciente">
+<body class="bg-[#f8fafc]">
+
+    <div class="main flex justify-center items-center h-screen ">
+
+        <div class="border border-slate-50 bg-white w-80 h-90 shadow-sm p-10 ">
         <h2 class="text-3xl font-bold">Nova Senha</h2>
         
         <div>
@@ -32,7 +34,7 @@
                 placeholder="Insira novamente">
 
             <button class="butao bg-clip-border px-19 py-1 bg-blue-900 text-white rounded-lg mt-2" type="submit">Confirmar</a></button>
-            
+            </div>
         </div>
 </body>
 </html>
