@@ -31,3 +31,12 @@ Route::get('/confirmado', function () {
 Route::get('/teste', function () {
     return view('pesquisa.teste');
 });
+
+
+Route::get('/colo', function () {
+    return view('anamnese.colo');
+});
+
+Route::get('/mama', function () {
+    return view('anamnese.mama');
+});
