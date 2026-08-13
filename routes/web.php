@@ -9,13 +9,13 @@ Route::get('/teste', function () {
     return view('pesquisa.teste');
 });
 
-<<<<<<< HEAD
+
 route::get('/agendamento/etapa-1', [AgendamentoEtapa1::class, 'index'])->name('agendamento.etapa1');
 
 route::get('/agendamento/etapa-2', [AgendamentoEtapa2Controller::class, 'index'])->name('agendamento.etapa2');
 
 route::get('/agendamento/etapa-3', [AgendamentoEtapa3Controller::class, 'index'])->name('agendamento.etapa3');
-=======
+
 
 Route::get('/feedback', function () {
     return view('pesquisa.feedback');
