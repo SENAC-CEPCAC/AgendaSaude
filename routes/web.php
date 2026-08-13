@@ -31,6 +31,7 @@ Route::get('/confirmado', function () {
 Route::get('/teste', function () {
     return view('pesquisa.teste');
 });
+<<<<<<< HEAD
 
 Route::get('/login', function () {
     return view('login.loginP');
@@ -44,3 +45,5 @@ Route::get('/recuperacao', function () {
 Route::get('/agendamento', function () {
     return view('ListaAgendamento.listaAgendamento');
 });
+=======
+>>>>>>> 8dc4c6f5a053afc8d62d97dc67fc291230fe52c9

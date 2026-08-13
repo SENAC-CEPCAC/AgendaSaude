@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda Saúde </title>
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Injeta duas customizações no ecossistema do Tailwind -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            //1. Variaveis de cores personalizadas
+            colors:{
+                'azul': '#004c99',
+                'amarelo': '#f6be00',
+                'cinza-escuro': '#747678',
+                'cinza-claro': '#d0d0ce',
+                'branco': '#fafafa', 
+            },
+            //2. Fontes personalizadas
+            fontFamily: {
+              sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+              mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+            },
+            //3. Espaçamento de 18px [ p-4.5 ]
+            spacing: {
+              '4.5': '1.125rem', // 18px mapping for perfect compatibility
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+        :root {
+            --azul: #004c99;
+            --amarelo: #f6be00;
+            --cinza-escuro: #747678;
+            --cinza-claro: #d0d0ce;
+            --branco: #fafafa;
+            /*fonts*/
+            --sans: 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif';
+            --mono: 'JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace';
+        }
+        body{
+            background-color: var(--cinza-claro);
+        }
+
+    </style>
+</head>
+
+<body>
+    
+    <header class="top-0 fixed h-12 w-full z-40 items-center px-5 bg-branco shadow-lg" >
+        <div class="max-w-6xl h-full flex items-center content-center mx-auto place-content-between cx_titulo_header_paciente">
+            <!--CSS GLOBAL-->
+            <p class="w-fit text-azul text-18px font-sans font-bold texto_logo">Agenda Saúde</p>
+
+            <a href="" class="rounded-md inline-flex items-center justify-center w-fit h-fit px-3 py-1 border-[1.5px] border-solid border-azul font-sans text-[14px] text-azul bg-branco header_btn_entrar hover:bg-azul hover:text-branco">Entrar</a>
+        </div>
+        
+    </header>
+    <!--CSS global-->
+    <main class="min-h-screen flex flex-col items-center mt-[80px] px-4">
+
+        <section class="flex gap-10 md:gap-5 items-center justify-between w-[95%] min-w-[325px] max-w-[1024px] max-h-fit mb-4 px-3 py-10 bg-branco rounded-lg border border-gray-200 shadow-sm hero">
+
+        
+                <style>
+                    /*
+                     - LAYOUT SESSÃO HERO
+                        -adaptar para desktop(responsivo para mobile);
+                        -adaptar o layout das divs de conteudo e imagem do hero
+
+                     - LAYOUT DOS ELEMENTOS DENTRO DO ARTICLE
+                     - ALINHAMENTO DA IMAGEM DENTRO DO CONTAINER DA IMAGEM DO HERO
+                     - ENCAPSULAMENTO DAS DIVS DE VISÃO,M,V EM UMA SESSSÃO FLEX.
+                     - ALINHAMENTO E ESPAÇAMENTO DO CONTEUDO DENTRO DESSAS DIVS.
+                     - INSERIR UM FOOTER.
+                     - VERIFICAR E CORRIGIR RESPONSIVIDADE
+                    */
+                    @media (max-width:768px) {
+                        .hero {
+                            padding: 10px 15px !important;
+                            flex-direction: column !important;
+                            gap: 10px !important;
+                        }
+
+                        .hero_conteudo {
+                            justify-content: center !important;
+                            align-items: center !important;
+                        };
+
+
+                    }
+                </style>
+
+                <div class="max-w-[380px] h-full flex items-center justify-center object-cover rounded-lg overflow-hidden mx-auto border border-gray-200 shadow-sm">
+                    <img src="https://cdnsesc.azureedge.net/assets/2021/09/sescsaudeimg.jpeg" alt="" class="w-[380px] h-full">
+                </div>
+
+                <div class="flex flex-col gap-4 items-center justify-center max-w-[385px] max-h-[400px] mx-auto my-5 px-[5px] conteudo_hero">
+
+                    <h1 class="font-sans font-bold text-center md:text-start text-[26px] text-azul hero_conteudo">Sua Saúde Onde Você Estiver
+                    </h1>
+                    <p class="font-sans mb-5 text-center md:text-start text-[16px] text-cinza-escuro hero_descricao">
+                        Agendamento rápido, unidades móveis de confiança e atendimento especializado com agilidade e praticidade.
+                    </p>
+
+                    <div class="flex flex-col items-center md:items-start gap-3 w-full hero_conteudo_btns">
+
+                        <a href="{{ route('permissao_colaborador.cadastro') }}"><button class="w-[230px] h-fit px-4 py-2.5 border-[1.5px] rounded-lg border border-azul font-sans font-normal text-[14px] hover:bg-azul hover:text-azul bg-transparent hover:bg-azul/15 transition-colors hero_conteudo_btn_cadastrese" data-url="">
+                            Cadastre-se
+                        </button></a> 
+                        <a href="{{ route('permissao_colaborador.login') }}"> <button class="rounded-lg w-[230px] h-fit px-4 py-2.5 border-[1.5px] border border-azul font-sans font-normal text-[14px] text-branco bg-azul hover:bg-branco hover:text-azul hover:opacit-90 transition-opacity hero_conteudo_btn_entrar" login-url="">
+                            Entrar
+                        </button></a>
+                    </div>
+                </div>
+            
+        </section>
+        
+        <section class="flex flex-col md:flex-row gap-4 md:gap-10 items-inline items-center :justify-around w-[95%] min-w-[325px] max-w-[1024px] max-h-fit my-4 py-10 rounded-lg m_s_v">
+
+            <div class="w-[325px] h-[210px] my-4 px-3 p-3 bg-branco rounded-lg border border-gray-200 shadow-sm flex flex-col gap-6 items-center">
+                <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="64" height="64" rx="32" fill="#D6E3FF"/>
+                    <path d="M26.6663 45.3337L27.9997 36.0003H21.333L33.333 18.667H35.9997L34.6663 29.3337H42.6663L29.333 45.3337H26.6663Z" fill="#001B3D"/>
+                </svg>
+
+                <h3 class="font-sans font-semibold text-[18px] text-azul">Missão</h3>
+
+                <p class="font-sans text-center text-[14px] text-cinza-escuro">Proporcionar acesso ágil e confiável a serviços de saúde, promovendo bem-estar e qualidade de vida para todos.</p>
+            </div>
+
+            <div class="w-[325px] h-[210px] my-4 px-3 p-3 bg-branco rounded-lg border border-gray-200 shadow-sm flex flex-col gap-6 items-center">
+                <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="64" height="64" rx="32" fill="#FFDF9D"/>
+                    <path d="M30.8502 46C30.228 46 29.6446 45.8667 29.1002 45.6C28.5558 45.3333 28.0946 44.9556 27.7169 44.4667L20.4502 35.2333L21.0835 34.5667C21.528 34.1 22.0613 33.8222 22.6835 33.7333C23.3058 33.6444 23.8835 33.7667 24.4169 34.1L26.8835 35.6V24.6667C26.8835 24.2889 27.0113 23.9722 27.2669 23.7167C27.5224 23.4611 27.8391 23.3333 28.2169 23.3333C28.5946 23.3333 28.9169 23.4611 29.1835 23.7167C29.4502 23.9722 29.5835 24.2889 29.5835 24.6667V31.3333H39.5502C40.6613 31.3333 41.6057 31.7222 42.3835 32.5C43.1613 33.2778 43.5502 34.2222 43.5502 35.3333V40.6667C43.5502 42.1333 43.028 43.3889 41.9835 44.4333C40.9391 45.4778 39.6835 46 38.2169 46H30.8502ZM22.4502 28C22.1613 27.5111 21.9391 26.9833 21.7835 26.4167C21.628 25.85 21.5502 25.2667 21.5502 24.6667C21.5502 22.8222 22.2002 21.25 23.5002 19.95C24.8002 18.65 26.3724 18 28.2169 18C30.0613 18 31.6335 18.65 32.9335 19.95C34.2335 21.25 34.8835 22.8222 34.8835 24.6667C34.8835 25.2667 34.8058 25.85 34.6502 26.4167C34.4946 26.9833 34.2724 27.5111 33.9835 28L31.6835 26.6667C31.8613 26.3556 31.9946 26.0389 32.0835 25.7167C32.1724 25.3944 32.2169 25.0444 32.2169 24.6667C32.2169 23.5556 31.828 22.6111 31.0502 21.8333C30.2724 21.0556 29.328 20.6667 28.2169 20.6667C27.1058 20.6667 26.1613 21.0556 25.3835 21.8333C24.6058 22.6111 24.2169 23.5556 24.2169 24.6667C24.2169 25.0444 24.2613 25.3944 24.3502 25.7167C24.4391 26.0389 24.5724 26.3556 24.7502 26.6667L22.4502 28Z" fill="#251A00"/>
+                </svg>
+
+                <h3 class="font-sans font-semibold text-[18px] text-azul">Visão</h3>
+
+                <p class="font-sans text-center text-[14px] text-cinza-escuro">Ser referência em soluções de saúde digital, reconhecida pela excelência no atendimento e inovação tecnológica.</p>
+            </div>
+
+            <div class="w-[325px] h-[210px] my-4 px-3 p-3 bg-branco rounded-lg border border-gray-200 shadow-sm flex flex-col gap-6 items-center">
+                <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="64" height="64" rx="32" fill="#FFDBCB"/>
+                    <path d="M27.4663 46L24.933 41.7333L20.133 40.6667L20.5997 35.7333L17.333 32L20.5997 28.2667L20.133 23.3333L24.933 22.2667L27.4663 18L31.9997 19.9333L36.533 18L39.0663 22.2667L43.8663 23.3333L43.3997 28.2667L46.6663 32L43.3997 35.7333L43.8663 40.6667L39.0663 41.7333L36.533 46L31.9997 44.0667L27.4663 46ZM30.5997 36.7333L38.133 29.2L36.2663 27.2667L30.5997 32.9333L27.733 30.1333L25.8663 32L30.5997 36.7333Z" fill="#341100"/>
+                </svg>
+
+                <h3 class="font-sans font-semibold text-[18px] text-azul">Valores</h3>
+
+                <p class="font-sans text-center text-[14px] text-cinza-escuro">Compromisso com a saúde, ética, inovação, acessibilidade e foco no paciente.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="py-5 bg-branco border border-gray-200 shadow-sm">
+            <div class="mt-2 border-t border-azul pt-8 sm:flex sm:items-center sm:justify-between lg:mt-24">
+
+            <ul class="flex flex-wrap justify-center gap-4 px-6 text-xs lg:justify-end">
+                <li>
+                <a href="#" class="text-azul transition hover:opacity-75">
+                    Terms & Conditions
+                </a>
+                </li>
+
+                <li>
+                <a href="#" class="text-azul transition hover:opacity-75">
+                    Privacy Policy
+                </a>
+                </li>
+
+                <li>
+                <a href="#" class="text-azul transition hover:opacity-75">
+                    Cookies
+                </a>
+                </li>
+            </ul>
+
+            <ul class="mt-8 px-6 flex justify-center gap-6 sm:mt-0 lg:justify-end">
+                <li>
+                <a
+                    href="#"
+                    rel="noreferrer"
+                    target="_blank"
+                    class="text-azul transition hover:opacity-75"
+                >
+                    <span class="sr-only">Facebook</span>
+
+                    <svg class="size-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                        fill-rule="evenodd"
+                        d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"
+                        clip-rule="evenodd"
+                    />
+                    </svg>
+                </a>
+                </li>
+
+                <li>
+                <a
+                    href="#"
+                    rel="noreferrer"
+                    target="_blank"
+                    class="text-azul transition hover:opacity-75"
+                >
+                    <span class="sr-only">Instagram</span>
+
+                    <svg class="size-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                        fill-rule="evenodd"
+                        d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z"
+                        clip-rule="evenodd"
+                    />
+                    </svg>
+                </a>
+                </li>
+
+                <li>
+                <a
+                    href="#"
+                    rel="noreferrer"
+                    target="_blank"
+                    class="text-azul transition hover:opacity-75"
+                >
+                    <span class="sr-only">Twitter</span>
+
+                    <svg class="size-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                        d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"
+                    />
+                    </svg>
+                </a>
+                </li>
+
+                <li>
+                <a
+                    href="#"
+                    rel="noreferrer"
+                    target="_blank"
+                    class="text-azul transition hover:opacity-75"
+                >
+                    <span class="sr-only">GitHub</span>
+
+                    <svg class="size-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                        fill-rule="evenodd"
+                        d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                        clip-rule="evenodd"
+                    />
+                    </svg>
+                </a>
+                </li>
+
+                <li>
+                <a
+                    href="#"
+                    rel="noreferrer"
+                    target="_blank"
+                    class="text-azul transition hover:opacity-75"
+                >
+                    <span class="sr-only">Dribbble</span>
+
+                    <svg class="size-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                        fill-rule="evenodd"
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c5.51 0 10-4.48 10-10S17.51 2 12 2zm6.605 4.61a8.502 8.502 0 011.93 5.314c-.281-.054-3.101-.629-5.943-.271-.065-.141-.12-.293-.184-.445a25.416 25.416 0 00-.564-1.236c3.145-1.28 4.577-3.124 4.761-3.362zM12 3.475c2.17 0 4.154.813 5.662 2.148-.152.216-1.443 1.941-4.48 3.08-1.399-2.57-2.95-4.675-3.189-5A8.687 8.687 0 0112 3.475zm-3.633.803a53.896 53.896 0 013.167 4.935c-3.992 1.063-7.517 1.04-7.896 1.04a8.581 8.581 0 014.729-5.975zM3.453 12.01v-.26c.37.01 4.512.065 8.775-1.215.25.477.477.965.694 1.453-.109.033-.228.065-.336.098-4.404 1.42-6.747 5.303-6.942 5.629a8.522 8.522 0 01-2.19-5.705zM12 20.547a8.482 8.482 0 01-5.239-1.8c.152-.315 1.888-3.656 6.703-5.337.022-.01.033-.01.054-.022a35.318 35.318 0 011.823 6.475 8.4 8.4 0 01-3.341.684zm4.761-1.465c-.086-.52-.542-3.015-1.659-6.084 2.679-.423 5.022.271 5.314.369a8.468 8.468 0 01-3.655 5.715z"
+                        clip-rule="evenodd"
+                    />
+                    </svg>
+                </a>
+                </li>
+            </ul>
+            </div>
+        </div>
+        </footer>
+    
+</body>
+
+    
+
+</html>
