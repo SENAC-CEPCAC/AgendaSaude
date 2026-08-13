@@ -3,6 +3,8 @@
     <x-agendamento.barra-progresso />
 
     <section class="flex flex-col gap-2">
+        <x-agendamento.titulo_descricao/>
+        <!--
         <h2 class="text-h2 font-semibold text-on-background">
             Escolha a Especialidade
         </h2>
@@ -10,7 +12,7 @@
         <p class="text-body-sm text-on-surface-variant mb-2">
             Selecione o tipo de atendimento que você precisa.
         </p>
-
+-->
         <div class="relative" id="especialidade">
             <button
                 id="btn-especialidade"
