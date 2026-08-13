@@ -95,7 +95,11 @@ function validarAcesso(nivelMinimoRequerido) {
         break;
       case 1:
       default:
+<<<<<<< HEAD
         window.location.href = 'home.html'; 
+=======
+        window.location.href = 'index.html'; 
+>>>>>>> 0690607421999b3f924124b84085365697bd09bd
         break;
     }
   }
@@ -103,5 +107,9 @@ function validarAcesso(nivelMinimoRequerido) {
 
 function logout() {
   localStorage.removeItem('userLogado');
+<<<<<<< HEAD
   window.location.href = getHomePageUrl();
+=======
+  window.location.href = 'index.html';
+>>>>>>> 0690607421999b3f924124b84085365697bd09bd
 }

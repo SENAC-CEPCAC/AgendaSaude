@@ -108,6 +108,8 @@ document.getElementById('loginForm')?.addEventListener('submit', (e) => {
     nivel: userFound.nivel
   }));
 
-  const paginaDestino = getCaminhoPagina(getPaginaDestino(userFound.nivel));
-  window.location.href = paginaDestino;
+  if (userFound.nivel === 1) window.location.href = 'n1_pagina.html';
+  if (userFound.nivel === 2) window.location.href = 'paciente.html';
+  if (userFound.nivel === 3) window.location.href = 'colaborador.html';
+  if (userFound.nivel >= 4) window.location.href = 'acesso_restrito.html';
 });
