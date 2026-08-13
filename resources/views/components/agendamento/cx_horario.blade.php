@@ -1,5 +1,5 @@
 <!-- Time Slots -->
-         <section class="flex flex-col gap-sm">
+         <section class="flex flex-col gap-sm" data-horarios>
             <h3 class="font-h3 text-h3 text-primary-container flex items-center gap-2">
                <span class="material-symbols-outlined text-[20px]" data-icon="schedule">schedule</span>
                Horários para 15 de Novembro

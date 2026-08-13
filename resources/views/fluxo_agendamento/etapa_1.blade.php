@@ -45,17 +45,12 @@
             >
                 <button type="button" data-especialidade="Clínica Geral"
                     class="opcao-especialidade w-full px-4 py-3 text-left text-on-surface transition-colors hover:bg-primary-fixed">
-                    Clínica Geral
+                    Exame Preventivo
                 </button>
 
                 <button type="button" data-especialidade="Ginecologia"
                     class="opcao-especialidade w-full px-4 py-3 text-left text-on-surface transition-colors hover:bg-primary-fixed">
-                    Ginecologia
-                </button>
-
-                <button type="button" data-especialidade="Pediatria"
-                    class="opcao-especialidade w-full px-4 py-3 text-left text-on-surface transition-colors hover:bg-primary-fixed">
-                    Pediatria
+                    Exame Mamografia
                 </button>
             </div>
         </div>
