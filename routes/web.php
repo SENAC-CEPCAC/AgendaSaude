@@ -41,7 +41,6 @@ Route::get('/confirmado', function () {
 Route::get('/teste', function () {
     return view('pesquisa.teste');
 });
-<<<<<<< HEAD
 
 Route::get('/login', function () {
     return view('login.loginP');
@@ -55,6 +54,27 @@ Route::get('/recuperacao', function () {
 Route::get('/agendamento', function () {
     return view('ListaAgendamento.listaAgendamento');
 });
-=======
->>>>>>> 8dc4c6f5a053afc8d62d97dc67fc291230fe52c9
->>>>>>> d27092e2fe0032ac7be9b23406293ffcb35aa837
+
+Route::get('/', function () {
+    return view('permissao_colaborador.index');
+});
+
+Route::get('/login', function () {
+    return view('permissao_colaborador.login');
+})->name('permissao_colaborador.login');
+
+Route::get('/cadastro', function () {
+    return view('permissao_colaborador.cadastro');
+})->name('permissao_colaborador.cadastro');
+
+Route::get('/novasenha', function () {
+    return view('permissao_colaborador.novasenha');
+})->name('permissao_colaborador.novasenha');
+
+Route::get('/recuperacao', function () {
+    return view('permissao_colaborador.recuperacao');
+})->name('permissao_colaborador.recuperacao');
+
+Route::get('/colaborador', function () {
+    return view('permissao_colaborador.colaborador');
+});
