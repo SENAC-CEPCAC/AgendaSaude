@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Login</title>
 
     <link rel="stylesheet" href="/css/perfilPaciente.css">
 
@@ -32,7 +32,7 @@
                 <input class="input border-1 border-gray-300 rounded-md pl-3" type="password" name="senha" id="password"
                     placeholder="Digite sua senha" required>
                 <h2 class="ml-30 text-xs esqueci">
-                    <a href="recuperacaoP.html">Esqueci a senha</a>
+                    <a href="{{ route('permissao_colaborador.recuperacao') }}">Esqueci a senha</a>
                 </h2>
             </div>
             <div class="flex mr-20 mt-3">

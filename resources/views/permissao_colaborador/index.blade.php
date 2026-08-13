@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Inicial - Agenda Saúde </title>
+    <title>Agenda Saúde </title>
     <!-- Google Fonts: Inter & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -114,10 +114,10 @@
 
                     <div class="flex flex-col items-center md:items-start gap-3 w-full hero_conteudo_btns">
 
-                        <a href="../loginP/cadastroP.html"><button class="w-[230px] h-fit px-4 py-2.5 border-[1.5px] rounded-lg border border-azul font-sans font-normal text-[14px] hover:bg-azul hover:text-azul bg-transparent hover:bg-azul/15 transition-colors hero_conteudo_btn_cadastrese" data-url="http://127.0.0.1:5500/AgendaSaude/views/loginP/loginP.html">
+                        <a href="{{ route('permissao_colaborador.cadastro') }}"><button class="w-[230px] h-fit px-4 py-2.5 border-[1.5px] rounded-lg border border-azul font-sans font-normal text-[14px] hover:bg-azul hover:text-azul bg-transparent hover:bg-azul/15 transition-colors hero_conteudo_btn_cadastrese" data-url="">
                             Cadastre-se
                         </button></a> 
-                        <a href="{{ route('permissao_colaborador.login') }}"> <button class="rounded-lg w-[230px] h-fit px-4 py-2.5 border-[1.5px] border border-azul font-sans font-normal text-[14px] text-branco bg-azul hover:bg-branco hover:text-azul hover:opacit-90 transition-opacity hero_conteudo_btn_entrar" login-url="../../views/loginP/loginP.html">
+                        <a href="{{ route('permissao_colaborador.login') }}"> <button class="rounded-lg w-[230px] h-fit px-4 py-2.5 border-[1.5px] border border-azul font-sans font-normal text-[14px] text-branco bg-azul hover:bg-branco hover:text-azul hover:opacit-90 transition-opacity hero_conteudo_btn_entrar" login-url="">
                             Entrar
                         </button></a>
                     </div>

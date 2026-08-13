@@ -33,9 +33,8 @@
     </script>
   </head>
   <body class="bg-[#f8fafc]">
-  <x-sidebar>  
   <div id="app-root" class="min-h-screen bg-[#f8fafc] text-slate-800 font-sans antialiased">
-      <?php include __DIR__ . '/../components/sidebar.php'; ?>
+      @include('components.sidebar')
 
       <main id="main-content" class="min-h-screen flex flex-col p-6 md:p-8">
         <header id="top-bar" class="h-16 bg-white border-b border-slate-100 px-4 md:px-6 flex items-center justify-between sticky top-0 z-20 shadow-sm rounded-xl mb-6">
