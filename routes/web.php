@@ -4,9 +4,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AgendamentoEtapa1;
 use App\Http\Controllers\AgendamentoEtapa2Controller;
 use App\Http\Controllers\AgendamentoEtapa3Controller;
+<<<<<<< HEAD
 use App\Http\Controllers\AnamneseColoController;
 use App\Http\Controllers\AnamneseMamaController;
 
+=======
+use App\Http\Controllers\ListaAgendamentoController;
+>>>>>>> 19c0703a3305583ec15296c67e73ba3b4942bd5b
 
 Route::get('/teste', function () {
     return view('pesquisa.teste');
@@ -45,6 +49,10 @@ Route::get('/teste', function () {
     return view('pesquisa.teste');
 });
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 19c0703a3305583ec15296c67e73ba3b4942bd5b
 Route::get('/colo', function () {
     return view('anamnese.colo');
 });
@@ -61,12 +69,15 @@ Route::get('/unidadesmoveis', function () {
 Route::get('/login', function () {
     return view('login.loginP');
 });
+
 Route::get('/novasenha', function () {
     return view('login.novasenha');
 });
+
 Route::get('/recuperacao', function () {
     return view('login.recuperacaoP');
 });
+
 Route::get('/agendamento', function () {
     return view('ListaAgendamento.listaAgendamento');
 });
