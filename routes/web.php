@@ -54,12 +54,15 @@ Route::get('/mama', function () {
 Route::get('/login', function () {
     return view('login.loginP');
 });
+
 Route::get('/novasenha', function () {
     return view('login.novasenha');
 });
+
 Route::get('/recuperacao', function () {
     return view('login.recuperacaoP');
 });
+
 Route::get('/agendamento', function () {
     return view('ListaAgendamento.listaAgendamento');
 });
