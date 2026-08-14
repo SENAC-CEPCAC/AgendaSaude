@@ -1,10 +1,21 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AgendamentoEtapa1;
+use App\Http\Controllers\AgendamentoEtapa2Controller;
+use App\Http\Controllers\AgendamentoEtapa3Controller;
+use App\Http\Controllers\ListaAgendamentoController;
 
 Route::get('/teste', function () {
     return view('pesquisa.teste');
 });
+
+
+route::get('/agendamento/etapa-1', [AgendamentoEtapa1::class, 'index'])->name('agendamento.etapa1');
+
+route::get('/agendamento/etapa-2', [AgendamentoEtapa2Controller::class, 'index'])->name('agendamento.etapa2');
+
+route::get('/agendamento/etapa-3', [AgendamentoEtapa3Controller::class, 'index'])->name('agendamento.etapa3');
 
 
 Route::get('/feedback', function () {
@@ -41,6 +52,30 @@ Route::get('/novasenha', function () {
 Route::get('/recuperacao', function () {
     return view('login.recuperacaoP');
 });
-Route::get('/agendamento', function () {
-    return view('ListaAgendamento.listaAgendamento');
+
+
+Route::get('/listaagendamentos', [ListaAgendamentoController::class, 'index'])->name('listaagendamentos.index');
+
+Route::get('/', function () {
+    return view('permissao_colaborador.index');
+});
+
+Route::get('/login', function () {
+    return view('permissao_colaborador.login');
+})->name('permissao_colaborador.login');
+
+Route::get('/cadastro', function () {
+    return view('permissao_colaborador.cadastro');
+})->name('permissao_colaborador.cadastro');
+
+Route::get('/novasenha', function () {
+    return view('permissao_colaborador.novasenha');
+})->name('permissao_colaborador.novasenha');
+
+Route::get('/recuperacao', function () {
+    return view('permissao_colaborador.recuperacao');
+})->name('permissao_colaborador.recuperacao');
+
+Route::get('/colaborador', function () {
+    return view('permissao_colaborador.colaborador');
 });
