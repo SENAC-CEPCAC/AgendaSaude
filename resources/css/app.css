@@ -1,0 +1,59 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Inter', sans-serif;
+
+    --color-background: #f9f9ff;
+    --color-surface: #f9f9ff;
+    --color-surface-container-lowest: #ffffff;
+    --color-surface-container-low: #f3f3f9;
+    --color-surface-container: #ededf3;
+    --color-surface-container-highest: #e2e2e8;
+    --color-surface-variant: #e2e2e8;
+
+    --color-on-background: #1a1c20;
+    --color-on-surface: #1a1c20;
+    --color-on-surface-variant: #434750;
+
+    --color-primary: #002856;
+    --color-primary-container: #003e7e;
+    --color-primary-fixed: #d6e3ff;
+    --color-primary-fixed-dim: #a9c7ff;
+    --color-on-primary: #ffffff;
+    --color-on-primary-fixed: #001b3d;
+
+    --color-secondary-container: #fdc008;
+    --color-secondary-fixed: #ffdf9d;
+    --color-on-secondary-fixed: #251a00;
+
+    --color-outline: #737781;
+    --color-outline-variant: #c3c6d2;
+    --color-error: #ba1a1a;
+    --color-error-container: #ffdad6;
+
+    --spacing-margin: 20px;
+    --spacing-gutter: 16px;
+
+    --text-h1: 32px;
+    --text-h1--line-height: 40px;
+
+    --text-h2: 24px;
+    --text-h2--line-height: 32px;
+
+    --text-h3: 20px;
+    --text-h3--line-height: 28px;
+
+    --text-body-md: 16px;
+    --text-body-md--line-height: 24px;
+
+    --text-body-sm: 14px;
+    --text-body-sm--line-height: 20px;
+
+    --text-label-md: 12px;
+    --text-label-md--line-height: 16px;
+}
