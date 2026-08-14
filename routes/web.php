@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AgendamentoEtapa1;
 use App\Http\Controllers\AgendamentoEtapa2Controller;
 use App\Http\Controllers\AgendamentoEtapa3Controller;
+use App\Http\Controllers\ListaAgendamentoController;
 
 Route::get('/teste', function () {
     return view('pesquisa.teste');
