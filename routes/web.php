@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AgendamentoEtapa1;
 use App\Http\Controllers\AgendamentoEtapa2Controller;
 use App\Http\Controllers\AgendamentoEtapa3Controller;
+use App\Http\Controllers\AnamneseColoController;
+use App\Http\Controllers\AnamneseMamaController;
+
 
 Route::get('/teste', function () {
     return view('pesquisa.teste');
@@ -91,3 +94,6 @@ Route::get('/recuperacao', function () {
 Route::get('/colaborador', function () {
     return view('permissao_colaborador.colaborador');
 });
+
+Route::resource('anamnese-colo', AnamneseColoController::class);
+Route::resource('anamnese-mama', AnamneseMamaController::class);
