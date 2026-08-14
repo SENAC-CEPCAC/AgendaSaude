@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AgendamentoEtapa1Controller;
 use App\Http\Controllers\AgendamentoEtapa2Controller;
 use App\Http\Controllers\AgendamentoEtapa3Controller;
+use App\Http\Controllers\AnamneseColoController;
+use App\Http\Controllers\AnamneseMamaController;
+
 
 
     // PAINEL PACIENTE
@@ -56,9 +59,31 @@ Route::get('/teste', function () {
     return view('pesquisa.teste');//ISABELA
 });
 
+Route::get('/colo', function () {
+    return view('anamnese.colo');
+});
+
+Route::get('/mama', function () {
+    return view('anamnese.mama');
+});
+
+Route::get('/unidadesmoveis', function () {
+    return view('anamnese.unidadesmoveis');
+});
 
 
-    // PAINEL ADMINISTRATIVO
+Route::get('/login', function () {
+    return view('login.loginP');
+});
+Route::get('/novasenha', function () {
+    return view('login.novasenha');
+});
+Route::get('/recuperacao', function () {
+    return view('login.recuperacaoP');
+});
+Route::get('/agendamento', function () {
+    return view('ListaAgendamento.listaAgendamento');
+});
 
 Route::get('/', function () {
     return view('permissao_colaborador.index');//RAFAEL
@@ -81,12 +106,5 @@ Route::get('/recuperacao', function () {
 })->name('permissao_colaborador.recuperacao');
 
 Route::get('/colaborador', function () {
-    return view('permissao_colaborador.colaborador');//RAFAEL
+    return view('permissao_colaborador.colaborador');
 });
-
-Route::get('/agendamento', function () {
-    return view('ListaAgendamento.listaAgendamento');//MATHEUS
-});
-
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('painelAdministrativo.dashboard');
-
