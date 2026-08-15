@@ -99,4 +99,4 @@ Route::get('/colaborador', function () {
 });
 
 Route::resource('anamnese-colo', AnamneseColoController::class);
-Route::resource('anamnese-mama', AnamneseMamaController::class);
+//Route::resource('anamnese-mama', AnamneseMamaController::class);
