@@ -25,11 +25,12 @@
         <form id="loginForm" class="border border-slate-50 bg-white w-80 h-90 shadow-sm p-10 ">
             <h2 class="text-3xl font-bold">Login</h2>
             <div>
-                <h4 class="email text-xs">E-mail</h4>
+                <label class="block text-sm font-semibold text-gray-800 mb-2">
+    E-mail</label>
                 <input class="input input border-1 border-gray-300 rounded-md pl-3" type="email" name="email" id="username"
                     placeholder="Digite seu e-mail" required>
-                <h4 class="text-xs">Senha</h4>
-                <input class="input border-1 border-gray-300 rounded-md pl-3" type="password" name="senha" id="password"
+                <h4 class="block mb-2.5 text-sm font-medium text-heading">Senha</h4>
+                <input class="block mb-2.5 text-sm font-medium text-heading " type="password" name="senha" id="password"
                     placeholder="Digite sua senha" required>
                 <h2 class="ml-30 text-xs esqueci">
                     <a href="{{ route('permissao_colaborador.recuperacao') }}">Esqueci a senha</a>
