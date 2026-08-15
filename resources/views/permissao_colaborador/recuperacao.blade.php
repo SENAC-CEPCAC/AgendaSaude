@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Recuperação</title>
     
     <link rel="stylesheet" href="/css/perfilPaciente.css">
 
@@ -20,20 +20,20 @@
 
     <div class="main flex justify-center items-center h-screen ">
 
-        <div class="border border-slate-50 bg-white w-80 h-90 shadow-sm p-10 ">
-        <h2 class="text-3xl font-bold">Recuperação</h2>
+        <div class="border border-slate-50 rounded-xl shadow-md bg-white w-80 h-100 shadow-sm p-15 ">
+        <h2 class="text-3xl ">Recuperação</h2>
         
         <div>
-            <h4 class="email text-xs ml-1">Digite seu E-mail</h4>
-            <input class="input input border-1 border-gray-300 rounded-md pl-3" type="email" name="email" id="email"
+            <h4 class="email text-xs pt-10 ml-1">Digite seu E-mail</h4>
+            <input class="input pt-2 border-1 border-gray-300 rounded-md pl-4" type="email" name="email" id="email"
                 placeholder="Digite seu e-mail">
-             <button class="butao bg-clip-border px-15.5 py-1 bg-blue-900 text-white rounded-lg mt-2" type="submit">Recuperar</button>
+             <button class="butao cursor-pointer hover:bg-blue-700 font-bold bg-clip-border px-15.5 py-1 bg-blue-500 text-white rounded-lg mt-2" type="submit">Recuperar</button>
                   
-             <h4 class="text-xs mt-6 ml-1">Digite o código:</h4>
-            <input class="input border-1 border-gray-300 rounded-md pl-3"  name="number" id="number"
+             <h4 class="text-xs pt-2 mt-6 ml-1">Digite o código:</h4>
+            <input class="input pt-2 border-1 border-gray-300 rounded-md pl-4"  name="number" id="number"
                 placeholder="Insira o código">
-
-            <button class="butao bg-clip-border px-15.5  py-1 bg-blue-900 text-white rounded-lg mt-2" type="submit">Confirmar</a></button>
+            
+            <button class="butao cursor-pointer hover:bg-blue-700 font-bold bg-clip-border px-15.5  py-1 bg-blue-500 text-white rounded-lg mt-2" type="submit">Confirmar</a></button>
           </div>  
         </div>
        
