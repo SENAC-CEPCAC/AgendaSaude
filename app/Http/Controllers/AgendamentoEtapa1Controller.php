@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class AgendamentoEtapa1 extends Controller
+class AgendamentoEtapa1Controller extends Controller
 {
     public function index()
     {

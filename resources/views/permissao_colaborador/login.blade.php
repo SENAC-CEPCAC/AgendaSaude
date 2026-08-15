@@ -2,50 +2,89 @@
 <html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <style>
+    body {
+      font-family: Arial;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f0f2f5;
+      margin: 0;
+    }
 
-    <link rel="stylesheet" href="/css/perfilPaciente.css">
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+      width: 300px;
+    }
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    h2 {
+      margin-top: 0;
+      color: #333;
+    }
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-        rel="stylesheet">
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
 
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .error {
+      color: red;
+      font-size: 14px;
+      margin-top: 10px;
+      text-align: center;
+    }
+  </style>
+
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
 </head>
 
-<body class="bg-[#f8fafc]">
+<body>
 
-    <div class="main flex justify-center items-center h-screen ">
+  <div class="card">
+    <h2 class="text-2xl font-bold" >AGENDA SAUDE</h2>
+    <br>
+    <form>
+      <h6 class="email text-xs">E-mail</h6>
+      <input type="text" id="username" placeholder="Usuário" required />
+      <h6 class="text-xs">Senha</h6>
+      <input type="password" id="password" placeholder="Senha" required />
+      <h6 class="ml-37 text-xs esqueci">
+        <a href="{{ route('permissao_colaborador.recuperacao') }}">Esqueci a senha</a>
+      </h6>
+      <br>
+      <button type="submit">Entrar</button>
+    </form>
+    <div id="errorMessage" class="error"></div>
+  </div>
 
-        <form id="loginForm" class="border border-slate-50 bg-white w-80 h-90 shadow-sm p-10 ">
-            <h2 class="text-3xl font-bold">Login</h2>
-            <div>
-                <h4 class="email text-xs">E-mail</h4>
-                <input class="input input border-1 border-gray-300 rounded-md pl-3" type="email" name="email" id="username"
-                    placeholder="Digite seu e-mail" required>
-                <h4 class="text-xs">Senha</h4>
-                <input class="input border-1 border-gray-300 rounded-md pl-3" type="password" name="senha" id="password"
-                    placeholder="Digite sua senha" required>
-                <h2 class="ml-30 text-xs esqueci">
-                    <a href="{{ route('permissao_colaborador.recuperacao') }}">Esqueci a senha</a>
-                </h2>
-            </div>
-            <div class="flex mr-20 mt-3">
-                <input type="checkbox" class="mr-2">
-                <p class="lembrar ml- text-sm">Lembrar senha</p>
-            </div>
-            <button class="butao bg-clip-border px-22 py-1 bg-blue-900 text-white rounded-lg "
-                type="submit">Entrar</button>
+  <script type="module" src="../permissoes_pageColaborador/js/acesso_restrito.js"></script>
 
-        </form>
-        <div id="errorMessage" class="error"></div>
-    </div>
-
-    <script src="../permissoes_pageColaborador/js/permissao.js"></script>
 </body>
+
 </html>
