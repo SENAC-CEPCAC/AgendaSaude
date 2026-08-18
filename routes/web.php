@@ -106,6 +106,7 @@ Route::get('/recuperacao', function () {
 })->name('recuperacao.recuperacao');
 
 Route::get('/colaborador', function () {
+<<<<<<< HEAD
     return view('colaborador.colaborador');
 });
 Route::get('/index', function () {
@@ -132,3 +133,9 @@ Route::middleware('auth.nivel:1,2,3,4')->group(function () {
     Route::delete('/dashboard/delete/{id}', [DashboardController::class, 'destroy'])->name('dash.delete');
     Route::put('/dashboard/update/{id}', [DashboardController::class, 'update'])->name('dash.update');
 });
+=======
+    return view('colaborador.colaborador');//RAFAEL
+});
+
+
+>>>>>>> b9466fb5d58498a81f80bb21b5d45c85843f7dd7
