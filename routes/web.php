@@ -106,7 +106,6 @@ Route::get('/recuperacao', function () {
 })->name('recuperacao.recuperacao');
 
 Route::get('/colaborador', function () {
-<<<<<<< HEAD
     return view('colaborador.colaborador');
 });
 Route::get('/index', function () {
@@ -116,7 +115,11 @@ Route::get('/index', function () {
 // Autenticação
 Route::middleware('auth.nivel:1,2,3,4')->group(function () {
     // N1
-     Route::post('/imc', [ImcController::class, 'store'])->name('imc.store');
+    Route::post('/AgendaSaude', [AgendamentoEtapa1Controller::class, 'AgendamentoEtapa1Controller'])->name('agendamento.etapa1'); //WILLIAM
+
+    route::post('/AgendaSaude', [AgendamentoEtapa2Controller::class, 'AgendamentoEtapa2Controller'])->name('agendamento.etapa2'); //WILLIAM
+
+    route::post('/AgendaSaude', [AgendamentoEtapa3Controller::class, 'AgendamentoEtapa3Controller'])->name('agendamento.etapa3'); //WILLIAM
     // N2 
 
     // N3 
@@ -133,9 +136,3 @@ Route::middleware('auth.nivel:1,2,3,4')->group(function () {
     Route::delete('/dashboard/delete/{id}', [DashboardController::class, 'destroy'])->name('dash.delete');
     Route::put('/dashboard/update/{id}', [DashboardController::class, 'update'])->name('dash.update');
 });
-=======
-    return view('colaborador.colaborador');//RAFAEL
-});
-
-
->>>>>>> b9466fb5d58498a81f80bb21b5d45c85843f7dd7
