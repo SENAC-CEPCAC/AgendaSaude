@@ -106,5 +106,7 @@ Route::get('/recuperacao', function () {
 })->name('recuperacao.recuperacao');
 
 Route::get('/colaborador', function () {
-    return view('colaborador.colaborador');
+    return view('colaborador.colaborador');//RAFAEL
 });
+
+
