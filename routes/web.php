@@ -86,25 +86,25 @@ Route::get('/agendamento', function () {
 });
 
 Route::get('/', function () {
-    return view('permissao_colaborador.index');//RAFAEL
+    return view('acesso.index');//RAFAEL
 });
 
 Route::get('/login', function () {
-    return view('permissao_colaborador.login');//RAFAEL
-})->name('permissao_colaborador.login');
+    return view('acesso.login');//RAFAEL
+})->name('acesso.login');
 
 Route::get('/cadastro', function () {
-    return view('permissao_colaborador.cadastro');//RAFAEL
-})->name('permissao_colaborador.cadastro');
+    return view('acesso.cadastro');//RAFAEL
+})->name('acesso.cadastro');
 
 Route::get('/novasenha', function () {
-    return view('permissao_colaborador.novasenha');//RAFAEL
-})->name('permissao_colaborador.novasenha');
+    return view('recuperacao.novasenha');//RAFAEL
+})->name('recuperacao.novasenha');
 
 Route::get('/recuperacao', function () {
-    return view('permissao_colaborador.recuperacao');//RAFAEL
-})->name('permissao_colaborador.recuperacao');
+    return view('recuperacao.recuperacao');//RAFAEL
+})->name('recuperacao.recuperacao');
 
 Route::get('/colaborador', function () {
-    return view('permissao_colaborador.colaborador');
+    return view('colaborador.colaborador');
 });
