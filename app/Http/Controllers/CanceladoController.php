@@ -1,4 +1,12 @@
-{{--
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class CanceladoController extends Controller
+{
+    {{--
     Componente: Modal de Cancelamento
     Uso: <x-modal-cancelado />
 
@@ -43,3 +51,4 @@
 
     </div>
 </div>
+}

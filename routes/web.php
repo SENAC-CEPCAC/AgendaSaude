@@ -43,12 +43,14 @@ Route::get('/feedback', function () {
 //});
 
 Route::get('/cancelado', function () {
-    return view('components.cancelado');//ISABELA
+    return view('components.cancelado');//ISABELA ok
 });
 
-Route::get('/confirmacaoagendamento', function () {
-    return view('components.confirmacaoagendamento');//ISABELA
-});
+use App\Http\Controllers\AgendamentoController;
+ 
+Route::patch('/agendamentos/{agendamento}/confirmar', [AgendamentoController::class, 'confirmar'])
+    ->name('agendamentos.confirmar');//ISABELA ok
+ 
 
 Route::get('/confirmado', function () {
     return view('components.confirmado');//ISABELA
@@ -56,7 +58,7 @@ Route::get('/confirmado', function () {
 
 
 Route::get('/teste', function () {
-    return view('pesquisa.teste');//ISABELA
+    return view('pesquisa.teste');//ISABELA 
 });
 
 Route::get('/colo', function () {
