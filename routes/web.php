@@ -7,6 +7,7 @@ use App\Http\Controllers\AgendamentoEtapa2Controller;
 use App\Http\Controllers\AgendamentoEtapa3Controller;
 use App\Http\Controllers\AnamneseColoController;
 use App\Http\Controllers\AnamneseMamaController;
+use App\Http\Controllers\ListaAgendamentoController;
 
 
 
@@ -81,9 +82,6 @@ Route::get('/novasenha', function () {
 Route::get('/recuperacao', function () {
     return view('login.recuperacaoP');
 });
-Route::get('/agendamento', function () {
-    return view('ListaAgendamento.listaAgendamento');
-});
 
 Route::get('/', function () {
     return view('acesso.index'); //RAFAEL
@@ -128,11 +126,15 @@ Route::middleware('auth.nivel:1,2,3,4')->group(function () {
 
 
 
-    Route::post('/imcCalcular', [ImcController::class, 'calcularImc'])->name('imc.calcular');
+    //Route::post('/imcCalcular', [ImcController::class, 'calcularImc'])->name('imc.calcular');
 
-    Route::post('/imc', [ImcController::class, 'store'])->name('imc.store');
+    //Route::post('/imc', [ImcController::class, 'store'])->name('imc.store');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dash.index');
     Route::delete('/dashboard/delete/{id}', [DashboardController::class, 'destroy'])->name('dash.delete');
     Route::put('/dashboard/update/{id}', [DashboardController::class, 'update'])->name('dash.update');
 });
+
+Route::get('/agendamentos-gestao', [ListaAgendamentoController::class, 'index'])->name('agendamentos.index'); // Mateus
+Route::get('/agendamentos/{id}', [ListaAgendamentoController::class, 'show'])->name('agendamentos.show'); // Mateus
+Route::post('/agendamentos/{id}/validar-documento', [ListaAgendamentoController::class, 'validarDocumentos'])->name('agendamentos.validar-documento'); // Mateus
