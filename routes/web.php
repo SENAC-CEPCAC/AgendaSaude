@@ -74,7 +74,7 @@ Route::get('/login-paciente', function () {
 })->name('login.paciente');
 
 Route::get('/novasenha-paciente', function () {
-    return view('login.novasenha');
+    return view('login.novaSenha');
 });
 
 Route::get('/recuperacao-paciente', function () {
@@ -114,25 +114,25 @@ Route::get('/unidadesmoveis', function () {
 // 8. PAINEL COLABORADOR & ACESSO (RAFAEL)
 // ==========================================
 Route::get('/', function () {
-    return view('permissao_colaborador.index');
+    return view('acesso.index');
 })->name('home');
 
 Route::get('/login', function () {
-    return view('permissao_colaborador.login');
-})->name('permissao_colaborador.login');
+    return view('acesso.login');
+})->name('acesso.login');
 
 Route::get('/cadastro', function () {
-    return view('permissao_colaborador.cadastro');
-})->name('permissao_colaborador.cadastro');
+    return view('acesso.cadastro');
+})->name('acesso.cadastro');
 
 Route::get('/novasenha', function () {
-    return view('permissao_colaborador.novasenha');
-})->name('permissao_colaborador.novasenha');
+    return view('recuperacao.novasenha');
+})->name('recuperacao.novasenha');
 
 Route::get('/recuperacao', function () {
-    return view('permissao_colaborador.recuperacao');
-})->name('permissao_colaborador.recuperacao');
+    return view('recuperacao.recuperacao');
+})->name('recuperacao.recuperacao');
 
 Route::get('/colaborador', function () {
-    return view('permissao_colaborador.colaborador');
-})->name('permissao_colaborador.colaborador');
+    return view('colaborador.colaborador');
+})->name('colaborador.colaborador');
