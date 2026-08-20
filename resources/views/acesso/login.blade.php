@@ -75,7 +75,7 @@
       <h6 class="text-xs">Senha</h6>
       <input type="password" id="password" placeholder="Senha" required />
       <h6 class="ml-37 text-xs esqueci">
-        <a href="{{ route('permissao_colaborador.recuperacao') }}">Esqueci a senha</a>
+        <a href="{{ route('recuperacao.recuperacao') }}">Esqueci a senha</a>
       </h6>
       <br>
       <button type="submit">Entrar</button>

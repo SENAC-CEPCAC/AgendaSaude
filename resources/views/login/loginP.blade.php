@@ -24,7 +24,7 @@
         <h2 class="text-3xl font-bold">Login</h2>
 
         <div>
-            <h4 class="email text-xs">E-mail</h4>
+            <h4 class="block mb-2.5 text-sm font-medium text-heading">E-mail</h4>
 
             <input
                 class="border border-gray-300 rounded-md pl-3"
