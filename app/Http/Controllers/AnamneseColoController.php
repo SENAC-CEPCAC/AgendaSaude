@@ -23,9 +23,9 @@ class AnamneseColoController extends Controller
     /**
      * Mostra o formulário de criação
      */
-    public function create()
+    public function create($id_prontuario)
     {
-        return view('anamnese-colo.criar');
+        return view('anamnese.colo', ['id_prontuario' => $id_prontuario]);
     }
 
     /**
@@ -57,10 +57,9 @@ class AnamneseColoController extends Controller
         DB::transaction(function () use ($dados) {
             $fato = FatoAnamnese::create([
                 'id_prontuario' => $dados['id_prontuario'],
-                'id_profissional' => auth()->id(), // profissional logado no sistema
-                'tipo_anamnese' => 'colo',
+                'id_profissional' => 1, // profissional logado no sistema
+                'tipo_anamnese' => 'siscolo',
                 'data_realizacao' => $dados['data_realizacao'],
-                'criado_em' => now(),
             ]);
 
             AnamneseColo::create([
@@ -86,7 +85,7 @@ class AnamneseColoController extends Controller
             ->with('sucesso', 'Anamnese de colo salva com sucesso!');
     }
 
-   
+
     public function show($id)
     {
         $anamneseColo = AnamneseColo::with('fatoAnamnese')->findOrFail($id);
@@ -104,7 +103,7 @@ class AnamneseColoController extends Controller
         return view('anamnese-colo.editar', ['anamneseColo' => $anamneseColo]);
     }
 
-   
+
     public function update(Request $request, $id)
     {
         $dados = $request->validate([
@@ -155,7 +154,7 @@ class AnamneseColoController extends Controller
             ->with('sucesso', 'Anamnese de colo atualizada com sucesso!');
     }
 
-    
+
     public function destroy($id)
     {
         DB::transaction(function () use ($id) {
