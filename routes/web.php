@@ -1,7 +1,8 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AgendamentoEtapa1;
+use App\Http\Controllers\AgendamentoEtapa1Controller;
 use App\Http\Controllers\AgendamentoEtapa2Controller;
 use App\Http\Controllers\AgendamentoEtapa3Controller;
 use App\Http\Controllers\AnamneseColoController;
@@ -9,41 +10,55 @@ use App\Http\Controllers\AnamneseMamaController;
 use App\Http\Controllers\CnesUnidadeController;
 
 
-Route::get('/teste', function () {
+
+
+// PAINEL PACIENTE
+
+Route::get('/login', function () { //WILLIAM
+    return view('login.loginP');
+});
+
+Route::get('/teste', function () { //WILLIAM
     return view('pesquisa.teste');
 });
 
+Route::get('/novasenha', function () { //WILLIAM
+    return view('login.novasenha');
+});
+Route::get('/recuperacao', function () { //WILLIAM
+    return view('login.recuperacaoP');
+});
 
-route::get('/agendamento/etapa-1', [AgendamentoEtapa1::class, 'index'])->name('agendamento.etapa1');
+route::get('/agendamento/etapa-1', [AgendamentoEtapa1Controller::class, 'index'])->name('agendamento.etapa1'); //GABRIEL
 
-route::get('/agendamento/etapa-2', [AgendamentoEtapa2Controller::class, 'index'])->name('agendamento.etapa2');
+route::get('/agendamento/etapa-2', [AgendamentoEtapa2Controller::class, 'index'])->name('agendamento.etapa2'); //GABRIEL
 
-route::get('/agendamento/etapa-3', [AgendamentoEtapa3Controller::class, 'index'])->name('agendamento.etapa3');
+route::get('/agendamento/etapa-3', [AgendamentoEtapa3Controller::class, 'index'])->name('agendamento.etapa3'); //GABRIEL
 
 
 Route::get('/feedback', function () {
-    return view('pesquisa.feedback');
+    return view('pesquisa.feedback'); //ISABELA
 });
 
-Route::get('/satisfacaocliente', function () {
-    return view('pesquisa.satisfacaocliente');
-});
+//Route::get('/satisfacaocliente', function () {
+//return view('pesquisa.satisfacaocliente');//ISABELA
+//});
 
 Route::get('/cancelado', function () {
-    return view('components.cancelado');
+    return view('components.cancelado'); //ISABELA
 });
 
 Route::get('/confirmacaoagendamento', function () {
-    return view('components.confirmacaoagendamento');
+    return view('components.confirmacaoagendamento'); //ISABELA
 });
 
 Route::get('/confirmado', function () {
-    return view('components.confirmado');
+    return view('components.confirmado'); //ISABELA
 });
 
 
 Route::get('/teste', function () {
-    return view('pesquisa.teste');
+    return view('pesquisa.teste'); //ISABELA
 });
 
 
@@ -59,41 +74,38 @@ Route::get('/unidadesmoveis', function () {
 Route::get('/login', function () {
     return view('login.loginP');
 });
-
 Route::get('/novasenha', function () {
     return view('login.novasenha');
 });
-
 Route::get('/recuperacao', function () {
     return view('login.recuperacaoP');
 });
 
-Route::get('/agendamento', function () {
-    return view('ListaAgendamento.listaAgendamento');
-});
-
 Route::get('/', function () {
-    return view('permissao_colaborador.index');
+    return view('acesso.index'); //RAFAEL
 });
 
 Route::get('/login', function () {
-    return view('permissao_colaborador.login');
-})->name('permissao_colaborador.login');
+    return view('acesso.login'); //RAFAEL
+})->name('acesso.login');
 
 Route::get('/cadastro', function () {
-    return view('permissao_colaborador.cadastro');
-})->name('permissao_colaborador.cadastro');
+    return view('acesso.cadastro'); //RAFAEL
+})->name('acesso.cadastro');
 
 Route::get('/novasenha', function () {
-    return view('permissao_colaborador.novasenha');
-})->name('permissao_colaborador.novasenha');
+    return view('recuperacao.novasenha'); //RAFAEL
+})->name('recuperacao.novasenha');
 
 Route::get('/recuperacao', function () {
-    return view('permissao_colaborador.recuperacao');
-})->name('permissao_colaborador.recuperacao');
+    return view('recuperacao.recuperacao'); //RAFAEL
+})->name('recuperacao.recuperacao');
 
 Route::get('/colaborador', function () {
-    return view('permissao_colaborador.colaborador');
+    return view('colaborador.colaborador');
+});
+Route::get('/index', function () {
+    return view('acesso.index');
 });
 
 Route::resource('anamnese-colo', AnamneseColoController::class);
