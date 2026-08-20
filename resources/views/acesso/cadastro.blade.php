@@ -29,30 +29,35 @@
                 <input class="input border-1 pt-1 border-gray-300 rounded-md pl-9 placeholder:text-sm" type="text" name="nome" id="name"
                     placeholder="Seu nome">
                 <h4 class="text-xs pt-2 mt-2">Sobrenome</h4>
-                <input class="input border-1 pt-1 border-gray-300 rounded-md pl-9 placeholder:text-sm"type="text" name="sobrenome" id="sobrenome "
-                       
+                <input class="input border-1 pt-1 border-gray-300 rounded-md pl-9 placeholder:text-sm" type="text" name="sobrenome" id="sobrenome "
+
                     placeholder="Seu sobrenome">
-                    <h4 class="text-xs pt-2 mt-2">CPF</h4>
+                <h4 class="text-xs pt-2 mt-2">CPF</h4>
                 <input class="input border-1 pt-1 border-gray-300 rounded-md pl-9 placeholder:text-sm" type="text" name="cpf" id="cpf"
                     placeholder="000.000.000-00">
-                      <h4 class="text-xs pt-2 mt-2">RG</h4>
+                <h4 class="text-xs pt-2 mt-2">RG</h4>
                 <input class="input border-1 pt-1 border-gray-300 rounded-md pl-9 placeholder:text-sm" type="text" name="rg" id="rg"
                     placeholder="000.000.000-0">
-                    <h4 class="nome text-xs pt-2 mt-2">E-mail</h4>
+                <h4 class="nome text-xs pt-2 mt-2">Telefone (WhatsApp)</h4>
+                <input class="input border-1 pt-1 border-gray-300 rounded-md pl-9 placeholder:text-sm" type="text" name="telefone" id="telefone"
+                    placeholder="(00) 00000-0000">
+                <h4 class="nome text-xs pt-2 mt-2">E-mail</h4>
                 <input class="input border-1 pt-1 border-gray-300  rounded-md pl-9 placeholder:text-sm" type="email" name="email" id="email"
                     placeholder="seu@email.com">
-               <h4 class="nome text-xs pt-2 mt-2">Telefone (WhatsApp)</h4>
-                <input class="input border-1 pt-1 border-gray-300 rounded-md pl-9 placeholder:text-sm" type="text" name="nome" id="name"
-                    placeholder="(00) 00000-0000">
-                   
+                <h4 class="nome text-xs pt-2 mt-2">Senha</h4>
+                <input class="input border-1 pt-1 border-gray-300 rounded-md pl-9 placeholder:text-sm" type="password" name="password" id="password"
+                    placeholder="Senha">
+
+
             </div>
             <div class="flex  mt-3">
                 <input type="checkbox" class="mr-2 mt-4">
                 <p class="lembrar ml- text-sm mt-4">Aceito os termos de uso e a política de privacidade da plataforma</p>
             </div>
+            <a href="{{ route('acesso.login') }}">
             <button class="butao cursor-pointer hover:bg-blue-700 font-bold bg-clip-border px-22 py-1 bg-blue-500 text-white rounded-lg mt-6"
-                type="submit">Entrar</button>
-
+                type="submit" login-url="{{ route('acesso.login') }}">Entrar</button>
+            </a>
         </div>
     </div>
 </body>
