@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Inicial - Agenda Saúde</title>
+    <title>Página Inicial</title>
     <!-- Google Fonts: Inter & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -87,13 +87,13 @@
                 </p>
 
                 <div class="flex flex-col items-center md:items-start gap-3 w-full hero_conteudo_btns">
-                    <a href="{{ route('permissao_colaborador.cadastro') }}">
-                        <button class="w-[230px] h-fit px-4 py-2.5 border-[1.5px] rounded-lg border border-azul font-sans font-normal text-[14px] hover:bg-azul hover:text-azul bg-transparent hover:bg-azul/15 transition-colors hero_conteudo_btn_cadastrese" data-url="{{ route('permissao_colaborador.cadastro') }}">
+                    <a href="{{ route('acesso.cadastro') }}">
+                        <button class="w-[230px] h-fit px-4 py-2.5 border-[1.5px] rounded-lg border border-azul font-sans font-normal text-[14px] hover:bg-azul hover:text-azul bg-transparent hover:bg-azul/15 transition-colors hero_conteudo_btn_cadastrese" data-url="{{ route('acesso.cadastro') }}">
                             Cadastre-se
                         </button>
                     </a> 
-                    <a href="{{ route('permissao_colaborador.login') }}"> 
-                        <button class="rounded-lg w-[230px] h-fit px-4 py-2.5 border-[1.5px] border border-azul font-sans font-normal text-[14px] text-branco bg-azul hover:bg-branco hover:text-azul hover:opacity-90 transition-opacity hero_conteudo_btn_entrar" login-url="{{ route('permissao_colaborador.login') }}">
+                    <a href="{{ route('acesso.login') }}"> 
+                        <button class="rounded-lg w-[230px] h-fit px-4 py-2.5 border-[1.5px] border border-azul font-sans font-normal text-[14px] text-branco bg-azul hover:bg-branco hover:text-azul hover:opacity-90 transition-opacity hero_conteudo_btn_entrar" login-url="{{ route('acesso.login') }}">
                             Entrar
                         </button>
                     </a>

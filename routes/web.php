@@ -6,6 +6,7 @@ use App\Http\Controllers\AgendamentoEtapa1Controller;
 use App\Http\Controllers\AgendamentoEtapa2Controller;
 use App\Http\Controllers\AgendamentoEtapa3Controller;
 use App\Http\Controllers\ListaProntuarioController;
+use App\Http\Controllers\ListaAgendamentoController;
 use App\Http\Controllers\AnamneseColoController;
 use App\Http\Controllers\AnamneseMamaController;
 
@@ -50,13 +51,23 @@ Route::post('/agendamento/{id}/reanexar-documento', [ListaProntuarioController::
 
 
 // ==========================================
-// 3. PAINEL DE GESTÃO / DASHBOARD
+// 3. GESTÃO DE AGENDAMENTOS (MATEUS)
+// ==========================================
+Route::get('/agendamentos-gestao', [ListaAgendamentoController::class, 'index'])->name('agendamentos.index');
+Route::get('/agendamentos/{id}', [ListaAgendamentoController::class, 'show'])->name('agendamentos.show');
+Route::post('/agendamentos/{id}/validar-documento', [ListaAgendamentoController::class, 'validarDocumentos'])->name('agendamentos.validar-documento');
+Route::post('/agendamentos/{id}/confirmar-paciente', [ListaAgendamentoController::class, 'confirmarHorarioPeloPaciente'])->name('agendamentos.confirmar-paciente');
+Route::post('/agendamentos/{id}/cancelar-paciente', [ListaAgendamentoController::class, 'cancelarPeloPaciente'])->name('agendamentos.cancelar-paciente');
+
+
+// ==========================================
+// 4. PAINEL DE GESTÃO / DASHBOARD
 // ==========================================
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 
 // ==========================================
-// 4. AUTENTICAÇÃO PACIENTE (WILLIAM)
+// 5. AUTENTICAÇÃO PACIENTE (WILLIAM)
 // ==========================================
 Route::get('/login-paciente', function () {
     return view('login.loginP');
@@ -72,7 +83,7 @@ Route::get('/recuperacao-paciente', function () {
 
 
 // ==========================================
-// 5. SATISFAÇÃO & FEEDBACK (ISABELA)
+// 6. SATISFAÇÃO & FEEDBACK (ISABELA)
 // ==========================================
 Route::get('/feedback', function () {
     return view('pesquisa.feedback');
@@ -84,7 +95,7 @@ Route::get('/teste', function () {
 
 
 // ==========================================
-// 6. ANAMNESE CLÍNICA & UNIDADES (VINÍCIUS)
+// 7. ANAMNESE CLÍNICA & UNIDADES (VINÍCIUS)
 // ==========================================
 Route::get('/colo', function () {
     return view('anamnese.colo');
@@ -100,7 +111,7 @@ Route::get('/unidadesmoveis', function () {
 
 
 // ==========================================
-// 7. PAINEL COLABORADOR & ACESSO (RAFAEL)
+// 8. PAINEL COLABORADOR & ACESSO (RAFAEL)
 // ==========================================
 Route::get('/', function () {
     return view('permissao_colaborador.index');
