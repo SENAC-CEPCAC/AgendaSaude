@@ -1,105 +1,137 @@
 <?php
 
-use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AgendamentoEtapa1Controller;
 use App\Http\Controllers\AgendamentoEtapa2Controller;
 use App\Http\Controllers\AgendamentoEtapa3Controller;
+use App\Http\Controllers\ListaProntuarioController;
+use App\Http\Controllers\ListaAgendamentoController;
 use App\Http\Controllers\AnamneseColoController;
 use App\Http\Controllers\AnamneseMamaController;
+<<<<<<< HEAD
 use App\Http\Controllers\CnesUnidadeController;
 
+=======
+
+/*
+|--------------------------------------------------------------------------
+| Rotas Web - Agenda Saúde
+|--------------------------------------------------------------------------
+*/
+
+// ==========================================
+// 1. FLUXO DE AGENDAMENTO DO PACIENTE (GABRIEL)
+// ==========================================
+Route::get('/agendamento/etapa-1', [AgendamentoEtapa1Controller::class, 'index'])->name('agendamento.etapa1');
+Route::post('/agendamento/etapa-1', [AgendamentoEtapa1Controller::class, 'salvar_etapa_1'])->name('agendamento.salvar_etapa_1');
+
+Route::get('/agendamento/etapa-2', [AgendamentoEtapa2Controller::class, 'index'])->name('agendamento.etapa2');
+Route::post('/agendamento/etapa-2', [AgendamentoEtapa2Controller::class, 'salvar_etapa_2'])->name('agendamento.salvar_etapa_2');
+
+Route::get('/agendamento/etapa-3', [AgendamentoEtapa3Controller::class, 'index'])->name('agendamento.etapa3');
+Route::post('/agendamento/etapa-3', [AgendamentoEtapa3Controller::class, 'store'])->name('agendamento.store');
+
+Route::get('/confirmado', function () {
+    return view('components.confirmado');
+})->name('agendamento.confirmado');
+
+Route::get('/confirmacaoagendamento', function () {
+    return view('components.confirmacaoagendamento');
+})->name('agendamento.confirmacao');
+
+Route::get('/cancelado', function () {
+    return view('components.cancelado');
+})->name('agendamento.cancelado');
+>>>>>>> c23347d35568520ecdda85ec037a9cd7f9d6aa37
 
 
+// ==========================================
+// 2. TRIAGEM ADMINISTRATIVA N1 (GABRIEL)
+// ==========================================
+Route::get('/agendamento', [ListaProntuarioController::class, 'index'])->name('triagem.index');
+Route::patch('/agendamento/{id}/status', [ListaProntuarioController::class, 'atualizar_status'])->name('triagem.atualizar_status');
+Route::post('/agendamento/{id}/avaliar-documento', [ListaProntuarioController::class, 'avaliar_documento'])->name('triagem.avaliar_documento');
+Route::post('/agendamento/{id}/reanexar-documento', [ListaProntuarioController::class, 'reanexar_documento'])->name('triagem.reanexar_documento');
 
-// PAINEL PACIENTE
 
-Route::get('/login', function () { //WILLIAM
+// ==========================================
+// 3. GESTÃO DE AGENDAMENTOS (MATEUS)
+// ==========================================
+Route::get('/agendamentos-gestao', [ListaAgendamentoController::class, 'index'])->name('agendamentos.index');
+Route::get('/agendamentos/{id}', [ListaAgendamentoController::class, 'show'])->name('agendamentos.show');
+Route::post('/agendamentos/{id}/validar-documento', [ListaAgendamentoController::class, 'validarDocumentos'])->name('agendamentos.validar-documento');
+Route::post('/agendamentos/{id}/confirmar-paciente', [ListaAgendamentoController::class, 'confirmarHorarioPeloPaciente'])->name('agendamentos.confirmar-paciente');
+Route::post('/agendamentos/{id}/cancelar-paciente', [ListaAgendamentoController::class, 'cancelarPeloPaciente'])->name('agendamentos.cancelar-paciente');
+
+
+// ==========================================
+// 4. PAINEL DE GESTÃO / DASHBOARD
+// ==========================================
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+
+// ==========================================
+// 5. AUTENTICAÇÃO PACIENTE (WILLIAM)
+// ==========================================
+Route::get('/login-paciente', function () {
     return view('login.loginP');
-});
+})->name('login.paciente');
 
-Route::get('/teste', function () { //WILLIAM
-    return view('pesquisa.teste');
-});
-
-Route::get('/novasenha', function () { //WILLIAM
+Route::get('/novasenha-paciente', function () {
     return view('login.novasenha');
 });
-Route::get('/recuperacao', function () { //WILLIAM
+
+Route::get('/recuperacao-paciente', function () {
     return view('login.recuperacaoP');
 });
 
-route::get('/agendamento/etapa-1', [AgendamentoEtapa1Controller::class, 'index'])->name('agendamento.etapa1'); //GABRIEL
 
-route::get('/agendamento/etapa-2', [AgendamentoEtapa2Controller::class, 'index'])->name('agendamento.etapa2'); //GABRIEL
-
-route::get('/agendamento/etapa-3', [AgendamentoEtapa3Controller::class, 'index'])->name('agendamento.etapa3'); //GABRIEL
-
-
+// ==========================================
+// 6. SATISFAÇÃO & FEEDBACK (ISABELA)
+// ==========================================
 Route::get('/feedback', function () {
-    return view('pesquisa.feedback'); //ISABELA
-});
-
-//Route::get('/satisfacaocliente', function () {
-//return view('pesquisa.satisfacaocliente');//ISABELA
-//});
-
-Route::get('/cancelado', function () {
-    return view('components.cancelado'); //ISABELA
-});
-
-Route::get('/confirmacaoagendamento', function () {
-    return view('components.confirmacaoagendamento'); //ISABELA
-});
-
-Route::get('/confirmado', function () {
-    return view('components.confirmado'); //ISABELA
-});
-
+    return view('pesquisa.feedback');
+})->name('pesquisa.feedback');
 
 Route::get('/teste', function () {
-    return view('pesquisa.teste'); //ISABELA
+    return view('pesquisa.teste');
 });
+
 
 
 Route::get('/mama', function () {
     return view('anamnese.mama');
-});
+})->name('anamnese.mama');
 
 Route::get('/unidadesmoveis', function () {
     return view('anamnese.unidadesmoveis');
-});
+})->name('anamnese.unidadesmoveis');
 
 
-Route::get('/login', function () {
-    return view('login.loginP');
-});
-Route::get('/novasenha', function () {
-    return view('login.novasenha');
-});
-Route::get('/recuperacao', function () {
-    return view('login.recuperacaoP');
-});
 
+// ==========================================
+// 8. PAINEL COLABORADOR & ACESSO (RAFAEL)
+// ==========================================
 Route::get('/', function () {
-    return view('acesso.index'); //RAFAEL
-});
+    return view('permissao_colaborador.index');
+})->name('home');
 
 Route::get('/login', function () {
-    return view('acesso.login'); //RAFAEL
-})->name('acesso.login');
+    return view('permissao_colaborador.login');
+})->name('permissao_colaborador.login');
 
 Route::get('/cadastro', function () {
-    return view('acesso.cadastro'); //RAFAEL
-})->name('acesso.cadastro');
+    return view('permissao_colaborador.cadastro');
+})->name('permissao_colaborador.cadastro');
 
 Route::get('/novasenha', function () {
-    return view('recuperacao.novasenha'); //RAFAEL
-})->name('recuperacao.novasenha');
+    return view('permissao_colaborador.novasenha');
+})->name('permissao_colaborador.novasenha');
 
 Route::get('/recuperacao', function () {
-    return view('recuperacao.recuperacao'); //RAFAEL
-})->name('recuperacao.recuperacao');
+    return view('permissao_colaborador.recuperacao');
+})->name('permissao_colaborador.recuperacao');
 
 Route::get('/colaborador', function () {
     return view('colaborador.colaborador');

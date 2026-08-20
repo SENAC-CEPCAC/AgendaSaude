@@ -25,12 +25,12 @@ class ListaAgendamentoController extends Controller
         $statusDocumentos = $request->input('status_documentos');
 
         $query = DB::table('fato_prontuario')
-            ->join('dim_pacientes', 'fato_prontuario.id_paciente', '=', 'dim_pacientes.id_paciente')
+            ->join('dim_pacientes', 'fato_prontuario.cpf_paciente', '=', 'dim_pacientes.cpf_paciente')
             ->join('fato_cronogramas', 'fato_prontuario.id_agenda', '=', 'fato_cronogramas.id_agenda')
             ->select(
                 'fato_prontuario.id_prontuario as id',
                 'fato_prontuario.numero_sequencial as numero_agendamento',
-                'dim_pacientes.cpf as cpf_paciente',
+                'dim_pacientes.cpf_paciente',
                 DB::raw("CONCAT(dim_pacientes.nome_completo) as nome_paciente"),
                 'fato_cronogramas.data_atendimento as horario_agendamento',
                 'fato_prontuario.status_agendamento as status',
@@ -42,7 +42,7 @@ class ListaAgendamentoController extends Controller
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('dim_pacientes.nome_completo', 'like', "%{$search}%")
-                  ->orWhere('dim_pacientes.cpf', 'like', "%{$search}%")
+                  ->orWhere('dim_pacientes.cpf_paciente', 'like', "%{$search}%")
                   ->orWhere('fato_prontuario.numero_sequencial', 'like', "%{$search}%");
             });
         }
@@ -68,7 +68,7 @@ class ListaAgendamentoController extends Controller
     public function show($id)
     {
         $agendamento = DB::table('fato_prontuario')
-            ->join('dim_pacientes', 'fato_prontuario.id_paciente', '=', 'dim_pacientes.id_paciente')
+            ->join('dim_pacientes', 'fato_prontuario.cpf_paciente', '=', 'dim_pacientes.cpf_paciente')
             ->join('fato_cronogramas', 'fato_prontuario.id_agenda', '=', 'fato_cronogramas.id_agenda')
             ->join('dim_vagas', 'fato_cronogramas.Vagas_id_vagas', '=', 'dim_vagas.id_vagas')
             ->where('fato_prontuario.numero_sequencial', $id)
