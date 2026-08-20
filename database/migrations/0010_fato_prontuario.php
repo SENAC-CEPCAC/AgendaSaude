@@ -33,7 +33,15 @@ return new class extends Migration
                     ->on('fato_cronogramas')
                     ->onDelete('cascade');
 
-            $table->enum('status_comparecimento', ['agendado', 'presente', 'faltou', 'cancelado'])->default('agendado');
+            $table->enum('status_comparecimento', [
+                'agendado',       // Vaga titular confirmada no agendamento inicial
+                'confirmado',     // Respondeu ao WhatsApp confirmando presença
+                'espera',         // Entrou na lista de espera inteligente (vagas cheias)
+                'presente',       // Chegou na unidade móvel
+                'faltou',         // Não compareceu
+                'cancelado'       // Desistiu / vaga liberada para o próximo
+            ])->default('agendado');
+            
             $table->timestamps();
         });
     }
