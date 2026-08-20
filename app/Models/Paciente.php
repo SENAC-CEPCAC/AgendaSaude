@@ -17,14 +17,28 @@ class Paciente extends Model
     /**
      * Chave primária da tabela.
      */
-    protected $primaryKey = 'id_paciente';
+    protected $primaryKey = 'cpf_paciente';
+
+    /**
+     * Indica se os IDs são auto-incrementáveis.
+     *
+     * @var bool
+     */
+    public $incrementing = false;
+
+    /**
+     * O tipo da chave primária.
+     *
+     * @var string
+     */
+    protected $keyType = 'string';
 
     /**
      * Atributos preenchíveis em massa.
      */
     protected $fillable = [
+        'cpf_paciente',
         'cartao_sus',
-        'cpf',
         'nome_completo',
         'nome_mae',
         'apelido',
@@ -35,6 +49,22 @@ class Paciente extends Model
         'termo_lgpd_aceito',
         'data_cadastro',
     ];
+
+    /**
+     * Accessor para compatibilidade com $paciente->cpf.
+     */
+    public function getCpfAttribute(): ?string
+    {
+        return $this->attributes['cpf_paciente'] ?? null;
+    }
+
+    /**
+     * Accessor para compatibilidade com $paciente->id_paciente.
+     */
+    public function getIdPacienteAttribute(): ?string
+    {
+        return $this->attributes['cpf_paciente'] ?? null;
+    }
 
     /**
      * Casts de tipos.
@@ -50,7 +80,7 @@ class Paciente extends Model
      */
     public function prontuarios()
     {
-        return $this->hasMany(Prontuario::class, 'id_paciente', 'id_paciente');
+        return $this->hasMany(Prontuario::class, 'cpf_paciente', 'cpf_paciente');
     }
 
     /**
@@ -58,7 +88,7 @@ class Paciente extends Model
      */
     public function endereco()
     {
-        return $this->hasOne(EnderecoPaciente::class, 'id_paciente', 'id_paciente');
+        return $this->hasOne(EnderecoPaciente::class, 'cpf_paciente', 'cpf_paciente');
     }
 
     /**
@@ -66,6 +96,6 @@ class Paciente extends Model
      */
     public function telefones()
     {
-        return $this->hasMany(TelefonePaciente::class, 'id_paciente', 'id_paciente');
+        return $this->hasMany(TelefonePaciente::class, 'cpf_paciente', 'cpf_paciente');
     }
 }

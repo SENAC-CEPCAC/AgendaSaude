@@ -5,7 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AgendamentoEtapa1Controller;
 use App\Http\Controllers\AgendamentoEtapa2Controller;
 use App\Http\Controllers\AgendamentoEtapa3Controller;
-use App\Http\Controllers\ListaAgendamentoController;
+use App\Http\Controllers\ListaProntuarioController;
 use App\Http\Controllers\AnamneseColoController;
 use App\Http\Controllers\AnamneseMamaController;
 
@@ -43,10 +43,10 @@ Route::get('/cancelado', function () {
 // ==========================================
 // 2. TRIAGEM ADMINISTRATIVA N1 (GABRIEL)
 // ==========================================
-Route::get('/agendamento', [ListaAgendamentoController::class, 'index'])->name('triagem.index');
-Route::patch('/agendamento/{id}/status', [ListaAgendamentoController::class, 'atualizar_status'])->name('triagem.atualizar_status');
-Route::post('/agendamento/{id}/avaliar-documento', [ListaAgendamentoController::class, 'avaliar_documento'])->name('triagem.avaliar_documento');
-Route::post('/agendamento/{id}/reanexar-documento', [ListaAgendamentoController::class, 'reanexar_documento'])->name('triagem.reanexar_documento');
+Route::get('/agendamento', [ListaProntuarioController::class, 'index'])->name('triagem.index');
+Route::patch('/agendamento/{id}/status', [ListaProntuarioController::class, 'atualizar_status'])->name('triagem.atualizar_status');
+Route::post('/agendamento/{id}/avaliar-documento', [ListaProntuarioController::class, 'avaliar_documento'])->name('triagem.avaliar_documento');
+Route::post('/agendamento/{id}/reanexar-documento', [ListaProntuarioController::class, 'reanexar_documento'])->name('triagem.reanexar_documento');
 
 
 // ==========================================

@@ -23,7 +23,7 @@ class EnderecoPaciente extends Model
      * Atributos preenchíveis em massa.
      */
     protected $fillable = [
-        'id_paciente',
+        'cpf_paciente',
         'logradouro',
         'numero',
         'complemento',
@@ -39,6 +39,6 @@ class EnderecoPaciente extends Model
      */
     public function paciente()
     {
-        return $this->belongsTo(Paciente::class, 'id_paciente', 'id_paciente');
+        return $this->belongsTo(Paciente::class, 'cpf_paciente', 'cpf_paciente');
     }
 }

@@ -23,7 +23,7 @@ class Prontuario extends Model
      * Atributos que podem ser preenchidos em massa.
      */
     protected $fillable = [
-        'id_paciente',
+        'cpf_paciente',
         'id_agenda',
         'status_comparecimento',
         'caminho_documento_rg_cpf',
@@ -37,7 +37,7 @@ class Prontuario extends Model
      */
     public function paciente()
     {
-        return $this->belongsTo(Paciente::class, 'id_paciente', 'id_paciente');
+        return $this->belongsTo(Paciente::class, 'cpf_paciente', 'cpf_paciente');
     }
 
     /**

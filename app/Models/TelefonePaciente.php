@@ -23,7 +23,7 @@ class TelefonePaciente extends Model
      * Atributos preenchíveis em massa.
      */
     protected $fillable = [
-        'id_paciente',
+        'cpf_paciente',
         'numero',
         'tipo',
     ];
@@ -33,6 +33,6 @@ class TelefonePaciente extends Model
      */
     public function paciente()
     {
-        return $this->belongsTo(Paciente::class, 'id_paciente', 'id_paciente');
+        return $this->belongsTo(Paciente::class, 'cpf_paciente', 'cpf_paciente');
     }
 }

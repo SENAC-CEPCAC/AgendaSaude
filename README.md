@@ -34,7 +34,7 @@ AnamneseMamaController
 ): Coleta de dados para rastreamento de câncer de mama (nódulos, histórico prévio de mamografia, histórico familiar, fatores de risco).
 Gestão de Comparecimento e Fila (
 
-ListaAgendamentoController
+ListaProntuarioController
 ):
 
 Controle de status do paciente: agendado, confirmado (via WhatsApp/contato), espera, presente (recepção na unidade móvel), faltou e cancelado.

@@ -254,9 +254,8 @@ class DadosFakeSeeder extends Seeder
         $pacientes = [
             // 4 Pacientes para SISCOLO
             [
-                'id_paciente' => 1,
+                'cpf_paciente' => '12345678901',
                 'cartao_sus' => '700123456789012',
-                'cpf' => '12345678901',
                 'nome_completo' => 'Ana Paula Ribeiro',
                 'nome_mae' => 'Maria das Graças Ribeiro',
                 'apelido' => 'Paulinha',
@@ -277,9 +276,8 @@ class DadosFakeSeeder extends Seeder
                 'telefone' => ['numero' => '(11) 98123-4567', 'tipo' => 'celular']
             ],
             [
-                'id_paciente' => 2,
+                'cpf_paciente' => '23456789012',
                 'cartao_sus' => '700234567890123',
-                'cpf' => '23456789012',
                 'nome_completo' => 'Beatriz Helena Souza',
                 'nome_mae' => 'Lúcia Helena Souza',
                 'apelido' => 'Bia',
@@ -300,9 +298,8 @@ class DadosFakeSeeder extends Seeder
                 'telefone' => ['numero' => '(11) 97234-5678', 'tipo' => 'celular']
             ],
             [
-                'id_paciente' => 3,
+                'cpf_paciente' => '34567890123',
                 'cartao_sus' => '700345678901234',
-                'cpf' => '34567890123',
                 'nome_completo' => 'Camila Duarte Albuquerque',
                 'nome_mae' => 'Sônia Maria Duarte',
                 'apelido' => 'Cami',
@@ -323,9 +320,8 @@ class DadosFakeSeeder extends Seeder
                 'telefone' => ['numero' => '(11) 99345-6789', 'tipo' => 'celular']
             ],
             [
-                'id_paciente' => 4,
+                'cpf_paciente' => '45678901234',
                 'cartao_sus' => '700456789012345',
-                'cpf' => '45678901234',
                 'nome_completo' => 'Débora Cristina Moreira',
                 'nome_mae' => 'Antônia Rosa Moreira',
                 'apelido' => null,
@@ -348,9 +344,8 @@ class DadosFakeSeeder extends Seeder
 
             // 4 Pacientes para SISMAMA (Mamografia)
             [
-                'id_paciente' => 5,
+                'cpf_paciente' => '56789012345',
                 'cartao_sus' => '700567890123456',
-                'cpf' => '56789012345',
                 'nome_completo' => 'Elena Vasconcelos Pires',
                 'nome_mae' => 'Clarice Vasconcelos',
                 'apelido' => 'Dona Elena',
@@ -371,9 +366,8 @@ class DadosFakeSeeder extends Seeder
                 'telefone' => ['numero' => '(11) 98567-8901', 'tipo' => 'celular']
             ],
             [
-                'id_paciente' => 6,
+                'cpf_paciente' => '67890123456',
                 'cartao_sus' => '700678901234567',
-                'cpf' => '67890123456',
                 'nome_completo' => 'Fátima Aparecida Guimarães',
                 'nome_mae' => 'Neuza Guimarães',
                 'apelido' => 'Dona Fátima',
@@ -394,9 +388,8 @@ class DadosFakeSeeder extends Seeder
                 'telefone' => ['numero' => '(11) 97678-9012', 'tipo' => 'celular']
             ],
             [
-                'id_paciente' => 7,
+                'cpf_paciente' => '78901234567',
                 'cartao_sus' => '700789012345678',
-                'cpf' => '78901234567',
                 'nome_completo' => 'Gisele Monteiro Prado',
                 'nome_mae' => 'Joana Monteiro Prado',
                 'apelido' => 'Gi',
@@ -417,9 +410,8 @@ class DadosFakeSeeder extends Seeder
                 'telefone' => ['numero' => '(11) 99789-0123', 'tipo' => 'celular']
             ],
             [
-                'id_paciente' => 8,
+                'cpf_paciente' => '89012345678',
                 'cartao_sus' => '700890123456789',
-                'cpf' => '89012345678',
                 'nome_completo' => 'Helena Barros Fagundes',
                 'nome_mae' => 'Rosa Maria Barros',
                 'apelido' => null,
@@ -442,9 +434,8 @@ class DadosFakeSeeder extends Seeder
 
             // 2 Pacientes adicionais (Fluxo de Fila de Espera / Triagem)
             [
-                'id_paciente' => 9,
+                'cpf_paciente' => '90123456789',
                 'cartao_sus' => '700901234567890',
-                'cpf' => '90123456789',
                 'nome_completo' => 'Isabela Fontes Meireles',
                 'nome_mae' => 'Teresa Fontes',
                 'apelido' => 'Isa',
@@ -465,9 +456,8 @@ class DadosFakeSeeder extends Seeder
                 'telefone' => ['numero' => '(11) 96901-2345', 'tipo' => 'celular']
             ],
             [
-                'id_paciente' => 10,
+                'cpf_paciente' => '01234567890',
                 'cartao_sus' => '700012345678901',
-                'cpf' => '01234567890',
                 'nome_completo' => 'Juliana Macedo Rezende',
                 'nome_mae' => 'Carmem Rezende',
                 'apelido' => 'Ju Rezende',
@@ -491,10 +481,9 @@ class DadosFakeSeeder extends Seeder
 
         foreach ($pacientes as $p) {
             DB::table('dim_pacientes')->updateOrInsert(
-                ['id_paciente' => $p['id_paciente']],
+                ['cpf_paciente' => $p['cpf_paciente']],
                 [
                     'cartao_sus' => $p['cartao_sus'],
-                    'cpf' => $p['cpf'],
                     'nome_completo' => $p['nome_completo'],
                     'nome_mae' => $p['nome_mae'],
                     'apelido' => $p['apelido'],
@@ -511,7 +500,7 @@ class DadosFakeSeeder extends Seeder
 
             // Endereço
             DB::table('dim_enderecos_pacientes')->updateOrInsert(
-                ['id_paciente' => $p['id_paciente']],
+                ['cpf_paciente' => $p['cpf_paciente']],
                 [
                     'logradouro' => $p['endereco']['logradouro'],
                     'numero' => $p['endereco']['numero'],
@@ -528,7 +517,7 @@ class DadosFakeSeeder extends Seeder
 
             // Telefone
             DB::table('dim_telefones_paciente')->updateOrInsert(
-                ['id_paciente' => $p['id_paciente']],
+                ['cpf_paciente' => $p['cpf_paciente']],
                 [
                     'numero' => $p['telefone']['numero'],
                     'tipo' => $p['telefone']['tipo'],
@@ -544,27 +533,27 @@ class DadosFakeSeeder extends Seeder
         // 10 Prontuários com variedade de status para demonstração da Triagem N1
         $prontuarios = [
             // SISCOLO (Pacientes 1, 2, 3, 4)
-            ['id_prontuario' => 1, 'id_paciente' => 1, 'id_agenda' => 1, 'status' => 'presente', 'status_doc' => 'aprovado', 'motivo' => null],
-            ['id_prontuario' => 2, 'id_paciente' => 2, 'id_agenda' => 1, 'status' => 'confirmado', 'status_doc' => 'aprovado', 'motivo' => null],
-            ['id_prontuario' => 3, 'id_paciente' => 3, 'id_agenda' => 3, 'status' => 'agendado', 'status_doc' => 'pendente', 'motivo' => null],
-            ['id_prontuario' => 4, 'id_paciente' => 4, 'id_agenda' => 3, 'status' => 'presente', 'status_doc' => 'aprovado', 'motivo' => null],
+            ['id_prontuario' => 1, 'cpf_paciente' => '12345678901', 'id_agenda' => 1, 'status' => 'presente', 'status_doc' => 'aprovado', 'motivo' => null],
+            ['id_prontuario' => 2, 'cpf_paciente' => '23456789012', 'id_agenda' => 1, 'status' => 'confirmado', 'status_doc' => 'aprovado', 'motivo' => null],
+            ['id_prontuario' => 3, 'cpf_paciente' => '34567890123', 'id_agenda' => 3, 'status' => 'agendado', 'status_doc' => 'pendente', 'motivo' => null],
+            ['id_prontuario' => 4, 'cpf_paciente' => '45678901234', 'id_agenda' => 3, 'status' => 'presente', 'status_doc' => 'aprovado', 'motivo' => null],
 
             // SISMAMA (Pacientes 5, 6, 7, 8)
-            ['id_prontuario' => 5, 'id_paciente' => 5, 'id_agenda' => 2, 'status' => 'presente', 'status_doc' => 'aprovado', 'motivo' => null],
-            ['id_prontuario' => 6, 'id_paciente' => 6, 'id_agenda' => 2, 'status' => 'confirmado', 'status_doc' => 'aprovado', 'motivo' => null],
-            ['id_prontuario' => 7, 'id_paciente' => 7, 'id_agenda' => 4, 'status' => 'agendado', 'status_doc' => 'rejeitado', 'motivo' => 'Documento ilegível. Favor enviar foto nítida do RG aberto.'],
-            ['id_prontuario' => 8, 'id_paciente' => 8, 'id_agenda' => 4, 'status' => 'presente', 'status_doc' => 'aprovado', 'motivo' => null],
+            ['id_prontuario' => 5, 'cpf_paciente' => '56789012345', 'id_agenda' => 2, 'status' => 'presente', 'status_doc' => 'aprovado', 'motivo' => null],
+            ['id_prontuario' => 6, 'cpf_paciente' => '67890123456', 'id_agenda' => 2, 'status' => 'confirmado', 'status_doc' => 'aprovado', 'motivo' => null],
+            ['id_prontuario' => 7, 'cpf_paciente' => '78901234567', 'id_agenda' => 4, 'status' => 'agendado', 'status_doc' => 'rejeitado', 'motivo' => 'Documento ilegível. Favor enviar foto nítida do RG aberto.'],
+            ['id_prontuario' => 8, 'cpf_paciente' => '89012345678', 'id_agenda' => 4, 'status' => 'presente', 'status_doc' => 'aprovado', 'motivo' => null],
 
             // Fila de Espera (Pacientes 9, 10)
-            ['id_prontuario' => 9, 'id_paciente' => 9, 'id_agenda' => 1, 'status' => 'espera', 'status_doc' => 'pendente', 'motivo' => null],
-            ['id_prontuario' => 10, 'id_paciente' => 10, 'id_agenda' => 2, 'status' => 'espera', 'status_doc' => 'pendente', 'motivo' => null],
+            ['id_prontuario' => 9, 'cpf_paciente' => '90123456789', 'id_agenda' => 1, 'status' => 'espera', 'status_doc' => 'pendente', 'motivo' => null],
+            ['id_prontuario' => 10, 'cpf_paciente' => '01234567890', 'id_agenda' => 2, 'status' => 'espera', 'status_doc' => 'pendente', 'motivo' => null],
         ];
 
         foreach ($prontuarios as $pront) {
             DB::table('fato_prontuario')->updateOrInsert(
                 ['id_prontuario' => $pront['id_prontuario']],
                 [
-                    'id_paciente' => $pront['id_paciente'],
+                    'cpf_paciente' => $pront['cpf_paciente'],
                     'id_agenda' => $pront['id_agenda'],
                     'status_comparecimento' => $pront['status'],
                     'status_documento' => $pront['status_doc'],

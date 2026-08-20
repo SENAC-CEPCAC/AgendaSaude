@@ -66,15 +66,15 @@ class AgendamentoEtapa3Controller extends Controller
         $dados_etapa_2 = session('agendamento.etapa_2', []);
 
         // 2. Identificação do paciente (autenticado ou primeiro paciente de demonstração)
-        $id_paciente = 1;
+        $cpf_paciente = Paciente::first()?->cpf_paciente ?? '12345678901';
         if (!empty($dados_validados['cpf_paciente'])) {
             $cpf_limpo = preg_replace('/[^0-9]/', '', $dados_validados['cpf_paciente']);
-            $paciente_encontrado = Paciente::where('cpf', $cpf_limpo)->first();
+            $paciente_encontrado = Paciente::find($cpf_limpo);
             if ($paciente_encontrado) {
-                $id_paciente = $paciente_encontrado->id_paciente;
+                $cpf_paciente = $paciente_encontrado->cpf_paciente;
             }
         } elseif (auth()->check()) {
-            $id_paciente = auth()->id();
+            $cpf_paciente = auth()->user()->identificacao ?? auth()->id();
         }
 
         // 3. Identificação do cronograma
@@ -100,7 +100,7 @@ class AgendamentoEtapa3Controller extends Controller
 
         // 6. Transação de criação do prontuário e incremento de vagas
         DB::transaction(function () use (
-            $id_paciente,
+            $cpf_paciente,
             $id_agenda,
             $status_comparecimento,
             $caminho_documento_rg_cpf,
@@ -108,7 +108,7 @@ class AgendamentoEtapa3Controller extends Controller
             $cronograma
         ) {
             Prontuario::create([
-                'id_paciente' => $id_paciente,
+                'cpf_paciente' => $cpf_paciente,
                 'id_agenda' => $id_agenda,
                 'status_comparecimento' => $status_comparecimento,
                 'caminho_documento_rg_cpf' => $caminho_documento_rg_cpf,
