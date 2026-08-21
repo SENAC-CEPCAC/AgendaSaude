@@ -61,6 +61,15 @@ Route::get('/teste', function () {
     return view('pesquisa.teste');//ISABELA 
 });
 
+
+Route::prefix('legal')->name('legal.')->group(function () {
+ 
+    // Política de Privacidade
+    Route::get('/politica-de-privacidade', [LegalController::class, 'privacidade'])
+        ->name('privacidade');
+        });
+ 
+
 Route::get('/colo', function () {
     return view('anamnese.colo');
 });
@@ -108,5 +117,7 @@ Route::get('/recuperacao', function () {
 })->name('recuperacao.recuperacao');
 
 Route::get('/colaborador', function () {
-    return view('colaborador.colaborador');
+    return view('colaborador.colaborador');//RAFAEL
 });
+
+

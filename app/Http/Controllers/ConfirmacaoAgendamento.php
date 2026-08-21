@@ -1,14 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
-
-class ConfirmacaoAgendamento extends Controller
-{
-    
- 
-namespace App\Http\Controllers;
  
 use App\Models\Agendamento;
 use Illuminate\Http\RedirectResponse;
