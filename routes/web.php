@@ -9,10 +9,7 @@ use App\Http\Controllers\ListaProntuarioController;
 use App\Http\Controllers\ListaAgendamentoController;
 use App\Http\Controllers\AnamneseColoController;
 use App\Http\Controllers\AnamneseMamaController;
-<<<<<<< HEAD
-use App\Http\Controllers\CnesUnidadeController;
-
-=======
+//use App\Http\Controllers\CnesUnidadeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,7 +40,6 @@ Route::get('/confirmacaoagendamento', function () {
 Route::get('/cancelado', function () {
     return view('components.cancelado');
 })->name('agendamento.cancelado');
->>>>>>> c23347d35568520ecdda85ec037a9cd7f9d6aa37
 
 
 // ==========================================
@@ -99,15 +95,9 @@ Route::get('/teste', function () {
 });
 
 
-
-Route::get('/mama', function () {
-    return view('anamnese.mama');
-})->name('anamnese.mama');
-
 Route::get('/unidadesmoveis', function () {
     return view('anamnese.unidadesmoveis');
 })->name('anamnese.unidadesmoveis');
-
 
 
 // ==========================================
@@ -136,16 +126,23 @@ Route::get('/recuperacao', function () {
 Route::get('/colaborador', function () {
     return view('colaborador.colaborador');
 });
+
 Route::get('/index', function () {
     return view('acesso.index');
 });
 
-Route::resource('anamnese-colo', AnamneseColoController::class);
-Route::resource('anamnese-colo', AnamneseColoController::class)->except(['create']);
+
+// ==========================================
+// 9. ANAMNESE 
+// ==========================================
+Route::get('/anamnese-colo/{id}/pdf', [AnamneseColoController::class, 'pdf'])->name('anamnese-colo.pdf');
 Route::get('/anamnese-colo/create/{id_prontuario}', [AnamneseColoController::class, 'create'])->name('anamnese-colo.create');
+Route::resource('anamnese-colo', AnamneseColoController::class)->except(['create']);
 
-Route::resource('anamnese-mama', AnamneseMamaController::class);
+Route::get('/anamnese-mama/{id}/pdf', [AnamneseMamaController::class, 'pdf'])->name('anamnese-mama.pdf');
+Route::get('/anamnese-mama/create/{id_prontuario}', [AnamneseMamaController::class, 'create'])->name('anamnese-mama.create');
+Route::resource('anamnese-mama', AnamneseMamaController::class)->except(['create']);
 
- 
-Route::resource('cnes-unidades', CnesUnidadeController::class)
-    ->parameters(['cnes-unidades' => 'cnesUnidade']);
+Route::get('/unidadesmoveis', function () {
+    return view('anamnese.unidadesmoveis');
+})->name('anamnese.unidadesmoveis');

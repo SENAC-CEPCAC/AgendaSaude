@@ -6,18 +6,32 @@ use App\Models\AnamneseColo;
 use App\Models\FatoAnamnese;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AnamneseColoController extends Controller
 {
     /**
-     * Lista todas as anamneses de colo
+     * Lista todas as anamneses de colo, com busca opcional por CPF
      */
-    public function index()
+    public function index(Request $request)
     {
-        // eager load do fatoAnamnese pra evitar consultas repetidas na view
-        $anamnesesColo = AnamneseColo::with('fatoAnamnese')->get();
+        $cpfBusca = $request->query('cpf');
 
-        return view('anamnese-colo.listar', ['anamnesesColo' => $anamnesesColo]);
+        $anamnesesColo = AnamneseColo::with('fatoAnamnese.prontuario.paciente')
+            ->when($cpfBusca, function ($query, $cpfBusca) {
+                $cpfLimpo = preg_replace('/\D/', '', $cpfBusca);
+
+                $query->whereHas('fatoAnamnese.prontuario.paciente', function ($q) use ($cpfLimpo) {
+                    $q->where('cpf_paciente', 'like', '%' . $cpfLimpo . '%');
+                });
+            })
+            ->latest('id_siscolo')
+            ->get();
+
+        return view('anamnese-colo.listar', [
+            'anamnesesColo' => $anamnesesColo,
+            'cpfBusca' => $cpfBusca,
+        ]);
     }
 
     /**
@@ -34,11 +48,8 @@ class AnamneseColoController extends Controller
     public function store(Request $request)
     {
         $dados = $request->validate([
-            // campos que vão pra tabela fato_anamnese
             'id_prontuario' => 'required|integer',
             'data_realizacao' => 'required|date',
-
-            // campos que vão pra tabela anamnese_siscolo
             'motivo_exame' => 'required|string|max:50',
             'data_ultima_menstruacao' => 'nullable|date',
             'fez_preventivo_anterior' => 'required|boolean',
@@ -57,7 +68,7 @@ class AnamneseColoController extends Controller
         DB::transaction(function () use ($dados) {
             $fato = FatoAnamnese::create([
                 'id_prontuario' => $dados['id_prontuario'],
-                'id_profissional' => 1, // profissional logado no sistema
+                'id_profissional' => auth()->id() ?? 1, // TEMPORÁRIO: fixo até o login estar pronto
                 'tipo_anamnese' => 'siscolo',
                 'data_realizacao' => $dados['data_realizacao'],
             ]);
@@ -85,24 +96,19 @@ class AnamneseColoController extends Controller
             ->with('sucesso', 'Anamnese de colo salva com sucesso!');
     }
 
-
     public function show($id)
     {
-        $anamneseColo = AnamneseColo::with('fatoAnamnese')->findOrFail($id);
+        $anamneseColo = AnamneseColo::with('fatoAnamnese.prontuario.paciente')->findOrFail($id);
 
         return view('anamnese-colo.detalhes', ['anamneseColo' => $anamneseColo]);
     }
 
-    /**
-     * Mostra o formulário de edição
-     */
     public function edit($id)
     {
         $anamneseColo = AnamneseColo::with('fatoAnamnese')->findOrFail($id);
 
         return view('anamnese-colo.editar', ['anamneseColo' => $anamneseColo]);
     }
-
 
     public function update(Request $request, $id)
     {
@@ -154,7 +160,6 @@ class AnamneseColoController extends Controller
             ->with('sucesso', 'Anamnese de colo atualizada com sucesso!');
     }
 
-
     public function destroy($id)
     {
         DB::transaction(function () use ($id) {
@@ -168,5 +173,17 @@ class AnamneseColoController extends Controller
         return redirect()
             ->route('anamnese-colo.index')
             ->with('sucesso', 'Anamnese de colo excluída com sucesso!');
+    }
+
+    /**
+     * Gera o PDF da ficha individual de uma anamnese
+     */
+    public function pdf($id)
+    {
+        $anamneseColo = AnamneseColo::with('fatoAnamnese.prontuario.paciente')->findOrFail($id);
+
+        $pdf = Pdf::loadView('anamnese-colo.pdf', ['anamneseColo' => $anamneseColo]);
+
+        return $pdf->download('anamnese-colo-' . $id . '.pdf');
     }
 }

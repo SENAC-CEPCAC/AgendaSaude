@@ -9,17 +9,16 @@ class FatoAnamnese extends Model
     protected $table = 'fato_anamnese';
     protected $primaryKey = 'id_fato_anamnese';
 
-    // essa tabela tem timestamp próprio (criado_em), não os padrões do Laravel
-protected $fillable = [
-    'id_prontuario',
-    'id_profissional',
-    'tipo_anamnese',
-    'data_realizacao',
-];
+    protected $fillable = [
+        'id_prontuario',
+        'id_profissional',
+        'tipo_anamnese',
+        'data_realizacao',
+    ];
 
-protected $casts = [
-    'data_realizacao' => 'date',
-];
+    protected $casts = [
+        'data_realizacao' => 'date',
+    ];
 
     public function anamneseMama()
     {
@@ -29,5 +28,10 @@ protected $casts = [
     public function anamneseColo()
     {
         return $this->hasOne(AnamneseColo::class, 'id_fato_anamnese', 'id_fato_anamnese');
+    }
+
+    public function prontuario()
+    {
+        return $this->belongsTo(Prontuario::class, 'id_prontuario', 'id_prontuario');
     }
 }
