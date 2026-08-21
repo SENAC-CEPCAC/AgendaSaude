@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 
 class LoginController extends Controller
 {
     public function index()
     {
-        return view('login.loginP');
+        return view('acesso.login');
     }
 
     public function logar(Request $request)
@@ -20,18 +21,30 @@ class LoginController extends Controller
         ]);
 
         $credentials = $request->only('email', 'password');
-        if (!Auth::attempt($credentials)) {
-            return redirect('/loginP')
+        $authenticated = false;
+
+        try {
+            $authenticated = Auth::attempt($credentials);
+        } catch (QueryException $exception) {
+            report($exception);
+        }
+
+        if (!$authenticated) {
+            return redirect()->route('acesso.login')
                     ->withErrors('Usuário ou senha inválidos');
         }
 
-        return to_route('agendamento.etapa1');
+        $request->session()->regenerate();
+
+        return to_route('dash.index');
     }
 
     public function destroy()
     {
         Auth::logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
 
-        return to_route('login.loginP');
+        return to_route('acesso.login');
     }
 }
