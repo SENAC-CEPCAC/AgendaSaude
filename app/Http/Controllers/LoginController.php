@@ -36,15 +36,20 @@ class LoginController extends Controller
 
         $request->session()->regenerate();
 
+        if ((int) Auth::user()->nivel === 4) {
+            return to_route('adm.adm');
+        }
+
         return to_route('dash.index');
     }
 
     public function destroy()
     {
         Auth::logout();
+        request()->session()->forget('colaborador_id');
         request()->session()->invalidate();
         request()->session()->regenerateToken();
 
-        return to_route('acesso.login');
+        return to_route('acesso.index');
     }
 }
