@@ -18,18 +18,15 @@
 
 <body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen">
   <div id="app-root" class="min-h-screen flex flex-col">
-    @include('components.sidebar')
+    @include('sidebar.sidebar_n3')
+    <div id="sidebar-overlay" class="fixed inset-0 z-40 hidden bg-slate-900/40 opacity-0 transition-opacity duration-300"></div>
+    <button id="mobile-menu-toggle" type="button" class="fixed left-3 top-3 z-[60] flex items-center justify-center rounded-lg bg-blue-600 p-2 text-white shadow-sm transition hover:bg-blue-800 sm:left-5 sm:top-5" aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menu">
+      <i data-lucide="menu" class="h-4 w-4"></i>
+    </button>
 
     <main id="main-content" class="min-h-screen flex-1 flex flex-col p-4 md:p-8 md:ml-64">
       <!-- Top Bar -->
       <header id="top-bar" class="h-16 bg-white border border-slate-200/80 px-4 md:px-6 flex items-center justify-between sticky top-4 z-20 shadow-sm rounded-xl mb-6">
-        <form method="POST" action="{{ route('logout') }}" class="fixed left-3 top-3 z-40 sm:left-5 sm:top-5">
-          @csrf
-          <button type="submit" class="flex items-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-800 px-3 py-2 text-[10px] font-bold uppercase tracking-wide text-white shadow-sm transition sm:px-4 sm:py-2.5 sm:text-xs">
-            <i data-lucide="log-out" class="h-4 w-4"></i>
-            Sair
-          </button>
-        </form>
         <div class="flex items-center gap-3">
           <div id="breadcrumb" class="flex items-center gap-2 text-xs text-slate-400 font-medium">
             <span>Portal Gestão N1</span>
@@ -492,6 +489,29 @@
 
   <!-- Scripts dos Modais e Interações -->
   <script>
+    if (window.lucide) {
+      lucide.createIcons();
+    }
+
+    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+    const mobileMenuClose = document.getElementById('mobile-menu-close');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+    const setSidebarOpen = (open) => {
+      sidebar.classList.toggle('-translate-x-full', !open);
+      sidebar.classList.toggle('translate-x-0', open);
+      sidebarOverlay.classList.toggle('hidden', !open);
+      sidebarOverlay.classList.toggle('opacity-100', open);
+      mobileMenuToggle.classList.toggle('hidden', open);
+      mobileMenuToggle.setAttribute('aria-expanded', String(open));
+      mobileMenuToggle.setAttribute('aria-label', open ? 'Recolher menu' : 'Abrir menu');
+    };
+
+    mobileMenuToggle.addEventListener('click', () => setSidebarOpen(!sidebar.classList.contains('translate-x-0')));
+    mobileMenuClose.addEventListener('click', () => setSidebarOpen(false));
+    sidebarOverlay.addEventListener('click', () => setSidebarOpen(false));
+
     function fecharModais() {
       document.querySelectorAll('#modal-documentos, #modal-avaliacao, #modal-status, #modal-reanexar').forEach(m => {
         m.classList.add('hidden');

@@ -8,13 +8,11 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="min-h-screen overflow-x-hidden bg-slate-50 text-slate-800 antialiased">
-    <form method="POST" action="{{ route('logout') }}" class="fixed left-3 top-3 z-40 sm:left-5 sm:top-5">
-        @csrf
-        <button type="submit" class="flex items-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-800 px-3 py-2 text-[10px] font-bold uppercase tracking-wide text-white shadow-sm transition sm:px-4 sm:py-2.5 sm:text-xs">
-            <i data-lucide="log-out" class="h-4 w-4"></i>
-            Sair
-        </button>
-    </form>
+    @include('sidebar.sidebar_n4')
+    <div id="sidebar-overlay" class="fixed inset-0 z-40 hidden bg-slate-900/40 opacity-0 transition-opacity duration-300"></div>
+    <button id="mobile-menu-toggle" type="button" class="fixed left-3 top-3 z-[60] flex items-center justify-center rounded-lg bg-blue-600 p-2 text-white shadow-sm transition hover:bg-blue-800 sm:left-5 sm:top-5" aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menu">
+        <i data-lucide="menu" class="h-4 w-4"></i>
+    </button>
     <div class="fixed right-3 top-3 z-40 max-w-[calc(100%-7rem)] truncate rounded-lg bg-white px-3 py-2 text-right text-[10px] font-bold text-slate-600 shadow-sm sm:right-5 sm:top-5 sm:px-4 sm:py-2.5 sm:text-xs">
         Olá, {{ $usuarioNome }}
     </div>
@@ -105,10 +103,10 @@
             <form method="POST" action="{{ route('adm.colaboradores.store') }}" class="mt-4 space-y-3">
                 @csrf
                 <label class="block text-xs font-semibold text-slate-600">Nome Completo
-                    <input name="nome" placeholder="JP Moraes " value="{{ old('nome') }}" required class="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-sm outline-none focus:border-blue-500 focus:bg-white">
+                    <input name="nome" placeholder="Cactus Tech" value="{{ old('nome') }}" required class="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-sm outline-none focus:border-blue-500 focus:bg-white">
                 </label>
                 <label class="block text-xs font-semibold text-slate-600">Email
-                    <input name="email" placeholder="usuario@sesc.ba" type="email" value="{{ old('email') }}" required class="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-sm outline-none focus:border-blue-500 focus:bg-white">
+                    <input name="email" placeholder="cactus@sesc.ba" type="email" value="{{ old('email') }}" required class="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-sm outline-none focus:border-blue-500 focus:bg-white">
                 </label>
                 <label class="block text-xs font-semibold text-slate-600">Matrícula
                     <input name="matricula" placeholder="12345678"value="{{ old('matricula') }}" required maxlength="100" class="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-sm outline-none focus:border-blue-500 focus:bg-white">
@@ -121,6 +119,7 @@
                 </label>
                 <label class="block text-xs font-semibold text-slate-600">Permissão
                     <select name="permissao" required class="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-sm outline-none focus:border-blue-500 focus:bg-white">
+                        <option value="1" @selected(old('permissao') == 1)>N1 - Paciente</option>
                         <option value="2" @selected(old('permissao') == 2)>N2 - Colaborador</option>
                         <option value="3" @selected(old('permissao') == 3)>N3 - Medico</option>
                         <option value="4" @selected(old('permissao') == 4)>N4 - Gestor</option>
@@ -145,6 +144,7 @@
                 @method('PATCH')
                 <label class="block text-xs font-semibold text-slate-600">Permissão
                     <select id="edicao-permissao" name="permissao" required class="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-sm outline-none focus:border-blue-500 focus:bg-white">
+                        <option value="1">N1 - Paciente</option>
                         <option value="2">N2 - Colaborador</option>
                         <option value="3">N3 - Médico</option>
                         <option value="4">N4 - Gestor</option>
@@ -159,6 +159,25 @@
     </div>
     <script>lucide.createIcons();</script>
     <script>
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const mobileMenuClose = document.getElementById('mobile-menu-close');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+        const setSidebarOpen = (open) => {
+            sidebar.classList.toggle('-translate-x-full', !open);
+            sidebar.classList.toggle('translate-x-0', open);
+            sidebarOverlay.classList.toggle('hidden', !open);
+            sidebarOverlay.classList.toggle('opacity-100', open);
+            mobileMenuToggle.classList.toggle('hidden', open);
+            mobileMenuToggle.setAttribute('aria-expanded', String(open));
+            mobileMenuToggle.setAttribute('aria-label', open ? 'Recolher menu' : 'Abrir menu');
+        };
+
+        mobileMenuToggle.addEventListener('click', () => setSidebarOpen(!sidebar.classList.contains('translate-x-0')));
+        mobileMenuClose.addEventListener('click', () => setSidebarOpen(false));
+        sidebarOverlay.addEventListener('click', () => setSidebarOpen(false));
+
         const cadastroModal = document.getElementById('cadastro-modal');
         const toggleCadastroModal = (open) => {
             cadastroModal.classList.toggle('hidden', !open);

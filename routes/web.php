@@ -102,8 +102,8 @@ Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 
 
 
-//ACESSO AOS COLABORADORES DE NIVEL - 1
-Route::middleware('auth.nivel:1,3')->group(function () {
+//ACESSO AOS COLABORADORES DE NIVEL - 1, 2 E 3
+Route::middleware('auth.nivel:1,2,3')->group(function () {
     route::get('/agendamento/etapa-1', [
         AgendamentoEtapa1Controller::class,
         'index'
@@ -150,33 +150,6 @@ Route::middleware('auth.nivel:2')->group(function () {
     Route::get('/agendamentos/{id}', [ListaAgendamentoController::class, 'show'])->name('agendamentos.show'); // Mateus
 
     Route::post('/agendamentos/{id}/validar-documento', [ListaAgendamentoController::class, 'validarDocumentos'])->name('agendamentos.validar-documento'); // Mateus
-
-    Route::post('/agendamentos/{id}/validar-documento', [ListaAgendamentoController::class, 'validarDocumentos'])->name('agendamentos.validar-documento'); // Mateus
-
-    route::get('/agendamento/etapa-1', [
-        AgendamentoEtapa1Controller::class,
-        'index'
-    ])->name('agendamento.etapa1'); //GABRIEL
-    route::post('/agendamento/etapa-1', [
-        AgendamentoEtapa1Controller::class,
-        'salvar_etapa_1'
-    ])->name('agendamento.salvar_etapa_1');
-    route::get('/agendamento/etapa-2', [
-        AgendamentoEtapa2Controller::class,
-        'index'
-    ])->name('agendamento.etapa2'); //GABRIEL
-    route::post('/agendamento/etapa-2', [
-        AgendamentoEtapa2Controller::class,
-        'salvar_etapa_2'
-    ])->name('agendamento.salvar_etapa_2');
-    route::get('/agendamento/etapa-3', [
-        AgendamentoEtapa3Controller::class,
-        'index'
-    ])->name('agendamento.etapa3'); //GABRIEL
-    route::post('/agendamento/etapa-3', [
-        AgendamentoEtapa3Controller::class,
-        'store'
-    ])->name('agendamento.store');
 
 });
 

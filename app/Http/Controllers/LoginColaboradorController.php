@@ -31,7 +31,7 @@ class LoginColaboradorController extends Controller
 
         return match ((int) $colaborador->permissao) {
             4 => to_route('adm.adm'),
-            2 => to_route('dash.index'),
+            2 => to_route('agendamentos.index'),
             3 => to_route('triagem.index'),
             default => back()->withErrors(['email' => 'Nível de acesso inválido.']),
         };
