@@ -10,7 +10,7 @@
 <body class="min-h-screen overflow-x-hidden bg-slate-50 text-slate-800 antialiased">
     <form method="POST" action="{{ route('logout') }}" class="fixed left-3 top-3 z-40 sm:left-5 sm:top-5">
         @csrf
-        <button type="submit" class="flex items-center gap-2 rounded-lg bg-slate-700 px-3 py-2 text-[10px] font-bold uppercase tracking-wide text-white shadow-sm transition hover:bg-slate-900 sm:px-4 sm:py-2.5 sm:text-xs">
+        <button type="submit" class="flex items-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-800 px-3 py-2 text-[10px] font-bold uppercase tracking-wide text-white shadow-sm transition sm:px-4 sm:py-2.5 sm:text-xs">
             <i data-lucide="log-out" class="h-4 w-4"></i>
             Sair
         </button>
@@ -30,11 +30,11 @@
         <section class="mb-5 flex flex-col items-center justify-between gap-4 rounded-xl border border-slate-100 bg-white p-4 shadow-sm sm:p-5 md:flex-row">
             <form method="GET" action="{{ route('adm.adm') }}" class="relative w-full md:w-80">
                 <i data-lucide="search" class="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"></i>
-                <input name="busca" value="{{ $busca }}" type="search" placeholder="Buscar paciente ou prontuário..." class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-xs outline-none transition focus:border-blue-500 focus:bg-white">
+                <input name="busca" value="{{ $busca }}" type="search" placeholder="Pesquisar..." class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-xs outline-none transition focus:border-blue-500 focus:bg-white">
             </form>
             <div class="flex w-full justify-end gap-3 md:w-auto">
                 
-                <button type="button" id="open-cadastro-modal" class="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-800 px-5 py-3 text-[10px] font-bold uppercase tracking-wide text-white shadow-sm transition hover:bg-blue-900 md:w-auto">
+                <button type="button" id="open-cadastro-modal" class="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-800 px-5 py-3 text-[10px] font-bold uppercase tracking-wide text-white shadow-sm transition  md:w-auto">
                     <i data-lucide="calendar-plus" class="h-4 w-4"></i> Cadastrar
                 </button>
             </div>
@@ -43,7 +43,7 @@
         <section class="overflow-hidden rounded-xl border border-slate-100 bg-white shadow-sm">
             <div class="overflow-x-auto">
                 <table class="w-full min-w-190 border-collapse text-left">
-                    <thead class="bg-slate-50 text-[10px] font-bold uppercase tracking-wide text-slate-500">
+                    <thead class="bg-slate-50 text-[10px] font-bold uppercase tracking-wide text-slate-700">
                         <tr class="border-b border-slate-100">
                             <th class="px-5 py-4">Colaborador</th>
                             <th class="px-5 py-4">Permissão</th>
@@ -52,9 +52,9 @@
                             <th class="px-5 py-4 text-center">Ações</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-100 text-xs text-slate-500">
+                    <tbody class="divide-y divide-slate-200 text-xs text-slate-600">
                         @forelse ($colaboradores as $colaborador)
-                            <tr class="transition hover:bg-slate-50/70">
+                            <tr class="transition hover:bg-slate-50/90">
                                 <td class="px-5 py-4 font-bold text-slate-800">{{ $colaborador->nome }}</td>
                                 <td class="px-5 py-4">N{{ $colaborador->permissao }}</td>
                                 <td class="px-5 py-4">{{ $colaborador->email }}</td>
@@ -68,7 +68,7 @@
                                                 {{ $colaborador->ativo ? 'Desativar' : 'Ativar' }}
                                             </button>
                                         </form>
-                                        <button type="button" data-edit-id="{{ $colaborador->id }}" data-edit-name="{{ $colaborador->nome }}" data-edit-permissao="{{ $colaborador->permissao }}" class="flex items-center gap-1 rounded-lg bg-blue-800 px-3 py-2 text-[9px] font-bold uppercase text-white hover:bg-blue-900">
+                                        <button type="button" data-edit-id="{{ $colaborador->id }}" data-edit-name="{{ $colaborador->nome }}" data-edit-permissao="{{ $colaborador->permissao }}" class="flex items-center gap-1 rounded-lg bg-blue-600 px-3 py-2 text-[9px] font-bold uppercase text-white hover:bg-blue-800">
                                             <i data-lucide="pencil" class="h-3 w-3"></i> Alterar
                                         </button>
                                     </div>
@@ -104,20 +104,20 @@
 
             <form method="POST" action="{{ route('adm.colaboradores.store') }}" class="mt-4 space-y-3">
                 @csrf
-                <label class="block text-xs font-semibold text-slate-600">Nome / Usuário
-                    <input name="nome" value="{{ old('nome') }}" required class="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-sm outline-none focus:border-blue-500 focus:bg-white">
+                <label class="block text-xs font-semibold text-slate-600">Nome Completo
+                    <input name="nome" placeholder="JP Moraes " value="{{ old('nome') }}" required class="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-sm outline-none focus:border-blue-500 focus:bg-white">
                 </label>
                 <label class="block text-xs font-semibold text-slate-600">Email
-                    <input name="email" type="email" value="{{ old('email') }}" required class="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-sm outline-none focus:border-blue-500 focus:bg-white">
+                    <input name="email" placeholder="usuario@sesc.ba" type="email" value="{{ old('email') }}" required class="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-sm outline-none focus:border-blue-500 focus:bg-white">
                 </label>
                 <label class="block text-xs font-semibold text-slate-600">Matrícula
-                    <input name="matricula" value="{{ old('matricula') }}" required maxlength="100" class="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-sm outline-none focus:border-blue-500 focus:bg-white">
+                    <input name="matricula" placeholder="12345678"value="{{ old('matricula') }}" required maxlength="100" class="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-sm outline-none focus:border-blue-500 focus:bg-white">
                 </label>
                 <label class="block text-xs font-semibold text-slate-600">Cidade
-                    <input name="cidade" value="{{ old('cidade') }}" required maxlength="255" class="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-sm outline-none focus:border-blue-500 focus:bg-white">
+                    <input name="cidade" placeholder="Salvador" value="{{ old('cidade') }}" required maxlength="255" class="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-sm outline-none focus:border-blue-500 focus:bg-white">
                 </label>
-                <label class="block text-xs font-semibold text-slate-600">Senha
-                    <input name="password" type="password" required minlength="8" class="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-sm outline-none focus:border-blue-500 focus:bg-white">
+                <label class="block text-xs font-semibold text-slate-600">Senha (minimo: 8 digitos)
+                    <input name="password" placeholder="********" type="password" required minlength="8" class="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-sm outline-none focus:border-blue-500 focus:bg-white">
                 </label>
                 <label class="block text-xs font-semibold text-slate-600">Permissão
                     <select name="permissao" required class="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-sm outline-none focus:border-blue-500 focus:bg-white">

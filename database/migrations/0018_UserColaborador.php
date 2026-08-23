@@ -13,6 +13,7 @@ return new class extends Migration
             $table->string('email')->unique()->after('nome');
             $table->string('password')->after('email');
             $table->string('matricula', 100)->after('password');
+            $table->string('cidade')->after('matricula');
             $table->unsignedTinyInteger('permissao')->after('matricula');
             $table->boolean('ativo')->default(true)->after('permissao');
         });
@@ -24,9 +25,10 @@ return new class extends Migration
             $table->dropColumn([
                 'nome',
                 'email',
-                'password',
                 'matricula',
+                'cidade',
                 'permissao',
+                'password',                
                 'ativo',
             ]);
         });

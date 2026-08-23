@@ -11,10 +11,10 @@ class UserColaborador extends Authenticatable
     protected $fillable = [
         'nome',
         'email',
-        'password',
         'matricula',
         'cidade',
         'permissao',
+        'password',        
         'ativo',
     ];
 
