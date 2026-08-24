@@ -37,7 +37,7 @@ return new class extends Migration
             $table->date('data_ultima_menstruacao')->nullable();
             $table->boolean('sangramento_apos_relacao')->default(false);
             $table->boolean('sangramento_apos_menopausa')->default(false);
-            $table->string('inspecao_colo', 50)->nullable();
+            $table->string('inspecao_colo')->nullable();
             $table->boolean('sinais_dst')->default(false);
             $table->timestamps();
         });

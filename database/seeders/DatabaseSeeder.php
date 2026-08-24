@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -41,6 +42,17 @@ class DatabaseSeeder extends Seeder
                     'email' => 'test@example.com',
                 ]); // [FAKE] Usuário de teste para login inicial
             }
+
+            User::where('email', 'admin@agendasaude.com')->delete();
+
+            User::updateOrCreate(
+                ['email' => 'adm@sesc.ba'],
+                [
+                    'name' => 'Administrador',
+                    'password' => Hash::make('Sesc@123'),
+                    'nivel' => 4,
+                ]
+            );
 
             // Dados fake do cenário de atendimento do Projeto Integrador
             $this->call([
