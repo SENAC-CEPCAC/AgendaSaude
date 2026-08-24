@@ -28,50 +28,31 @@
 
 <body class="bg-[#f8fafc]">
 
+
+
   @php
-    $usuario = auth()->user();
-    if (! $usuario && session('colaborador_id')) {
-      $usuario = \App\Models\UserColaborador::find(session('colaborador_id'));
-    }
-    $nivelUsuario = (int) ($usuario?->nivel ?? $usuario?->permissao ?? 0);
+  $usuario = auth()->user();
+  if (! $usuario && session('colaborador_id')) {
+  $usuario = \App\Models\UserColaborador::find(session('colaborador_id'));
+  }
+  $usuarioNome = $usuario?->nome ?? $usuario?->name ?? 'Usuário';
+  $nivelUsuario = (int) ($usuario?->nivel ?? $usuario?->permissao ?? 0);
   @endphp
 
   @if ($nivelUsuario === 4)
-    @include('sidebar.sidebar_n4')
-    <div id="sidebar-overlay" class="fixed inset-0 z-40 hidden bg-slate-900/30" aria-hidden="true"></div>
-    <button id="mobile-menu-toggle" type="button" aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menu" class="fixed left-4 top-4 z-30 rounded-lg bg-blue-600 p-1 text-white shadow-md transition hover:bg-blue-700">
-      <span class="material-symbols-outlined">[=]</span>
-    </button>
+  @include('sidebar.sidebar_n4')
+  <div id="sidebar-overlay" class="fixed inset-0 z-40 hidden bg-slate-900/30" aria-hidden="true"></div>
+  <button id="mobile-menu-toggle" type="button" aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menu" class="fixed left-4 top-4 z-30 rounded-lg bg-blue-600 p-1 text-white shadow-md transition hover:bg-blue-700">
+    <span class="material-symbols-outlined">[=]</span>
+  </button>
   @endif
 
   <div id="app-root" class="min-h-screen bg-[#f8fafc] text-slate-800 font-sans antialiased">
 
     <!-- Top Bar / Header -->
-    <header id="top-bar" class="h-16 bg-white border-b border-slate-100 px-4 md:px-8 flex items-center justify-between sticky top-0 z-20 shadow-xs">
-      <div class="flex items-center gap-3">
-        <div id="breadcrumb" class="flex items-center gap-2 text-xs text-slate-400 font-medium">
-          <span>Portal Gestão</span>
-          <span>/</span>
-          <span class="text-slate-600 font-semibold">Lista de Agendamentos</span>
-        </div>
-      </div>
+    <header id="top-bar" class="h-16 px-4 md:px-8 flex items-center justify-between sticky top-0 z-20 shadow-xs">
+      <div class="flex items-center gap-3"></div>
 
-      <div id="top-bar-actions" class="flex items-center gap-4">
-        <button id="notification-button" class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg relative transition-colors cursor-pointer">
-          <i data-lucide="bell" class="w-5 h-5"></i>
-          <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full"></span>
-        </button>
-
-        <div id="user-profile" class="flex items-center gap-3 pl-4 border-l border-slate-100">
-          <div id="user-avatar" class="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-slate-600 text-xs shadow-inner">
-            AD
-          </div>
-          <div id="user-info" class="hidden sm:block text-left">
-            <p id="user-name" class="text-xs font-bold text-slate-700">Dr. Marcos Gabriel</p>
-            <p id="user-role" class="text-[10px] text-slate-400 font-semibold leading-none mt-0.5">Gestor Geral / Operador</p>
-          </div>
-        </div>
-      </div>
     </header>
 
     <!-- Conteúdo Principal -->
@@ -103,17 +84,6 @@
         </div>
 
         <div class="flex flex-wrap items-center gap-3 w-full md:w-auto justify-end">
-          <!-- Filtro Status Agendamento -->
-          <select
-            name="status"
-            onchange="this.form.submit()"
-            class="bg-white border border-slate-200 text-slate-600 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-sky-500 transition-all cursor-pointer">
-            <option value="">Todos os Status Agendamento</option>
-            <option value="confirmado" {{ request('status') == 'confirmado' ? 'selected' : '' }}>Confirmado</option>
-            <option value="aguardando_confirmacao" {{ request('status') == 'aguardando_confirmacao' ? 'selected' : '' }}>Aguardando 24h</option>
-            <option value="em_espera" {{ request('status') == 'em_espera' ? 'selected' : '' }}>Em Espera (Fila)</option>
-            <option value="cancelado" {{ request('status') == 'cancelado' ? 'selected' : '' }}>Cancelado</option>
-          </select>
 
           <!-- Filtro Status Documentos -->
           <select
@@ -126,6 +96,20 @@
             <option value="validar_no_ato" {{ request('status_documentos') == 'validar_no_ato' ? 'selected' : '' }}>Validar no Ato</option>
             <option value="rejeitado" {{ request('status_documentos') == 'rejeitado' ? 'selected' : '' }}>Rejeitado</option>
           </select>
+
+          <!-- Filtro Status Agendamento -->
+          <select
+            name="status"
+            onchange="this.form.submit()"
+            class="bg-white border border-slate-200 text-slate-600 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-sky-500 transition-all cursor-pointer">
+            <option value="">Todos os Status Agendamento</option>
+            <option value="confirmado" {{ request('status') == 'confirmado' ? 'selected' : '' }}>Confirmado</option>
+            <option value="aguardando_confirmacao" {{ request('status') == 'aguardando_confirmacao' ? 'selected' : '' }}>Aguardando 24h</option>
+            <option value="presente" {{ request('status') == 'presente' ? 'selected' : '' }}>Presente</option>
+            <option value="em_espera" {{ request('status') == 'espera' ? 'selected' : '' }}>Espera</option>
+            <option value="cancelado" {{ request('status') == 'cancelado' ? 'selected' : '' }}>Cancelado</option>
+          </select>
+
         </div>
       </form>
 
@@ -362,22 +346,22 @@
 
   @if ($nivelUsuario === 4)
   <script>
-            const sidebar = document.getElementById('sidebar');
-            const menuToggle = document.getElementById('mobile-menu-toggle');
-            const menuClose = document.getElementById('mobile-menu-close');
-            const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const sidebar = document.getElementById('sidebar');
+    const menuToggle = document.getElementById('mobile-menu-toggle');
+    const menuClose = document.getElementById('mobile-menu-close');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
 
-            function setSidebarExpanded(expanded) {
-                sidebar.classList.toggle('-translate-x-full', !expanded);
-                sidebarOverlay.classList.toggle('hidden', !expanded);
-                menuToggle.setAttribute('aria-expanded', String(expanded));
-                menuClose.setAttribute('aria-expanded', String(expanded));
-                sidebarOverlay.setAttribute('aria-hidden', String(!expanded));
-            }
+    function setSidebarExpanded(expanded) {
+      sidebar.classList.toggle('-translate-x-full', !expanded);
+      sidebarOverlay.classList.toggle('hidden', !expanded);
+      menuToggle.setAttribute('aria-expanded', String(expanded));
+      menuClose.setAttribute('aria-expanded', String(expanded));
+      sidebarOverlay.setAttribute('aria-hidden', String(!expanded));
+    }
 
-            menuToggle.addEventListener('click', () => setSidebarExpanded(true));
-            menuClose.addEventListener('click', () => setSidebarExpanded(false));
-            sidebarOverlay.addEventListener('click', () => setSidebarExpanded(false));
+    menuToggle.addEventListener('click', () => setSidebarExpanded(true));
+    menuClose.addEventListener('click', () => setSidebarExpanded(false));
+    sidebarOverlay.addEventListener('click', () => setSidebarExpanded(false));
   </script>
   @endif
 
