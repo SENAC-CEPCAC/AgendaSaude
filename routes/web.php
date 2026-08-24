@@ -7,6 +7,7 @@ use App\Http\Controllers\AgendamentoEtapa2Controller;
 use App\Http\Controllers\AgendamentoEtapa3Controller;
 use App\Http\Controllers\AnamneseColoController;
 use App\Http\Controllers\AnamneseMamaController;
+use App\Http\Controllers\CadastroController;
 
 
 
@@ -14,7 +15,7 @@ use App\Http\Controllers\AnamneseMamaController;
 
 Route::get('/login', function () {//WILLIAM
     return view('login.loginP');
-});
+})->name('loginPaciente');
 
 Route::get('/teste', function () {//WILLIAM
     return view('pesquisa.teste');
@@ -87,7 +88,7 @@ Route::get('/agendamento', function () {
 
 Route::get('/', function () {
     return view('permissao_colaborador.index');//RAFAEL
-});
+})->name('index');
 
 Route::get('/login', function () {
     return view('permissao_colaborador.login');//RAFAEL
@@ -96,6 +97,9 @@ Route::get('/login', function () {
 Route::get('/cadastro', function () {
     return view('permissao_colaborador.cadastro');//RAFAEL
 })->name('permissao_colaborador.cadastro');
+
+Route::post('/cadastro', [CadastroController::class, 'store'])
+    ->name('permissao_colaborador.cadastro.store');
 
 Route::get('/novasenha', function () {
     return view('permissao_colaborador.novasenha');//RAFAEL

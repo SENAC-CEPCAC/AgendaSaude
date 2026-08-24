@@ -36,8 +36,8 @@
                 <input class="input border-1 border-gray-300 rounded-md pl-3 placeholder:text-sm" type="text" name="cpf" id="cpf"
                     placeholder="000.000.000-00">
                       <h4 class="text-xs mt-2">RG</h4>
-                <input class="input border-1 border-gray-300 rounded-md pl-3 placeholder:text-sm" type="text" name="rg" id="rg"
-                    placeholder="000.000.000-0">
+                <input class="input border-1 border-gray-300 rounded-md pl-3 placeholder:text-sm" type="text" name="cartao_sus" id="cartao_sus"
+                    inputmode="numeric" maxlength="15" placeholder="000 0000 0000 0000">
                     <h4 class="nome text-xs mt-2">E-mail</h4>
                 <input class="input input border-1 border-gray-300 rounded-md pl-3 placeholder:text-sm" type="email" name="email" id="email"
                     placeholder="seu@email.com">
