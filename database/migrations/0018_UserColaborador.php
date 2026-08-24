@@ -8,29 +8,21 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('users_colaboradores', function (Blueprint $table) {
-            $table->string('nome')->after('id');
-            $table->string('email')->unique()->after('nome');
-            $table->string('password')->after('email');
-            $table->string('matricula', 100)->after('password');
-            $table->string('cidade')->after('matricula');
-            $table->unsignedTinyInteger('permissao')->after('matricula');
-            $table->boolean('ativo')->default(true)->after('permissao');
+        Schema::create('users_colaboradores', function (Blueprint $table) {
+            $table->id();
+            $table->string('nome');
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->string('matricula', 100);
+            $table->string('cidade');
+            $table->unsignedTinyInteger('permissao');
+            $table->boolean('ativo')->default(true);
+            $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::table('users_colaboradores', function (Blueprint $table) {
-            $table->dropColumn([
-                'nome',
-                'email',
-                'matricula',
-                'cidade',
-                'permissao',
-                'password',                
-                'ativo',
-            ]);
-        });
+        Schema::dropIfExists('users_colaboradores');
     }
 };

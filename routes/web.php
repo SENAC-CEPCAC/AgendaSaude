@@ -83,7 +83,7 @@ Route::get('/cadastro', function () {
 Route::get('/novasenha', function () {
     return view('recuperacao.novasenha');
 })->name('recuperacao.novasenha');
-Route::post('/novasenha', [LoginController::class, 'atualizarSenha'])->name('recuperacao.senha.atualizar');
+Route::post('/novasenha', [LoginColaboradorController::class, 'atualizarSenha'])->name('recuperacao.senha.atualizar');
 
 Route::get('/recuperacao', function () {
     return view('recuperacao.recuperacao');
