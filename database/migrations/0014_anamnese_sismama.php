@@ -34,13 +34,13 @@ return new class extends Migration
             $table->integer('ano_ultima_mamografia')->nullable();
             $table->boolean('fez_radioterapia_mama')->default(false);
             $table->boolean('fez_cirurgia_mama')->default(false);
-            $table->string('tipo_mamografia', 30)->nullable();
-            $table->string('achado_descarga_papilar_dir', 30)->nullable();
-            $table->string('achado_descarga_papilar_esq', 30)->nullable();
-            $table->string('achado_nodulo_localizacao_dir', 30)->nullable();
-            $table->string('achado_nodulo_localizacao_esq', 30)->nullable();
-            $table->string('achado_linfonodo_palpavel_dir', 30)->nullable();
-            $table->string('achado_linfonodo_palpavel_esq', 30)->nullable();
+            $table->string('tipo_mamografia', 100)->nullable();
+            $table->string('achado_descarga_papilar_dir', 100)->nullable();
+            $table->string('achado_descarga_papilar_esq', 100)->nullable();
+            $table->string('achado_nodulo_localizacao_dir', 100)->nullable();
+            $table->string('achado_nodulo_localizacao_esq', 100)->nullable();
+            $table->string('achado_linfonodo_palpavel_dir', 100)->nullable();
+            $table->string('achado_linfonodo_palpavel_esq', 100)->nullable();
             $table->timestamps();
         });
     }
