@@ -1,3 +1,5 @@
+@props(['sidebar' => 'default'])
+
 <!doctype html>
 <html lang="pt-BR">
 
@@ -21,6 +23,9 @@
             <!-- Mobile Sidebar Backdrop Overlay (Removido lg:hidden) -->
             <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/40 z-40 hidden transition-opacity duration-300"></div>
 
+            @if ($sidebar === 'n3')
+                @include('sidebar.sidebar_n3')
+            @else
             <!-- LEFT SIDEBAR - Deep Slate Navigation (Alterado para iniciar escondido via -translate-x-full e removido comportamento lg: fixo) -->
             <aside id="sidebar" class="fixed top-0 left-0 bottom-0 w-64 bg-[#0a0f1d] border-r border-slate-800 flex flex-col justify-between text-slate-300 z-50 transition-transform duration-300 transform -translate-x-full">
                 <div>
@@ -142,14 +147,15 @@
                     </a>
                 </div>
             </aside>
+            @endif
 
+            <!-- MAIN CONTAINER WORKSPACE (Removido lg:ml-64 para ocupar toda a largura por padrão) -->
             <!-- MAIN CONTAINER WORKSPACE (Removido lg:ml-64 para ocupar toda a largura por padrão) -->
             <main id="main-content" class="flex-1 min-h-screen flex flex-col">
 
                 <!-- TOP BAR / HEADER -->
                 <header id="top-bar" class="h-16 bg-white border-b border-slate-100 px-6 flex items-center justify-between sticky top-0 z-20 shadow-sm">
                     <div class="flex items-center gap-3">
-                        <!-- Menu Toggle Button (Removido lg:hidden) -->
                         <button id="mobile-menu-toggle" class="p-2 -ml-2 text-slate-500 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-colors cursor-pointer">
                             <i data-lucide="menu" class="w-5 h-5"></i>
                         </button>

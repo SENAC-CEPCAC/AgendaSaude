@@ -80,14 +80,13 @@
       </h6>
       <br>
       <button type="submit">Entrar</button>
+
+      <a href="{{ route('acesso.index') }}" class="mt-5 block text-center text-sm text-blue-800 hover:underline">Voltar</a>
     </form>
     @if ($errors->any())
       <div class="error">{{ $errors->first() }}</div>
     @endif
   </div>
 
-  <script type="module" src="../permissoes_pageColaborador/js/acesso_restrito.js"></script>
-
 </body>
-
 </html>

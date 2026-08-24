@@ -16,7 +16,7 @@ class UserColaborador extends Controller
             'password' => ['required', 'string', 'min:8', 'max:255'],
             'matricula' => ['required', 'string', 'max:100'],
             'cidade' => ['required', 'string', 'max:255'],
-            'permissao' => ['required', 'integer', 'between:2,4'],
+            'permissao' => ['required', 'integer', 'between:1,4'],
         ]);
 
         $dados['password'] = Hash::make($dados['password']);

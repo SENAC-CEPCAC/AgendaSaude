@@ -15,6 +15,7 @@ class AnamneseColoController extends Controller
      */
     public function index(Request $request)
     {
+<<<<<<< HEAD
         $cpfBusca = $request->query('cpf');
 
         $anamnesesColo = AnamneseColo::with('fatoAnamnese.prontuario.paciente')
@@ -32,6 +33,9 @@ class AnamneseColoController extends Controller
             'anamnesesColo' => $anamnesesColo,
             'cpfBusca' => $cpfBusca,
         ]);
+=======
+        return view('anamnese.colo');
+>>>>>>> c6463960cfaa456585db638854b2e9274e0a7f51
     }
 
     /**

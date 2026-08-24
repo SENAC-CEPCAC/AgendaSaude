@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+<<<<<<< HEAD
 use App\Models\AnamneseMama;
 use App\Models\FatoAnamnese;
 use Illuminate\Http\Request;
@@ -133,5 +134,12 @@ class AnamneseMamaController extends Controller
         $pdf = Pdf::loadView('anamnese-mama.pdf', ['anamneseMama' => $anamneseMama]);
 
         return $pdf->download('anamnese-mama-' . $id . '.pdf');
+=======
+class AnamneseMamaController extends Controller
+{
+    public function index()
+    {
+        return view('anamnese.mama');
+>>>>>>> c6463960cfaa456585db638854b2e9274e0a7f51
     }
 }
