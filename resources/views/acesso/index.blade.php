@@ -67,7 +67,7 @@
     <header class="top-0 fixed h-12 w-full z-40 items-center px-5 bg-branco shadow-lg">
         <div class="max-w-6xl h-full flex items-center content-center mx-auto place-content-between cx_titulo_header_paciente">
             <p class="w-fit text-azul text-18px font-sans font-bold texto_logo">Agenda Saúde</p>
-            
+            <a href="{{ route('login.colaborador') }}" class="rounded-lg bg-azul px-3 py-2 text-xs font-semibold text-branco transition hover:opacity-90 sm:px-4 sm:text-sm">Acesso restrito</a>
         </div>
     </header>
 
@@ -92,10 +92,8 @@
                             Cadastre-se
                         </button>
                     </a> 
-                    <a href="{{ route('acesso.login') }}"> 
-                        <button class="rounded-lg w-[230px] h-fit px-4 py-2.5 border-[1.5px] border border-azul font-sans font-normal text-[14px] text-branco bg-azul hover:bg-branco hover:text-azul hover:opacity-90 transition-opacity hero_conteudo_btn_entrar" login-url="{{ route('acesso.login') }}">
-                            Entrar
-                        </button>
+                    <a href="{{ route('acesso.login') }}" class="rounded-lg w-[230px] h-fit px-4 py-2.5 border-[1.5px] border-azul font-sans font-normal text-[14px] text-branco bg-azul hover:bg-branco hover:text-azul hover:opacity-90 transition-opacity hero_conteudo_btn_entrar text-center" login-url="{{ route('acesso.login') }}">
+                        Entrar
                     </a>
                 </div>
             </div>

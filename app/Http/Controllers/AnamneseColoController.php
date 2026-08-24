@@ -14,10 +14,7 @@ class AnamneseColoController extends Controller
      */
     public function index()
     {
-        // eager load do fatoAnamnese pra evitar consultas repetidas na view
-        $anamnesesColo = AnamneseColo::with('fatoAnamnese')->get();
-
-        return view('anamnese-colo.listar', ['anamnesesColo' => $anamnesesColo]);
+        return view('anamnese.colo');
     }
 
     /**

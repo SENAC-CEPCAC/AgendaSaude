@@ -8,13 +8,23 @@ use App\Http\Controllers\AgendamentoEtapa3Controller;
 use App\Http\Controllers\AnamneseColoController;
 use App\Http\Controllers\AnamneseMamaController;
 use App\Http\Controllers\ListaAgendamentoController;
+use App\Http\Controllers\ListaProntuarioController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\AdmController;
+use App\Http\Controllers\UserColaborador;
+use App\Http\Controllers\LoginColaboradorController;
 
 
 
 // PAINEL PACIENTE
 
+
 Route::get('/login', function () { //WILLIAM
     return view('login.loginP');
+})->name('login.paciente');
+
+Route::get('/novasenha-paciente', function () { //WILLIAM
+    return view('login.novaSenha');
 });
 
 Route::get('/teste', function () { //WILLIAM
@@ -28,107 +38,136 @@ Route::get('/recuperacao', function () { //WILLIAM
     return view('login.recuperacaoP');
 });
 
-route::get('/agendamento/etapa-1', [AgendamentoEtapa1Controller::class, 'index'])->name('agendamento.etapa1'); //GABRIEL
 
-route::get('/agendamento/etapa-2', [AgendamentoEtapa2Controller::class, 'index'])->name('agendamento.etapa2'); //GABRIEL
-
-route::get('/agendamento/etapa-3', [AgendamentoEtapa3Controller::class, 'index'])->name('agendamento.etapa3'); //GABRIEL
-
-
-Route::get('/feedback', function () {
-    return view('pesquisa.feedback'); //ISABELA
+Route::get('/satisfacaocliente', function () {
+    return view('pesquisa.satisfacaocliente'); //ISABELA
 });
-
-//Route::get('/satisfacaocliente', function () {
-//return view('pesquisa.satisfacaocliente');//ISABELA
-//});
-
-Route::get('/cancelado', function () {
-    return view('components.cancelado'); //ISABELA
-});
-
-Route::get('/confirmacaoagendamento', function () {
-    return view('components.confirmacaoagendamento'); //ISABELA
-});
-
-Route::get('/confirmado', function () {
-    return view('components.confirmado'); //ISABELA
-});
-
 
 Route::get('/teste', function () {
     return view('pesquisa.teste'); //ISABELA
 });
 
-Route::get('/colo', function () {
-    return view('anamnese.colo');
-});
-
-Route::get('/mama', function () {
-    return view('anamnese.mama');
-});
-
 Route::get('/unidadesmoveis', function () {
-    return view('anamnese.unidadesmoveis');
+    return view('anamnese.unidadesmoveis'); //ISABELA
+});
+
+Route::get('/feedback', function () {
+    return view('pesquisa.feedback'); //ISABELA
 });
 
 
-Route::get('/login', function () {
-    return view('login.loginP');
-});
-Route::get('/novasenha', function () {
-    return view('login.novasenha');
-});
-Route::get('/recuperacao', function () {
-    return view('login.recuperacaoP');
-});
-
+// ==========================================
+// 8. PAINEL COLABORADOR & ACESSO (RAFAEL)
+// ==========================================
 Route::get('/', function () {
-    return view('acesso.index'); //RAFAEL
-});
+    return view('acesso.index');
+})->name('home');
 
 Route::get('/login', function () {
-    return view('acesso.login'); //RAFAEL
+    return view('acesso.login');
 })->name('acesso.login');
 
+Route::get('/logincolaborador', [
+    LoginColaboradorController::class,
+    'index'
+])->name('login.colaborador');
+Route::post('/logincolaborador', [
+    LoginColaboradorController::class,
+    'login'
+])->name('login.colaborador.attempt');
+
 Route::get('/cadastro', function () {
-    return view('acesso.cadastro'); //RAFAEL
+    return view('acesso.cadastro');
 })->name('acesso.cadastro');
 
 Route::get('/novasenha', function () {
-    return view('recuperacao.novasenha'); //RAFAEL
+    return view('recuperacao.novasenha');
 })->name('recuperacao.novasenha');
+Route::post('/novasenha', [LoginColaboradorController::class, 'atualizarSenha'])->name('recuperacao.senha.atualizar');
 
 Route::get('/recuperacao', function () {
-    return view('recuperacao.recuperacao'); //RAFAEL
+    return view('recuperacao.recuperacao');
 })->name('recuperacao.recuperacao');
 
 Route::get('/colaborador', function () {
+<<<<<<<<< Temporary merge branch 1
+    return view('permissao_colaborador.colaborador');
+});
+
+Route::resource('anamnese-colo', AnamneseColoController::class);
+//Route::resource('anamnese-mama', AnamneseMamaController::class);
+=========
     return view('colaborador.colaborador');
 });
 Route::get('/index', function () {
     return view('acesso.index');
+})->name('acesso.index');
+
+Route::get('/login', function () {
+    return view('acesso.login');
+})->name('acesso.login');
+
+Route::post('/login', [LoginController::class, 'logar'])->name('login.attempt');
+Route::post('/cadastro', [LoginController::class, 'cadastrar'])->name('cadastro.store');
+Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
+
+
+
+//ACESSO ÀS PÁGINAS DO FLUXO DE AGENDAMENTO
+Route::middleware('auth.nivel:1,2,3,4')->group(function () {
+    Route::get('/agendamentos-gestao', [ListaAgendamentoController::class, 'index'])->name('agendamentos.index'); // Mateus
+    Route::get('/agendamentos/{id}', [ListaAgendamentoController::class, 'show'])->name('agendamentos.show'); // Mateus
+    Route::post('/agendamentos/{id}/validar-documento', [ListaAgendamentoController::class, 'validarDocumentos'])->name('agendamentos.validar-documento'); // Mateus
+
+    route::get('/agendamento/etapa-1', [
+        AgendamentoEtapa1Controller::class,
+        'index'
+    ])->name('agendamento.etapa1'); //GABRIEL
+    route::post('/agendamento/etapa-1', [
+        AgendamentoEtapa1Controller::class,
+        'salvar_etapa_1'
+    ])->name('agendamento.salvar_etapa_1');
+    route::get('/agendamento/etapa-2', [
+        AgendamentoEtapa2Controller::class,
+        'index'
+    ])->name('agendamento.etapa2'); //GABRIEL
+    route::post('/agendamento/etapa-2', [
+        AgendamentoEtapa2Controller::class,
+        'salvar_etapa_2'
+    ])->name('agendamento.salvar_etapa_2');
+    route::get('/agendamento/etapa-3', [
+        AgendamentoEtapa3Controller::class,
+        'index'
+    ])->name('agendamento.etapa3'); //GABRIEL
+    route::post('/agendamento/etapa-3', [
+        AgendamentoEtapa3Controller::class,
+        'store'
+    ])->name('agendamento.store');
+    Route::get('/confirmado', function () {
+        return view('components.confirmado');
+    })->name('agendamento.confirmado');
 });
 
-// Autenticação
-Route::middleware('auth.nivel:1,2,3,4')->group(function () {
-    // N1
-    Route::post('/AgendaSaude', [AgendamentoEtapa1Controller::class, 'AgendamentoEtapa1Controller'])->name('agendamento.etapa1'); //WILLIAM
+//ACESSO AOS COLABORADORES DE NIVEL - 2
+Route::middleware('auth.nivel:2')->group(function () {
+    // N2    
+    Route::get('/cancelado', function () {
+        return view('components.cancelado'); //ISABELA
+    });
 
-    route::post('/AgendaSaude', [AgendamentoEtapa2Controller::class, 'AgendamentoEtapa2Controller'])->name('agendamento.etapa2'); //WILLIAM
+    Route::get('/confirmacaoagendamento', function () {
+        return view('components.confirmacaoagendamento'); //ISABELA
+    });
+});
 
-    route::post('/AgendaSaude', [AgendamentoEtapa3Controller::class, 'AgendamentoEtapa3Controller'])->name('agendamento.etapa3'); //WILLIAM
-    // N2 
+//ACESSO AOS COLABORADORES DE NIVEL - 3
+Route::middleware('auth.nivel:3,4')->group(function () {
+    // N3
+    Route::get('/prontuario', [ListaProntuarioController::class, 'index'])
+        ->name('triagem.index');
 
-    // N3 
-
-    // N4
-
-
-
-    //Route::post('/imcCalcular', [ImcController::class, 'calcularImc'])->name('imc.calcular');
-
-    //Route::post('/imc', [ImcController::class, 'store'])->name('imc.store');
+    Route::get('/colo', [AnamneseColoController::class, 'index'])
+        ->name('anamnese.colo');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dash.index');
     Route::delete('/dashboard/delete/{id}', [DashboardController::class, 'destroy'])->name('dash.delete');
@@ -138,3 +177,4 @@ Route::middleware('auth.nivel:1,2,3,4')->group(function () {
 Route::get('/agendamentos-gestao', [ListaAgendamentoController::class, 'index'])->name('agendamentos.index'); // Mateus
 Route::get('/agendamentos/{id}', [ListaAgendamentoController::class, 'show'])->name('agendamentos.show'); // Mateus
 Route::post('/agendamentos/{id}/validar-documento', [ListaAgendamentoController::class, 'validarDocumentos'])->name('agendamentos.validar-documento'); // Mateus
+>>>>>>>>> Temporary merge branch 2
