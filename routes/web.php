@@ -89,17 +89,8 @@ Route::get('/recuperacao', function () {
     return view('recuperacao.recuperacao');
 })->name('recuperacao.recuperacao');
 
-Route::get('/colaborador', function () {
-<<<<<<<<< Temporary merge branch 1
-    return view('permissao_colaborador.colaborador');
-});
-
-Route::resource('anamnese-colo', AnamneseColoController::class);
-//Route::resource('anamnese-mama', AnamneseMamaController::class);
-=========
-    return view('colaborador.colaborador');
-});
-Route::get('/index', function () {
+//RAFAEL
+Route::get('/', function () {
     return view('acesso.index');
 })->name('acesso.index');
 
@@ -169,12 +160,29 @@ Route::middleware('auth.nivel:3,4')->group(function () {
     Route::get('/colo', [AnamneseColoController::class, 'index'])
         ->name('anamnese.colo');
 
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dash.index');
-    Route::delete('/dashboard/delete/{id}', [DashboardController::class, 'destroy'])->name('dash.delete');
-    Route::put('/dashboard/update/{id}', [DashboardController::class, 'update'])->name('dash.update');
+    Route::get('/mama', [AnamneseMamaController::class, 'index'])
+        ->name('anamnese.mama');
+
+    Route::get('/dashboard', function () {
+        return view('painel_adm.dashboard');
+    })->name('painel_adm.dashboard');
 });
 
-Route::get('/agendamentos-gestao', [ListaAgendamentoController::class, 'index'])->name('agendamentos.index'); // Mateus
-Route::get('/agendamentos/{id}', [ListaAgendamentoController::class, 'show'])->name('agendamentos.show'); // Mateus
-Route::post('/agendamentos/{id}/validar-documento', [ListaAgendamentoController::class, 'validarDocumentos'])->name('agendamentos.validar-documento'); // Mateus
->>>>>>>>> Temporary merge branch 2
+//ACESSO AOS COLABORADORES DE NIVEL - 4
+Route::middleware('auth.nivel:4')->group(function () {
+    // N4
+    Route::get('/adm', [AdmController::class, 'index'])->name('adm.adm');
+    Route::patch('/adm/{adm}', [AdmController::class, 'update'])->name('adm.update');
+    Route::patch('/adm/{adm}/status', [AdmController::class, 'toggleStatus'])->name('adm.status');
+    Route::delete('/adm/{adm}', [AdmController::class, 'destroy'])->name('adm.destroy');
+
+    Route::post('/adm/colaboradores', [UserColaborador::class, 'store'])->name('adm.colaboradores.store');
+
+    Route::get('/colaborador', function () {
+        return view('colaborador.colaborador');
+    })->name('colaborador.colaborador');
+
+    Route::get('/dashboard', function () {
+        return view('painel_adm.dashboard');
+    })->name('painel_adm.dashboard');
+});
