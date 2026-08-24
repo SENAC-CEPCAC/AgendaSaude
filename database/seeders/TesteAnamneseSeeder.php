@@ -31,23 +31,26 @@ class TesteAnamneseSeeder extends Seeder
                 'updated_at' => now(),
             ]);
 
-            // 3. Paciente
-            $paciente = DB::table('dim_pacientes')->where('cpf', '12345678900')->first();
-            $idPaciente = $paciente->id_paciente ?? DB::table('dim_pacientes')->insertGetId([
-                'cartao_sus' => '898001160540121',
-                'cpf' => '12345678900',
-                'nome_completo' => 'Joana da Silva',
-                'nome_mae' => 'Antonia da Silva',
-                'apelido' => 'Joaninha',
-                'data_nascimento' => '1985-04-12',
-                'sexo' => 'F',
-                'raca_cor' => 'Parda',
-                'escolaridade' => 'Ensino Médio Completo',
-                'termo_lgpd_aceito' => true,
-                'data_cadastro' => now(),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            // 3. Paciente (cpf_paciente é a própria chave primária, não auto-incrementável)
+            $cpfPaciente = '12345678900';
+            $paciente = DB::table('dim_pacientes')->where('cpf_paciente', $cpfPaciente)->first();
+            if (!$paciente) {
+                DB::table('dim_pacientes')->insert([
+                    'cpf_paciente' => $cpfPaciente,
+                    'cartao_sus' => '898001160540121',
+                    'nome_completo' => 'Joana da Silva',
+                    'nome_mae' => 'Antonia da Silva',
+                    'apelido' => 'Joaninha',
+                    'data_nascimento' => '1985-04-12',
+                    'sexo' => 'F',
+                    'raca_cor' => 'Parda',
+                    'escolaridade' => 'Ensino Médio Completo',
+                    'termo_lgpd_aceito' => true,
+                    'data_cadastro' => now(),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
 
             // 4. Unidade CNES
             $unidade = DB::table('dim_cnes_unidades')->where('codigo_cnes', '1234567')->first();
@@ -74,7 +77,7 @@ class TesteAnamneseSeeder extends Seeder
                 'updated_at' => now(),
             ]);
 
-            // 7. Cronograma (agenda) - sempre cria um novo, já que não tem chave natural única
+            // 7. Cronograma (agenda) - sempre cria um novo
             $idAgenda = DB::table('fato_cronogramas')->insertGetId([
                 'id_cnes_unidade' => $idUnidade,
                 'Vagas_id_vagas' => $idVaga,
@@ -87,9 +90,9 @@ class TesteAnamneseSeeder extends Seeder
                 'updated_at' => now(),
             ]);
 
-            // 8. Prontuário - sempre cria um novo
+            // 8. Prontuário - sempre cria um novo (usa cpf_paciente como FK)
             $idProntuario = DB::table('fato_prontuario')->insertGetId([
-                'id_paciente' => $idPaciente,
+                'cpf_paciente' => $cpfPaciente,
                 'id_agenda' => $idAgenda,
                 'status_comparecimento' => 'presente',
                 'created_at' => now(),
@@ -99,6 +102,7 @@ class TesteAnamneseSeeder extends Seeder
             $this->command->info("✅ Prontuário de teste criado! id_prontuario = {$idProntuario}");
             $this->command->info("✅ Profissional de teste: id_profissional = {$idProfissional}");
             $this->command->info("Acesse: http://127.0.0.1:8000/anamnese-colo/create/{$idProntuario}");
+            $this->command->info("Ou:     http://127.0.0.1:8000/anamnese-mama/create/{$idProntuario}");
         });
     }
 }

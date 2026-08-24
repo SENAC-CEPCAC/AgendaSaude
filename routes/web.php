@@ -9,6 +9,7 @@ use App\Http\Controllers\ListaProntuarioController;
 use App\Http\Controllers\ListaAgendamentoController;
 use App\Http\Controllers\AnamneseColoController;
 use App\Http\Controllers\AnamneseMamaController;
+use App\Http\Controllers\AnamneseDoDiaController;
 //use App\Http\Controllers\CnesUnidadeController;
 
 /*
@@ -141,8 +142,14 @@ Route::resource('anamnese-colo', AnamneseColoController::class)->except(['create
 
 Route::get('/anamnese-mama/{id}/pdf', [AnamneseMamaController::class, 'pdf'])->name('anamnese-mama.pdf');
 Route::get('/anamnese-mama/create/{id_prontuario}', [AnamneseMamaController::class, 'create'])->name('anamnese-mama.create');
-Route::resource('anamnese-mama', AnamneseMamaController::class)->except(['create']);
+Route::resource('anamnese-mama', AnamneseMamaController::class)->except(['create', 'edit', 'update']);
 
+Route::get('/anamnese-dia', [AnamneseDoDiaController::class, 'index'])
+    ->name('anamnese-dia.index');
+
+Route::get('/anamnese-dia/pdf', [AnamneseDoDiaController::class, 'pdf'])
+    ->name('anamnese-dia.pdf');
+    
 Route::get('/unidadesmoveis', function () {
     return view('anamnese.unidadesmoveis');
 })->name('anamnese.unidadesmoveis');

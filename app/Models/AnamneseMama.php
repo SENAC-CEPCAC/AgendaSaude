@@ -30,7 +30,6 @@ class AnamneseMama extends Model
         'achado_linfonodo_palpavel_esq',
     ];
 
-  
     public function fatoAnamnese()
     {
         return $this->belongsTo(FatoAnamnese::class, 'id_fato_anamnese', 'id_fato_anamnese');
