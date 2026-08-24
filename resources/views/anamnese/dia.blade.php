@@ -113,6 +113,10 @@
                          class="text-sm font-medium text-blue-600 hover:text-blue-700">
                         Ver
                       </a>
+                      <a href="{{ route('anamnese-colo.pdf', $anamnese->anamneseColo->id_siscolo) }}"
+                         class="text-sm font-medium text-emerald-600 hover:text-emerald-700">
+                        PDF
+                      </a>
                       <form method="POST"
                             action="{{ route('anamnese-colo.destroy', $anamnese->anamneseColo->id_siscolo) }}"
                             onsubmit="return confirm('Tem certeza que deseja excluir esta anamnese?');">
