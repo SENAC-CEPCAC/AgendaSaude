@@ -12,6 +12,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AdmController;
 use App\Http\Controllers\UserColaborador;
 use App\Http\Controllers\LoginColaboradorController;
+use App\Http\Controllers\RelatorioController;
 
 
 
@@ -187,3 +188,16 @@ Route::post('/agendamentos/{id}/validar-documento', [ListaAgendamentoController:
 
 Route::post('/agendamentos/{id}/validar-documento', [ListaAgendamentoController::class, 'validarDocumentos'])->name('agendamentos.validar-documento'); // Mateus
 
+
+Route::middleware(['auth'])->group(function () {
+    }); //Mateus
+    // Visualização principal dos Relatórios (com abas e filtros)
+    Route::get('/relatorios', [RelatorioController::class, 'index'])->name('relatorios.index');
+
+    // Download/Exportação dos relatórios (CSV/Excel)
+    Route::get('/relatorios/exportar/{tipo}', [RelatorioController::class, 'exportar'])->name('relatorios.exportar');
+
+    // Visualização individual de Anamnese via JSON/Modal
+    Route::get('/relatorios/anamnese/{id}', [RelatorioController::class, 'anamneseDetalhes'])->name('relatorios.anamnese.detalhes');
+    
+Route::get('/relatorios/anamneses/imprimir-todas', [RelatorioController::class, 'imprimirTodasAnamneses'])->name('relatorios.anamneses.imprimir-todas'); //Mateus
