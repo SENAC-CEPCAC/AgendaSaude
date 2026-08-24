@@ -9,51 +9,26 @@ use Carbon\Carbon;
 
 class AgendamentosTesteSeeder extends Seeder
 {
-    private function insertSeguro(string $tabela, array $dadosCustomizados): int
+    private function insertSeguro(string $tabela, array $dadosCustomizados): mixed
     {
         $hoje = Carbon::now();
-        $colunas = DB::select("SHOW COLUMNS FROM `{$tabela}`");
+        $colunas = Schema::getColumnListing($tabela);
         $dadosFinais = [];
 
-        foreach ($colunas as $col) {
-            $campo = $col->Field;
-            $tipo  = strtolower($col->Type);
-            $nulo  = $col->Null === 'YES';
-            $extra = $col->Extra;
-            $default = $col->Default;
-
-            if (str_contains($extra, 'auto_increment')) {
+        foreach ($colunas as $campo) {
+            if ($campo === 'id' && !array_key_exists('id', $dadosCustomizados)) {
                 continue;
             }
 
             if (array_key_exists($campo, $dadosCustomizados)) {
-                // Se foi passado null mas a coluna for NOT NULL no banco, ajusta
-                if (is_null($dadosCustomizados[$campo]) && !$nulo) {
-                    $dadosFinais[$campo] = 1;
-                } else {
-                    $dadosFinais[$campo] = $dadosCustomizados[$campo];
-                }
+                $dadosFinais[$campo] = $dadosCustomizados[$campo];
                 continue;
             }
+        }
 
-            if (!$nulo && is_null($default)) {
-                if (str_starts_with($campo, 'id_') || str_ends_with($campo, '_id') || str_contains($tipo, 'int')) {
-                    $dadosFinais[$campo] = 1;
-                } elseif (str_contains($tipo, 'date') && !str_contains($tipo, 'time')) {
-                    $dadosFinais[$campo] = '1990-01-01';
-                } elseif (str_contains($tipo, 'time')) {
-                    $dadosFinais[$campo] = $hoje->format('Y-m-d H:i:s');
-                } elseif (str_contains($tipo, 'enum')) {
-                    preg_match("/^enum\('(.*)'\)$/", $tipo, $matches);
-                    $opcoes = isset($matches[1]) ? explode("','", $matches[1]) : ['agendado'];
-                    $dadosFinais[$campo] = $opcoes[0];
-                } elseif (str_contains($tipo, 'char(1)')) {
-                    $dadosFinais[$campo] = 'F';
-                } elseif (str_contains($tipo, 'bool') || str_contains($tipo, 'tinyint(1)')) {
-                    $dadosFinais[$campo] = 1;
-                } else {
-                    $dadosFinais[$campo] = 'Geral';
-                }
+        foreach ($dadosCustomizados as $campo => $valor) {
+            if (in_array($campo, $colunas)) {
+                $dadosFinais[$campo] = $valor;
             }
         }
 
@@ -181,7 +156,7 @@ class AgendamentosTesteSeeder extends Seeder
         $pacientes = [
             [
                 $campoNomePac => 'Maria Silva Santos',
-                'cpf' => '12345678900',
+                'cpf_paciente' => '12345678900',
                 'cartao_sus' => '898001234567890',
                 'telefone' => '11987654321',
                 'sexo' => 'F',
@@ -191,7 +166,7 @@ class AgendamentosTesteSeeder extends Seeder
             ],
             [
                 $campoNomePac => 'João Pereira Lima (Próximo da Fila #51)',
-                'cpf' => '23456789011',
+                'cpf_paciente' => '23456789011',
                 'cartao_sus' => '898002345678901',
                 'telefone' => '11976543210',
                 'sexo' => 'M',
@@ -201,7 +176,7 @@ class AgendamentosTesteSeeder extends Seeder
             ],
             [
                 $campoNomePac => 'Ana Beatriz Oliveira (Fila #52)',
-                'cpf' => '34567890122',
+                'cpf_paciente' => '34567890122',
                 'cartao_sus' => '898003456789012',
                 'telefone' => '11965432109',
                 'sexo' => 'F',
@@ -211,7 +186,7 @@ class AgendamentosTesteSeeder extends Seeder
             ],
             [
                 $campoNomePac => 'Carlos Eduardo Fagundes',
-                'cpf' => '45678901233',
+                'cpf_paciente' => '45678901233',
                 'cartao_sus' => '898004567890123',
                 'telefone' => '11954321098',
                 'sexo' => 'M',
@@ -221,7 +196,7 @@ class AgendamentosTesteSeeder extends Seeder
             ],
             [
                 $campoNomePac => 'Luciana Ferreira Costa',
-                'cpf' => '56789012344',
+                'cpf_paciente' => '56789012344',
                 'cartao_sus' => '898005678901234',
                 'telefone' => '11943210987',
                 'sexo' => 'F',
@@ -231,9 +206,8 @@ class AgendamentosTesteSeeder extends Seeder
             ],
         ];
 
-        $pacienteIds = [];
         foreach ($pacientes as $p) {
-            $pacienteIds[] = $this->insertSeguro('dim_pacientes', $p);
+            $this->insertSeguro('dim_pacientes', $p);
         }
 
         $this->command->info('3. Inserindo Vagas e Horários...');
@@ -302,15 +276,12 @@ class AgendamentosTesteSeeder extends Seeder
 
         $this->command->info('4. Inserindo Agendamentos com Cenários de Teste...');
 
-        // Detecta se id_agenda aceita NULL na tabela fato_prontuario
-        $colAgenda = DB::select("SHOW COLUMNS FROM `fato_prontuario` LIKE 'id_agenda'");
-        $agendaPermiteNull = !empty($colAgenda) && $colAgenda[0]->Null === 'YES';
-        $agendaFila = $agendaPermiteNull ? null : $agenda1Id;
+        $agendaFila = $agenda1Id;
 
         // CENÁRIO 1: Agendamento #50 (Prazo de 24h expirado)
         $this->insertSeguro('fato_prontuario', [
             'numero_sequencial' => 50,
-            'id_paciente' => $pacienteIds[0],
+            'cpf_paciente' => '12345678900',
             'id_agenda' => $agenda1Id,
             'id_profissional' => $medico1Id,
             'id_vagas' => $vaga1Id,
@@ -329,7 +300,7 @@ class AgendamentosTesteSeeder extends Seeder
         // CENÁRIO 2: Paciente #51 na FILA DE ESPERA (O próximo da fila)
         $this->insertSeguro('fato_prontuario', [
             'numero_sequencial' => 51,
-            'id_paciente' => $pacienteIds[1],
+            'cpf_paciente' => '23456789011',
             'id_agenda' => $agendaFila,
             'status_comparecimento' => 'agendado',
             'status_agendamento' => 'em_espera',
@@ -346,7 +317,7 @@ class AgendamentosTesteSeeder extends Seeder
         // CENÁRIO 3: Paciente #52 na FILA DE ESPERA (Doc Pendente)
         $this->insertSeguro('fato_prontuario', [
             'numero_sequencial' => 52,
-            'id_paciente' => $pacienteIds[2],
+            'cpf_paciente' => '34567890122',
             'id_agenda' => $agendaFila,
             'status_comparecimento' => 'agendado',
             'status_agendamento' => 'em_espera',
@@ -363,7 +334,7 @@ class AgendamentosTesteSeeder extends Seeder
         // CENÁRIO 4: Agendamento #53 (Confirmado pelo Paciente)
         $this->insertSeguro('fato_prontuario', [
             'numero_sequencial' => 53,
-            'id_paciente' => $pacienteIds[3],
+            'cpf_paciente' => '45678901233',
             'id_agenda' => $agenda2Id,
             'id_profissional' => $medico1Id,
             'id_vagas' => $vaga2Id,
@@ -383,7 +354,7 @@ class AgendamentosTesteSeeder extends Seeder
         // CENÁRIO 5: Agendamento #54 (Validar no Ato)
         $this->insertSeguro('fato_prontuario', [
             'numero_sequencial' => 54,
-            'id_paciente' => $pacienteIds[4],
+            'cpf_paciente' => '56789012344',
             'id_agenda' => $agenda3Id,
             'id_profissional' => $medico2Id,
             'id_vagas' => $vaga3Id,
