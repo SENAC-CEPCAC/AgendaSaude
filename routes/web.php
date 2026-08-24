@@ -9,6 +9,9 @@ use App\Http\Controllers\AnamneseColoController;
 use App\Http\Controllers\AnamneseMamaController;
 use App\Http\Controllers\ListaAgendamentoController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\LoginColaboradorController;
+use App\Http\Controllers\CronogramaGestaoController;
+use App\Http\Controllers\ProntuarioVisualizacaoController;
 
 
 
@@ -34,15 +37,19 @@ Route::get('/recuperacao', function () { //WILLIAM
     return view('login.recuperacaoP');
 });
 
-route::get('/agendamento/etapa-1', [AgendamentoEtapa1Controller::class, 'index'])->name('agendamento.etapa1'); //GABRIEL
+// ==========================================
+// FLUXO DE AGENDAMENTO (3 ETAPAS)
+// ==========================================
+Route::get('/agendamento/etapa-1', [AgendamentoEtapa1Controller::class, 'index'])->name('agendamento.etapa1');
+Route::post('/agendamento/etapa-1', [AgendamentoEtapa1Controller::class, 'salvar_etapa_1'])->name('agendamento.salvar_etapa_1');
 
-route::get('/agendamento/etapa-2', [AgendamentoEtapa2Controller::class, 'index'])->name('agendamento.etapa2'); //GABRIEL
+Route::get('/agendamento/etapa-2', [AgendamentoEtapa2Controller::class, 'index'])->name('agendamento.etapa2');
+Route::post('/agendamento/etapa-2', [AgendamentoEtapa2Controller::class, 'salvar_etapa_2'])->name('agendamento.salvar_etapa_2');
 
-route::get('/agendamento/etapa-3', [AgendamentoEtapa3Controller::class, 'index'])->name('agendamento.etapa3'); //GABRIEL
+Route::get('/agendamento/etapa-3', [AgendamentoEtapa3Controller::class, 'index'])->name('agendamento.etapa3');
+Route::post('/agendamento/etapa-3', [AgendamentoEtapa3Controller::class, 'store'])->name('agendamento.store');
 
 
-=======
->>>>>>> 2c9b93265c00b488bb98edc62561b0f6bde706dc
 Route::get('/feedback', function () {
     return view('pesquisa.feedback'); //ISABELA
 });
@@ -53,15 +60,15 @@ Route::get('/feedback', function () {
 
 Route::get('/cancelado', function () {
     return view('components.cancelado'); //ISABELA
-});
+})->name('agendamento.cancelado');
 
 Route::get('/confirmacaoagendamento', function () {
     return view('components.confirmacaoagendamento'); //ISABELA
-});
+})->name('agendamento.confirmacao');
 
 Route::get('/confirmado', function () {
     return view('components.confirmado'); //ISABELA
-});
+})->name('agendamento.confirmado');
 
 Route::get('/teste', function () {
     return view('pesquisa.teste'); //ISABELA
@@ -80,6 +87,13 @@ Route::get('/unidadesmoveis', function () {
 });
 
 
+
+// ==========================================
+// ACESSO COLABORADOR (LOGIN POR MATRÍCULA)
+// ==========================================
+Route::get('/loginadmin', [LoginColaboradorController::class, 'index'])->name('login.admin');
+Route::post('/loginadmin', [LoginColaboradorController::class, 'logar'])->name('login.admin.attempt');
+Route::post('/logoutadmin', [LoginColaboradorController::class, 'destroy'])->name('login.admin.logout');
 
 // ==========================================
 // 8. PAINEL COLABORADOR & ACESSO (RAFAEL)
@@ -102,6 +116,8 @@ Route::get('/novasenha', function () {
 
 Route::get('/recuperacao', function () {
     return view('recuperacao.recuperacao');
+});
+
 Route::get('/', function () {
     return view('acesso.index'); //RAFAEL
 });
@@ -112,6 +128,7 @@ Route::get('/login', function () {
 })->name('acesso.login');
 
 Route::post('/login', [LoginController::class, 'logar'])->name('login.attempt');
+
 Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 
 Route::get('/cadastro', function () {
@@ -124,7 +141,6 @@ Route::get('/novasenha', function () {
 
 Route::get('/recuperacao', function () {
     return view('recuperacao.recuperacao'); //RAFAEL
->>>>>>> d93574ef842346ad84dadfc13cafd6a8a3b3b35c
 })->name('recuperacao.recuperacao');
 
 
@@ -153,17 +169,21 @@ Route::middleware('auth.nivel:4')->group(function () {
     Route::get('/acesso_restrito', function () {
         return view('acesso_restrito.acesso_restrito');
     })->name('acesso_restrito.acesso_restrito');
+
+    // GESTÃO DE CRONOGRAMAS E VAGAS (EXCLUSIVO GESTOR N4)
+    Route::get('/gestao-cronograma', [CronogramaGestaoController::class, 'index'])->name('cronograma.index');
+    Route::post('/gestao-cronograma', [CronogramaGestaoController::class, 'store'])->name('cronograma.store');
+    Route::put('/gestao-cronograma/{id}', [CronogramaGestaoController::class, 'update'])->name('cronograma.update');
+    Route::delete('/gestao-cronograma/{id}', [CronogramaGestaoController::class, 'destroy'])->name('cronograma.destroy');
 });
 
 
 // Autenticação
 Route::middleware('auth.nivel:1,2,3')->group(function () {
     // N1
-    Route::post('/agendasaude1', [AgendamentoEtapa1Controller::class, 'AgendamentoEtapa1Controller'])->name('agendamento.etapa1'); //WILLIAM
-
-    Route::post('/agendasaude2', [AgendamentoEtapa2Controller::class, 'AgendamentoEtapa2Controller'])->name('agendamento.etapa2'); //WILLIAM
-
-    Route::post('/agendasaude3', [AgendamentoEtapa3Controller::class, 'AgendamentoEtapa3Controller'])->name('agendamento.etapa3'); //WILLIAM
+    // Route::post('/agendasaude1', [AgendamentoEtapa1Controller::class, 'AgendamentoEtapa1Controller'])->name('agendamento.etapa1'); //WILLIAM
+    // Route::post('/agendasaude2', [AgendamentoEtapa2Controller::class, 'AgendamentoEtapa2Controller'])->name('agendamento.etapa2'); //WILLIAM
+    // Route::post('/agendasaude3', [AgendamentoEtapa3Controller::class, 'AgendamentoEtapa3Controller'])->name('agendamento.etapa3'); //WILLIAM
     // N2 
 
     // N3 
@@ -184,8 +204,12 @@ Route::middleware('auth.nivel:1,2,3')->group(function () {
 Route::get('/agendamentos-gestao', [ListaAgendamentoController::class, 'index'])->name('agendamentos.index'); // Mateus
 Route::get('/agendamentos/{id}', [ListaAgendamentoController::class, 'show'])->name('agendamentos.show'); // Mateus
 
-Route::post('/agendamentos/{id}/validar-documento', [ListaAgendamentoController::class, 'validarDocumentos'])->name('agendamentos.validar-documento'); // Mateus
->>>>>>> d93574ef842346ad84dadfc13cafd6a8a3b3b35c
+// ==========================================
+// PRONTUÁRIO ELETRÔNICO DO PACIENTE (PEP)
+// ==========================================
+Route::get('/prontuario/paciente/{id}', [ProntuarioVisualizacaoController::class, 'show'])->name('prontuario.paciente');
+Route::get('/prontuario/{id}', [ProntuarioVisualizacaoController::class, 'show'])->name('prontuario.detalhes');
 
-Route::post('/agendamentos/{id}/validar-documento', [ListaAgendamentoController::class, 'validarDocumentos'])->name('agendamentos.validar-documento'); // Mateus
->>>>>>> 2c9b93265c00b488bb98edc62561b0f6bde706dc
+/*Route::post('/agendamentos/{id}/validar-documento', [ListaAgendamentoController::class, 'validarDocumentos'])->name('agendamentos.validar-documento'); // Mateus
+
+Route::post('/agendamentos/{id}/validar-documento', [ListaAgendamentoController::class, 'validarDocumentos'])->name('agendamentos.validar-documento'); // Mateus*/

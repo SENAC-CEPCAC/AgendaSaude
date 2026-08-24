@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('users_colaboradores', function (Blueprint $table) {
             $table->id();
+            $table->string('matricula', 30)->unique(); // Login do colaborador
+            $table->string('nome', 150);
+            $table->string('email', 100)->unique()->nullable();
+            $table->string('password'); // Senha criptografada
+            $table->unsignedTinyInteger('nivel')->default(2); // Nível de acesso (1: N1/Recepção, 2: Médico/Enfermeiro, 4: Admin)
+            $table->string('cargo_funcao', 50)->nullable();
+            $table->string('registro_profissional', 30)->nullable(); // CRM, COREN, etc.
+            $table->rememberToken();
             $table->timestamps();
         });
     }
