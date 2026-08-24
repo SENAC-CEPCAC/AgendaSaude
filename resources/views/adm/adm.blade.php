@@ -119,7 +119,7 @@
                 </label>
                 <label class="block text-xs font-semibold text-slate-600">Permissão
                     <select name="permissao" required class="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-sm outline-none focus:border-blue-500 focus:bg-white">
-                        <option value="1" @selected(old('permissao') == 1)>N1 - Paciente</option>
+                        <!-- <option value="1" @selected(old('permissao') == 1)>N1 - Paciente</option> -->
                         <option value="2" @selected(old('permissao') == 2)>N2 - Colaborador</option>
                         <option value="3" @selected(old('permissao') == 3)>N3 - Medico</option>
                         <option value="4" @selected(old('permissao') == 4)>N4 - Gestor</option>
@@ -144,7 +144,7 @@
                 @method('PATCH')
                 <label class="block text-xs font-semibold text-slate-600">Permissão
                     <select id="edicao-permissao" name="permissao" required class="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-sm outline-none focus:border-blue-500 focus:bg-white">
-                        <option value="1">N1 - Paciente</option>
+                        <!-- <option value="1">N1 - Paciente</option> -->
                         <option value="2">N2 - Colaborador</option>
                         <option value="3">N3 - Médico</option>
                         <option value="4">N4 - Gestor</option>

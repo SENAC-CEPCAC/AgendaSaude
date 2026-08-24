@@ -16,13 +16,28 @@
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
-<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen">
+@php
+  $usuario = auth()->user();
+  if (! $usuario && session('colaborador_id')) {
+    $usuario = \App\Models\UserColaborador::find(session('colaborador_id'));
+  }
+  $nivelUsuario = (int) ($usuario?->nivel ?? $usuario?->permissao ?? 0);
+@endphp
+
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen" data-sidebar-enabled="{{ $nivelUsuario === 3 || $nivelUsuario === 4 ? 'true' : 'false' }}">
   <div id="app-root" class="min-h-screen flex flex-col">
-    @include('sidebar.sidebar_n3')
+
+  @if ($nivelUsuario === 3)
+  @include('sidebar.sidebar_n3')
+  @elseif ($nivelUsuario === 4)
+  @include('sidebar.sidebar_n4')
+  @endif
+  @if ($nivelUsuario === 3 || $nivelUsuario === 4)
     <div id="sidebar-overlay" class="fixed inset-0 z-40 hidden bg-slate-900/40 opacity-0 transition-opacity duration-300"></div>
     <button id="mobile-menu-toggle" type="button" class="fixed left-3 top-3 z-[60] flex items-center justify-center rounded-lg bg-blue-600 p-2 text-white shadow-sm transition hover:bg-blue-800 sm:left-5 sm:top-5" aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menu">
       <i data-lucide="menu" class="h-4 w-4"></i>
     </button>
+  @endif
 
     <main id="main-content" class="min-h-screen flex-1 flex flex-col p-4 md:p-8 md:ml-64">
       <!-- Top Bar -->
@@ -497,20 +512,23 @@
     const mobileMenuClose = document.getElementById('mobile-menu-close');
     const sidebar = document.getElementById('sidebar');
     const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const sidebarEnabled = document.body.dataset.sidebarEnabled === 'true';
 
-    const setSidebarOpen = (open) => {
-      sidebar.classList.toggle('-translate-x-full', !open);
-      sidebar.classList.toggle('translate-x-0', open);
-      sidebarOverlay.classList.toggle('hidden', !open);
-      sidebarOverlay.classList.toggle('opacity-100', open);
-      mobileMenuToggle.classList.toggle('hidden', open);
-      mobileMenuToggle.setAttribute('aria-expanded', String(open));
-      mobileMenuToggle.setAttribute('aria-label', open ? 'Recolher menu' : 'Abrir menu');
-    };
+    if (sidebarEnabled) {
+      const setSidebarOpen = (open) => {
+        sidebar.classList.toggle('-translate-x-full', !open);
+        sidebar.classList.toggle('translate-x-0', open);
+        sidebarOverlay.classList.toggle('hidden', !open);
+        sidebarOverlay.classList.toggle('opacity-100', open);
+        mobileMenuToggle.classList.toggle('hidden', open);
+        mobileMenuToggle.setAttribute('aria-expanded', String(open));
+        mobileMenuToggle.setAttribute('aria-label', open ? 'Recolher menu' : 'Abrir menu');
+      };
 
-    mobileMenuToggle.addEventListener('click', () => setSidebarOpen(!sidebar.classList.contains('translate-x-0')));
-    mobileMenuClose.addEventListener('click', () => setSidebarOpen(false));
-    sidebarOverlay.addEventListener('click', () => setSidebarOpen(false));
+      mobileMenuToggle.addEventListener('click', () => setSidebarOpen(!sidebar.classList.contains('translate-x-0')));
+      mobileMenuClose.addEventListener('click', () => setSidebarOpen(false));
+      sidebarOverlay.addEventListener('click', () => setSidebarOpen(false));
+    }
 
     function fecharModais() {
       document.querySelectorAll('#modal-documentos, #modal-avaliacao, #modal-status, #modal-reanexar').forEach(m => {

@@ -83,10 +83,11 @@ Route::get('/cadastro', function () {
 Route::get('/novasenha', function () {
     return view('recuperacao.novasenha');
 })->name('recuperacao.novasenha');
+Route::post('/novasenha', [LoginController::class, 'atualizarSenha'])->name('recuperacao.senha.atualizar');
 
 Route::get('/recuperacao', function () {
     return view('recuperacao.recuperacao');
-});
+})->name('recuperacao.recuperacao');
 
 //RAFAEL
 Route::get('/', function () {
@@ -98,12 +99,17 @@ Route::get('/login', function () {
 })->name('acesso.login');
 
 Route::post('/login', [LoginController::class, 'logar'])->name('login.attempt');
+Route::post('/cadastro', [LoginController::class, 'cadastrar'])->name('cadastro.store');
 Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 
 
 
-//ACESSO AOS COLABORADORES DE NIVEL - 1, 2 E 3
-Route::middleware('auth.nivel:1,2,3')->group(function () {
+//ACESSO ÀS PÁGINAS DO FLUXO DE AGENDAMENTO
+Route::middleware('auth.nivel:1,2,3,4')->group(function () {
+    Route::get('/agendamentos-gestao', [ListaAgendamentoController::class, 'index'])->name('agendamentos.index'); // Mateus
+    Route::get('/agendamentos/{id}', [ListaAgendamentoController::class, 'show'])->name('agendamentos.show'); // Mateus
+    Route::post('/agendamentos/{id}/validar-documento', [ListaAgendamentoController::class, 'validarDocumentos'])->name('agendamentos.validar-documento'); // Mateus
+
     route::get('/agendamento/etapa-1', [
         AgendamentoEtapa1Controller::class,
         'index'
@@ -131,12 +137,11 @@ Route::middleware('auth.nivel:1,2,3')->group(function () {
     Route::get('/confirmado', function () {
         return view('components.confirmado');
     })->name('agendamento.confirmado');
-
 });
 
 //ACESSO AOS COLABORADORES DE NIVEL - 2
 Route::middleware('auth.nivel:2')->group(function () {
-    // N2
+    // N2    
     Route::get('/cancelado', function () {
         return view('components.cancelado'); //ISABELA
     });
@@ -144,31 +149,23 @@ Route::middleware('auth.nivel:2')->group(function () {
     Route::get('/confirmacaoagendamento', function () {
         return view('components.confirmacaoagendamento'); //ISABELA
     });
-
-    Route::get('/agendamentos-gestao', [ListaAgendamentoController::class, 'index'])->name('agendamentos.index'); // Mateus
-
-    Route::get('/agendamentos/{id}', [ListaAgendamentoController::class, 'show'])->name('agendamentos.show'); // Mateus
-
-    Route::post('/agendamentos/{id}/validar-documento', [ListaAgendamentoController::class, 'validarDocumentos'])->name('agendamentos.validar-documento'); // Mateus
-
 });
 
 //ACESSO AOS COLABORADORES DE NIVEL - 3
-Route::middleware('auth.nivel:3')->group(function () {
+Route::middleware('auth.nivel:3,4')->group(function () {
     // N3
     Route::get('/prontuario', [ListaProntuarioController::class, 'index'])
         ->name('triagem.index');
 
-    Route::get('/colo', function () {
-        return view('anamnese.colo');
-    });
+    Route::get('/colo', [AnamneseColoController::class, 'index'])
+        ->name('anamnese.colo');
 
-    Route::get('/mama', function () {
-        return view('anamnese.mama');
-    });
+    Route::get('/mama', [AnamneseMamaController::class, 'index'])
+        ->name('anamnese.mama');
 
-    
-
+    Route::get('/dashboard', function () {
+        return view('painel_adm.dashboard');
+    })->name('painel_adm.dashboard');
 });
 
 //ACESSO AOS COLABORADORES DE NIVEL - 4
@@ -178,12 +175,14 @@ Route::middleware('auth.nivel:4')->group(function () {
     Route::patch('/adm/{adm}', [AdmController::class, 'update'])->name('adm.update');
     Route::patch('/adm/{adm}/status', [AdmController::class, 'toggleStatus'])->name('adm.status');
     Route::delete('/adm/{adm}', [AdmController::class, 'destroy'])->name('adm.destroy');
-});
 
-Route::middleware('auth.nivel:4')->group(function () {
     Route::post('/adm/colaboradores', [UserColaborador::class, 'store'])->name('adm.colaboradores.store');
 
     Route::get('/colaborador', function () {
         return view('colaborador.colaborador');
     })->name('colaborador.colaborador');
+
+    Route::get('/dashboard', function () {
+        return view('painel_adm.dashboard');
+    })->name('painel_adm.dashboard');
 });
