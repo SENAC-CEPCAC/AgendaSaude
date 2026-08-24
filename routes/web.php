@@ -186,3 +186,45 @@ Route::middleware('auth.nivel:4')->group(function () {
         return view('painel_adm.dashboard');
     })->name('painel_adm.dashboard');
 });
+Route::get('/agendamentos-gestao', [ListaAgendamentoController::class, 'index'])->name('agendamentos.index'); // Mateus
+Route::get('/agendamentos/{id}', [ListaAgendamentoController::class, 'show'])->name('agendamentos.show'); // Mateus
+
+Route::post('/agendamentos/{id}/validar-documento', [ListaAgendamentoController::class, 'validarDocumentos'])->name('agendamentos.validar-documento'); // Mateus
+
+
+Route::post('/agendamentos/{id}/validar-documento', [ListaAgendamentoController::class, 'validarDocumentos'])->name('agendamentos.validar-documento'); // Mateus
+
+
+Route::middleware(['auth'])->group(function () {
+    }); //Mateus
+    // Visualização principal dos Relatórios (com abas e filtros)
+    Route::get('/relatorios', [RelatorioController::class, 'index'])->name('relatorios.index');
+
+    // Download/Exportação dos relatórios (CSV/Excel)
+    Route::get('/relatorios/exportar/{tipo}', [RelatorioController::class, 'exportar'])->name('relatorios.exportar');
+
+    // Visualização individual de Anamnese via JSON/Modal
+    Route::get('/relatorios/anamnese/{id}', [RelatorioController::class, 'anamneseDetalhes'])->name('relatorios.anamnese.detalhes');
+    
+Route::get('/relatorios/anamneses/imprimir-todas', [RelatorioController::class, 'imprimirTodasAnamneses'])->name('relatorios.anamneses.imprimir-todas'); //Mateus
+
+// ==========================================
+// 9. ANAMNESE 
+// ==========================================
+Route::get('/anamnese-colo/{id}/pdf', [AnamneseColoController::class, 'pdf'])->name('anamnese-colo.pdf');
+Route::get('/anamnese-colo/create/{id_prontuario}', [AnamneseColoController::class, 'create'])->name('anamnese-colo.create');
+Route::resource('anamnese-colo', AnamneseColoController::class)->except(['create']);
+
+Route::get('/anamnese-mama/{id}/pdf', [AnamneseMamaController::class, 'pdf'])->name('anamnese-mama.pdf');
+Route::get('/anamnese-mama/create/{id_prontuario}', [AnamneseMamaController::class, 'create'])->name('anamnese-mama.create');
+Route::resource('anamnese-mama', AnamneseMamaController::class)->except(['create', 'edit', 'update']);
+
+Route::get('/anamnese-dia', [AnamneseDoDiaController::class, 'index'])
+    ->name('anamnese-dia.index');
+
+Route::get('/anamnese-dia/pdf', [AnamneseDoDiaController::class, 'pdf'])
+    ->name('anamnese-dia.pdf');
+
+Route::get('/unidadesmoveis', function () {
+    return view('anamnese.unidadesmoveis');
+})->name('anamnese.unidadesmoveis');
