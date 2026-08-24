@@ -98,4 +98,13 @@ class Paciente extends Model
     {
         return $this->hasMany(TelefonePaciente::class, 'cpf_paciente', 'cpf_paciente');
     }
+
+     public function user(): HasOne
+    {
+        return $this->hasOne(
+            User::class,
+            'cpf_paciente',
+            'cpf_paciente'
+        );
+    }
 }

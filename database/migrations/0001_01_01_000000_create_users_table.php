@@ -17,8 +17,11 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->char('cpf_paciente', 11);
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('cpf_paciente')->references('cpf_paciente')->on('dim_pacientes')->onDelete('cascade');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
