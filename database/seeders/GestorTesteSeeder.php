@@ -30,7 +30,7 @@ class GestorTesteSeeder extends Seeder
             UserColaborador::updateOrCreate(
                 ['matricula' => 'ADM4001'],
                 [
-                    'nome' => 'Gestor Geral (Nível 4)',
+                    'nome' => 'Gestor Geral',
                     'email' => 'gestor@agendasaude.com',
                     'password' => Hash::make('12345678'),
                     'permissao' => 4,
