@@ -63,12 +63,15 @@
           <h1 class="text-2xl font-bold uppercase tracking-wide text-[#0f172a]">Agendamentos</h1>
           <p class="text-xs text-slate-500 mt-1">Gestão da fila inteligente, validação de documentos e controle de 24h.</p>
         </div>
+        @if ($nivelUsuario !==3)
         <div>
           <a href="{{ route('agendamento.etapa1') }}" target="_blank" class="inline-flex items-center gap-2 bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold px-4 py-2.5 rounded-lg shadow-sm transition-all">
             Novo Agendamento
           </a>
         </div>
+        @endif
       </div>
+
 
       <!-- Filtros e Busca -->
       <form id="filterForm" method="GET" action="{{ url()->current() }}" class="bg-white rounded-xl border border-slate-100 p-4 md:p-6 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xs">

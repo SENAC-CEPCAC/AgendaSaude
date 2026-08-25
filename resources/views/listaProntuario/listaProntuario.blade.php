@@ -17,27 +17,27 @@
 </head>
 
 @php
-  $usuario = auth()->user();
-  if (! $usuario && session('colaborador_id')) {
-    $usuario = \App\Models\UserColaborador::find(session('colaborador_id'));
-  }
-  $nivelUsuario = (int) ($usuario?->nivel ?? $usuario?->permissao ?? 0);
+$usuario = auth()->user();
+if (! $usuario && session('colaborador_id')) {
+$usuario = \App\Models\UserColaborador::find(session('colaborador_id'));
+}
+$nivelUsuario = (int) ($usuario?->nivel ?? $usuario?->permissao ?? 0);
 @endphp
 
 <body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen" data-sidebar-enabled="{{ $nivelUsuario === 3 || $nivelUsuario === 4 ? 'true' : 'false' }}">
   <div id="app-root" class="min-h-screen flex flex-col">
 
-  @if ($nivelUsuario === 3)
-  @include('sidebar.sidebar_n3')
-  @elseif ($nivelUsuario === 4)
-  @include('sidebar.sidebar_n4')
-  @endif
-  @if ($nivelUsuario === 3 || $nivelUsuario === 4)
+    @if ($nivelUsuario === 3)
+    @include('sidebar.sidebar_n3')
+    @elseif ($nivelUsuario === 4)
+    @include('sidebar.sidebar_n4')
+    @endif
+    @if ($nivelUsuario === 3 || $nivelUsuario === 4)
     <div id="sidebar-overlay" class="fixed inset-0 z-40 hidden bg-slate-900/40 opacity-0 transition-opacity duration-300"></div>
     <button id="mobile-menu-toggle" type="button" class="fixed left-3 top-3 z-[60] flex items-center justify-center rounded-lg bg-blue-600 p-2 text-white shadow-sm transition hover:bg-blue-800 sm:left-5 sm:top-5" aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menu">
       <i data-lucide="menu" class="h-4 w-4"></i>
     </button>
-  @endif
+    @endif
 
     <main id="main-content" class="min-h-screen flex-1 flex flex-col p-4 md:p-8 md:ml-64">
       <!-- Top Bar -->
@@ -71,11 +71,12 @@
             <h1 class="text-2xl font-bold text-slate-900">Triagem de Prontuários (N1)</h1>
             <p class="text-sm text-slate-500 mt-0.5">Validação de documentos anexados (RG/CPF, Requisição) e controle de presença.</p>
           </div>
-
+          @if ($nivelUsuario !==3)
           <a href="{{ route('agendamento.etapa1') }}" target="_blank" class="inline-flex items-center gap-2 bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold px-4 py-2.5 rounded-lg shadow-sm transition-all">
             <span class="material-symbols-outlined text-[18px]">add_circle</span>
             Novo Agendamento
-          </a>
+          </a> 
+          @endif
         </div>
 
         <!-- Mensagens Flash de Sucesso ou Erro -->
