@@ -255,13 +255,12 @@ class RelatorioController extends Controller
      */
     public function index(Request $request)
     {
-        $area = $request->get('area', 'cronograma'); // 'cronograma' ou 'atendimentos'
-        $tipoAtendimento = $request->get('tipo', 'atendidos'); // 'atendidos', 'anamneses', 'desistencias', 'fila_espera'
+        $area = $request->get('area', 'cronograma');
+        $tipoAtendimento = $request->get('tipo', 'atendidos');
         $busca = $request->get('search');
         $dataInicio = $request->get('data_inicio', Carbon::now()->startOfMonth()->format('Y-m-d'));
         $dataFim = $request->get('data_fim', Carbon::now()->endOfMonth()->format('Y-m-d'));
 
-        // Consultas paginadas
         $cronogramas = $this->getQueryCronogramas($busca, $dataInicio, $dataFim)->paginate(15, ['*'], 'cronogramas_page');
         $atendidos = $this->getQueryAtendidos($busca, $dataInicio, $dataFim)->paginate(15, ['*'], 'atendidos_page');
         $anamneses = $this->getQueryAnamneses($busca, $dataInicio, $dataFim)->paginate(15, ['*'], 'anamneses_page');
@@ -279,7 +278,6 @@ class RelatorioController extends Controller
         $taxaOcupacao = $vagasOfertadas > 0 ? round(($vagasPreenchidas / $vagasOfertadas) * 100, 1) : 0;
         $totalAgendas = (clone $queryCronogramasTotal)->count();
 
-        // Totalizadores
         $totais = [
             'total_agendas'     => $totalAgendas,
             'vagas_ofertadas'   => $vagasOfertadas,
@@ -320,6 +318,14 @@ class RelatorioController extends Controller
         $anamneses = $this->getQueryAnamneses($busca, $dataInicio, $dataFim, $tipoProtocolo)->get();
 
         return view('relatorios.imprimir-todas-anamneses', compact('anamneses'));
+    }
+
+    /**
+     * ALIAS / MÉTODO PRINCIPAL DE EXPORTAÇÃO CSV
+     */
+    public function exportar(Request $request, string $tipo)
+    {
+        return $this->exportarCsv($request, $tipo);
     }
 
     /**
