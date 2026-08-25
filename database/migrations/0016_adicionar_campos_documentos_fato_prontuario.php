@@ -18,7 +18,7 @@ return new class extends Migration
         Schema::table('fato_prontuario', function (Blueprint $table) {
             $table->string('caminho_documento_rg_cpf', 255)->nullable()->after('status_comparecimento');
             $table->string('caminho_documento_requisicao', 255)->nullable()->after('caminho_documento_rg_cpf');
-            $table->enum('status_documento', ['pendente', 'aprovado', 'rejeitado'])->default('pendente')->after('caminho_documento_requisicao');
+            $table->enum('status_documento', ['pendente', 'aprovado', 'validar_no_ato', 'rejeitado'])->default('pendente')->after('caminho_documento_requisicao');
             $table->string('motivo_rejeicao_documento', 255)->nullable()->after('status_documento');
         });
     }

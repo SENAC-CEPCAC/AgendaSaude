@@ -69,7 +69,7 @@
     <h2 class="text-2xl font-bold">AGENDA SAÚDE</h2>
     <p class="text-xs text-slate-500 font-semibold mb-4 uppercase tracking-wide">Área do Colaborador</p>
 
-    <form method="POST" action="{{ route('login.admin.attempt') }}">
+    <form method="POST" action="{{ route('login.colaborador.attempt') }}">
       @csrf
       <h6 class="text-xs font-medium text-slate-700">Matrícula</h6>
       <input type="text" name="matricula" id="matricula" placeholder="Digite sua matrícula" value="{{ old('matricula') }}" required autofocus />

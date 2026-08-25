@@ -213,9 +213,13 @@
                   $statusAgend = strtolower($agendamento->status_agendamento ?? $agendamento->status ?? 'em_espera');
                   @endphp
 
-                  @if($statusAgend === 'confirmado')
+                  @if($statusAgend === 'confirmado' || $statusAgend === 'agendado')
                   <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-green-700">
                     Confirmado
+                  </span>
+                  @elseif($statusAgend === 'espera' || $statusAgend === 'em_espera')
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300">
+                    Lista de Espera
                   </span>
                   @elseif($statusAgend === 'aguardando_confirmacao')
                   <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-yellow-100 text-yellow-700">

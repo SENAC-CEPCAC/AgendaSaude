@@ -71,6 +71,7 @@ class ListaAgendamentoController extends Controller
                 'fato_prontuario.status_comparecimento',
                 'fato_prontuario.status_comparecimento as status',
                 'fato_prontuario.status_documento as status_documentos',
+                'fato_prontuario.status_agendamento',
                 DB::raw("
                 CASE 
                     WHEN fato_prontuario.status_comparecimento = 'confirmado'
@@ -81,9 +82,9 @@ class ListaAgendamentoController extends Controller
             );
 
         /*
-     * PACIENTE - somente seus próprios agendamentos
-     */
-        if ($nivel === 1) {
+         * PACIENTE - somente seus próprios agendamentos
+         */
+        if ($nivel === 1 && !empty($cpfPaciente)) {
             $query->where(
                 'fato_prontuario.cpf_paciente',
                 $cpfPaciente

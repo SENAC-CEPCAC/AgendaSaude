@@ -8,15 +8,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('adms', function (Blueprint $table) {
-            $table->id();
-            $table->string('nome');
-            $table->string('permissao', 10);
-            $table->string('email')->unique();
-            $table->string('cidade');
-            $table->boolean('ativo')->default(true);
-            $table->timestamps();
-        });
+        if (! Schema::hasTable('adms')) {
+            Schema::create('adms', function (Blueprint $table) {
+                $table->id();
+                $table->string('nome');
+                $table->string('permissao', 10);
+                $table->string('email')->unique();
+                $table->string('cidade');
+                $table->boolean('ativo')->default(true);
+                $table->timestamps();
+            });
+        }
     }
 
     public function down(): void

@@ -48,6 +48,26 @@ class CronogramaGestaoController extends Controller
         $dias_atendimento = $cronogramas->pluck('data_atendimento')->unique()->count();
 
         // 4. Carregamento dos dados auxiliares para formulários e filtros
+        if (Vaga::count() === 0) {
+            Vaga::updateOrCreate(['id_vagas' => 1], ['tipo_exame' => 'Preventivo (Siscolo)']);
+            Vaga::updateOrCreate(['id_vagas' => 2], ['tipo_exame' => 'Mamografia (Sismama)']);
+        }
+        if (CnesUnidade::count() === 0) {
+            CnesUnidade::updateOrCreate(
+                ['codigo_cnes' => '2658914'],
+                ['nome_unidade' => 'Unidade Móvel de Saúde da Mulher 01 - Centro / Itinerante']
+            );
+            CnesUnidade::updateOrCreate(
+                ['codigo_cnes' => '3049182'],
+                ['nome_unidade' => 'Unidade Móvel de Prevenção e Diagnóstico 02 - Zona Leste']
+            );
+        }
+        if (Turno::count() === 0) {
+            Turno::updateOrCreate(['id_turno' => 1], ['turno' => 'Manhã']);
+            Turno::updateOrCreate(['id_turno' => 2], ['turno' => 'Tarde']);
+            Turno::updateOrCreate(['id_turno' => 3], ['turno' => 'Integral']);
+        }
+
         $unidades = CnesUnidade::all();
         $vagas_tipos = Vaga::all();
         $turnos = Turno::all();
