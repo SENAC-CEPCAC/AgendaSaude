@@ -142,7 +142,7 @@ Route::middleware('auth.nivel:3,4')->group(function () {
 // ==========================================
 Route::middleware('auth.nivel:4')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('painel_adm.dashboard');
-
+    
     Route::get('/adm', [AdmController::class, 'index'])->name('adm.adm');
     Route::patch('/adm/{adm}', [AdmController::class, 'update'])->name('adm.update');
     Route::patch('/adm/{adm}/status', [AdmController::class, 'toggleStatus'])->name('adm.status');
