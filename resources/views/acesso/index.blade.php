@@ -88,7 +88,7 @@
                 </p>
 
                 <div class="flex flex-col items-center md:items-start gap-3 w-full hero_conteudo_btns">
-                    <a href="{{ route('acesso.cadastro') }}">
+                    <a href="{{ route('politica') }}">
                         <button class="w-[230px] h-fit px-4 py-2.5 border-[1.5px] rounded-lg border border-azul font-sans font-normal text-[14px] hover:bg-azul hover:text-azul bg-transparent hover:bg-azul/15 transition-colors hero_conteudo_btn_cadastrese" data-url="{{ route('acesso.cadastro') }}">
                             Cadastre-se
                         </button>

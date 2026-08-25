@@ -52,12 +52,12 @@
                         Prontuario
                     </a>
                 </li>
-                <li>
+                <!-- <li>
                     <a href="{{ url('/unidadesmoveis') }}" class="flex items-center gap-3 px-10 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 font-['Inter'] text-sm font-medium hover:text-[#003E7E] dark:hover:text-blue-300 transition-all active:scale-95 transition-transform">
                         <span class="material-symbols-outlined"></span>
                         Unidades Móveis
                     </a>
-                </li>
+                </li> -->
                 <li>
                     <a href="{{ route('cronograma.index') }}" class="flex items-center gap-3 px-12 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 font-['Inter'] text-sm font-medium hover:text-[#003E7E] dark:hover:text-blue-300 transition-all active:scale-95 transition-transform">
                         <span class="material-symbols-outlined"></span>
