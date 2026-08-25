@@ -13,6 +13,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AdmController;
 use App\Http\Controllers\UserColaborador;
 use App\Http\Controllers\LoginColaboradorController;
+use App\Http\Controllers\CadastroController;
 
 
 
@@ -55,6 +56,7 @@ Route::get('/feedback', function () {
     return view('pesquisa.feedback'); //ISABELA
 });
 
+Route::post('/cadastro/store', [CadastroController::class, 'store'])->name('acesso.cadastro.store');
 
 // ==========================================
 // 8. PAINEL COLABORADOR & ACESSO (RAFAEL)
@@ -97,10 +99,6 @@ Route::get('/', function () {
 Route::get('/login', function () {
     return view('acesso.login');
 })->name('acesso.login');
-
-Route::post('/login', [LoginController::class, 'logar'])->name('login.attempt');
-Route::post('/cadastro', [LoginController::class, 'cadastrar'])->name('cadastro.store');
-Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 
 
 

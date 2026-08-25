@@ -20,7 +20,8 @@ return new class extends Migration
         Schema::create('dim_pacientes', function (Blueprint $table) {
             // DADOS PESSOAIS (cpf_paciente é o CPF como chave primária única)
             $table->char('cpf_paciente', 11)->primary();
-            $table->string('cartao_sus', 15)->nullable();
+            $ $table->string('cartao_sus', 15)->nullable();
+            $table->char('cpf', 11)->unique();
             $table->string('nome_completo', 150);
             $table->string('nome_mae', 150)->nullable();
             $table->string('apelido', 50)->nullable();

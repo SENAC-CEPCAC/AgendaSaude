@@ -27,6 +27,9 @@ class User extends Authenticatable
         'email',
         'password',
         'cpf_paciente',
+        'cpf',
+        'telefone',
+        'nivel',
     ];
 
     /**
@@ -49,7 +52,7 @@ class User extends Authenticatable
     public function paciente()
     {
         return $this->belongsTo(
-            DimPaciente::class,
+            Paciente::class,
             'cpf_paciente',
             'cpf_paciente'
         );
