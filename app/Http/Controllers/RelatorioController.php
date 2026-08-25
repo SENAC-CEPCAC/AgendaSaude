@@ -10,7 +10,43 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class RelatorioController extends Controller
 {
     /**
-     * 1. QUERY DE PACIENTES ATENDIDOS (ÁREA OPERACIONAL)
+     * QUERY DA ÁREA 1: CRONOGRAMAS E OCUPAÇÃO DE VAGAS
+     */
+    private function getQueryCronogramas($busca = null, $dataInicio = null, $dataFim = null)
+    {
+        $query = DB::table('fato_cronogramas as c')
+            ->join('dim_cnes_unidades as u', 'c.id_cnes_unidade', '=', 'u.id_cnes_unidade')
+            ->join('dim_vagas as v', 'c.Vagas_id_vagas', '=', 'v.id_vagas')
+            ->join('dim_turno as t', 'c.Turno_id_turno', '=', 't.id_turno');
+
+        if (!empty($busca)) {
+            $query->where(function ($q) use ($busca) {
+                $q->where('c.municipio_atendimento', 'like', "%{$busca}%")
+                  ->orWhere('u.nome_unidade', 'like', "%{$busca}%")
+                  ->orWhere('v.tipo_exame', 'like', "%{$busca}%")
+                  ->orWhere('c.id_agenda', 'like', "%{$busca}%");
+            });
+        }
+
+        if (!empty($dataInicio) && !empty($dataFim)) {
+            $query->whereBetween('c.data_atendimento', [$dataInicio, $dataFim]);
+        }
+
+        return $query->select(
+            'c.id_agenda',
+            'c.data_atendimento',
+            'c.municipio_atendimento',
+            'c.qnt_oferecidas_vagas',
+            'c.prenchida_vagas',
+            'u.nome_unidade',
+            'u.codigo_cnes',
+            'v.tipo_exame',
+            't.turno'
+        )->orderBy('c.data_atendimento', 'desc');
+    }
+
+    /**
+     * QUERY DA ÁREA 2.1: PACIENTES ATENDIDOS
      */
     private function getQueryAtendidos($busca = null, $dataInicio = null, $dataFim = null)
     {
@@ -57,7 +93,7 @@ class RelatorioController extends Controller
     }
 
     /**
-     * 2. QUERY DE QUESTIONÁRIOS DE ANAMNESE COM TODOS OS CAMPOS DAS MIGRATIONS
+     * QUERY DA ÁREA 2.2: ANAMNESES (SISMAMA / SISCOLO)
      */
     private function getQueryAnamneses($busca = null, $dataInicio = null, $dataFim = null, $tipoProtocolo = null)
     {
@@ -102,7 +138,7 @@ class RelatorioController extends Controller
             'prof.cargo_funcao',
             'u.nome_unidade',
             
-            // TODOS OS CAMPOS DA MIGRATION anamnese_sismama
+            // SISMAMA
             'mama.nodulo_mama_direita',
             'mama.nodulo_mama_esquerda',
             'mama.risco_elevado_cancer',
@@ -119,7 +155,7 @@ class RelatorioController extends Controller
             'mama.achado_linfonodo_palpavel_dir',
             'mama.achado_linfonodo_palpavel_esq',
             
-            // TODOS OS CAMPOS DA MIGRATION anamnese_siscolo
+            // SISCOLO
             'colo.motivo_exame',
             'colo.fez_preventivo_anterior',
             'colo.ano_ultimo_preventivo',
@@ -137,7 +173,7 @@ class RelatorioController extends Controller
     }
 
     /**
-     * 3. QUERY DE DESISTÊNCIAS E CANCELAMENTOS (ÁREA DE AUDITORIA)
+     * QUERY DA ÁREA 2.3: DESISTÊNCIAS E CANCELAMENTOS
      */
     private function getQueryDesistencias($busca = null, $dataInicio = null, $dataFim = null)
     {
@@ -179,7 +215,7 @@ class RelatorioController extends Controller
     }
 
     /**
-     * 4. QUERY DA FILA DE ESPERA (ÁREA DE VAGAS)
+     * QUERY DA ÁREA 2.4: FILA DE ESPERA
      */
     private function getQueryFilaEspera($busca = null)
     {
@@ -215,33 +251,54 @@ class RelatorioController extends Controller
     }
 
     /**
-     * TELA PRINCIPAL DE RELATÓRIOS
+     * TELA PRINCIPAL DE RELATÓRIOS (2 ÁREAS SEPARADAS)
      */
     public function index(Request $request)
     {
-        $tipo = $request->get('tipo', 'atendidos');
+        $area = $request->get('area', 'cronograma'); // 'cronograma' ou 'atendimentos'
+        $tipoAtendimento = $request->get('tipo', 'atendidos'); // 'atendidos', 'anamneses', 'desistencias', 'fila_espera'
         $busca = $request->get('search');
         $dataInicio = $request->get('data_inicio', Carbon::now()->startOfMonth()->format('Y-m-d'));
         $dataFim = $request->get('data_fim', Carbon::now()->endOfMonth()->format('Y-m-d'));
 
+        // Consultas paginadas
+        $cronogramas = $this->getQueryCronogramas($busca, $dataInicio, $dataFim)->paginate(15, ['*'], 'cronogramas_page');
         $atendidos = $this->getQueryAtendidos($busca, $dataInicio, $dataFim)->paginate(15, ['*'], 'atendidos_page');
         $anamneses = $this->getQueryAnamneses($busca, $dataInicio, $dataFim)->paginate(15, ['*'], 'anamneses_page');
         $desistencias = $this->getQueryDesistencias($busca, $dataInicio, $dataFim)->paginate(15, ['*'], 'desistencias_page');
         $filaEspera = $this->getQueryFilaEspera($busca)->paginate(15, ['*'], 'fila_page');
 
-        // Totalizadores independentes por área
+        // Métricas da Área de Cronograma
+        $queryCronogramasTotal = DB::table('fato_cronogramas');
+        if (!empty($dataInicio) && !empty($dataFim)) {
+            $queryCronogramasTotal->whereBetween('data_atendimento', [$dataInicio, $dataFim]);
+        }
+        $vagasOfertadas = (int) (clone $queryCronogramasTotal)->sum('qnt_oferecidas_vagas');
+        $vagasPreenchidas = (int) (clone $queryCronogramasTotal)->sum('prenchida_vagas');
+        $vagasLivres = max(0, $vagasOfertadas - $vagasPreenchidas);
+        $taxaOcupacao = $vagasOfertadas > 0 ? round(($vagasPreenchidas / $vagasOfertadas) * 100, 1) : 0;
+        $totalAgendas = (clone $queryCronogramasTotal)->count();
+
+        // Totalizadores
         $totais = [
-            'atendidos'    => $this->getQueryAtendidos(null, $dataInicio, $dataFim)->count(),
-            'desistencias' => $this->getQueryDesistencias(null, $dataInicio, $dataFim)->count(),
-            'fila_espera'  => $this->getQueryFilaEspera(null)->count(),
-            'anamneses'    => $this->getQueryAnamneses(null, $dataInicio, $dataFim)->count(),
+            'total_agendas'     => $totalAgendas,
+            'vagas_ofertadas'   => $vagasOfertadas,
+            'vagas_preenchidas' => $vagasPreenchidas,
+            'vagas_livres'      => $vagasLivres,
+            'taxa_ocupacao'     => $taxaOcupacao,
+            'atendidos'         => $this->getQueryAtendidos(null, $dataInicio, $dataFim)->count(),
+            'desistencias'      => $this->getQueryDesistencias(null, $dataInicio, $dataFim)->count(),
+            'fila_espera'       => $this->getQueryFilaEspera(null)->count(),
+            'anamneses'         => $this->getQueryAnamneses(null, $dataInicio, $dataFim)->count(),
         ];
 
         return view('relatorios.index', compact(
-            'tipo',
+            'area',
+            'tipoAtendimento',
             'busca',
             'dataInicio',
             'dataFim',
+            'cronogramas',
             'atendidos',
             'anamneses',
             'desistencias',
@@ -266,7 +323,7 @@ class RelatorioController extends Controller
     }
 
     /**
-     * EXPORTAÇÃO EM CSV POR ÁREA ESPECÍFICA (COM SUPORTE A FILTROS ATIVOS)
+     * EXPORTAÇÃO EM CSV POR ÁREA
      */
     public function exportarCsv(Request $request, string $tipo)
     {
@@ -274,15 +331,34 @@ class RelatorioController extends Controller
         $dataInicio = $request->get('data_inicio');
         $dataFim = $request->get('data_fim');
 
-        $fileName = "relatorio_area_{$tipo}_" . date('Ymd_His') . ".csv";
+        $fileName = "relatorio_{$tipo}_" . date('Ymd_His') . ".csv";
 
         return new StreamedResponse(function () use ($tipo, $busca, $dataInicio, $dataFim) {
             $handle = fopen('php://output', 'w');
             fputs($handle, "\xEF\xBB\xBF");
 
-            if ($tipo === 'atendidos') {
+            if ($tipo === 'cronograma') {
+                fputcsv($handle, ['ID Agenda', 'Data', 'Município', 'Unidade CNES', 'Código CNES', 'Procedimento', 'Turno', 'Vagas Ofertadas', 'Vagas Preenchidas', 'Vagas Livres', 'Ocupação (%)'], ';');
+                $dados = $this->getQueryCronogramas($busca, $dataInicio, $dataFim)->get();
+                foreach ($dados as $row) {
+                    $livres = max(0, $row->qnt_oferecidas_vagas - $row->prenchida_vagas);
+                    $taxa = $row->qnt_oferecidas_vagas > 0 ? round(($row->prenchida_vagas / $row->qnt_oferecidas_vagas) * 100, 1) : 0;
+                    fputcsv($handle, [
+                        '#' . $row->id_agenda,
+                        $row->data_atendimento,
+                        $row->municipio_atendimento,
+                        $row->nome_unidade,
+                        $row->codigo_cnes ?? 'N/I',
+                        $row->tipo_exame,
+                        strtoupper($row->turno),
+                        $row->qnt_oferecidas_vagas,
+                        $row->prenchida_vagas,
+                        $livres,
+                        $taxa . '%'
+                    ], ';');
+                }
+            } elseif ($tipo === 'atendidos') {
                 fputcsv($handle, ['Prontuário', 'CPF', 'Paciente', 'Cartão SUS', 'Data Atendimento', 'Município', 'Unidade CNES', 'Tipo Exame', 'Turno', 'Status Comparecimento'], ';');
-                
                 $dados = $this->getQueryAtendidos($busca, $dataInicio, $dataFim)->get();
                 foreach ($dados as $row) {
                     fputcsv($handle, [
@@ -300,7 +376,6 @@ class RelatorioController extends Controller
                 }
             } elseif ($tipo === 'desistencias') {
                 fputcsv($handle, ['Prontuário', 'CPF', 'Paciente', 'Telefone', 'Data Agendada', 'Data Cancelamento', 'Tipo Exame', 'Motivo / Status'], ';');
-                
                 $dados = $this->getQueryDesistencias($busca, $dataInicio, $dataFim)->get();
                 foreach ($dados as $row) {
                     $motivo = $row->motivo_rejeicao_documento ?: strtoupper(str_replace('_', ' ', $row->status_comparecimento));
@@ -317,7 +392,6 @@ class RelatorioController extends Controller
                 }
             } elseif ($tipo === 'fila_espera') {
                 fputcsv($handle, ['Posição', 'Prontuário', 'CPF', 'Paciente', 'Cartão SUS', 'Telefone', 'Data Entrada', 'Tipo Exame', 'Status Documentos'], ';');
-                
                 $pos = 1;
                 $dados = $this->getQueryFilaEspera($busca)->get();
                 foreach ($dados as $row) {
@@ -335,7 +409,6 @@ class RelatorioController extends Controller
                 }
             } elseif ($tipo === 'anamneses') {
                 fputcsv($handle, ['ID Anamnese', 'Prontuário', 'CPF', 'Paciente', 'Data Realização', 'Protocolo', 'Médico', 'CRM', 'Resumo Clínico'], ';');
-                
                 $dados = $this->getQueryAnamneses($busca, $dataInicio, $dataFim)->get();
                 foreach ($dados as $row) {
                     $resumo = $row->tipo_anamnese === 'sismama'

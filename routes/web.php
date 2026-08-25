@@ -16,6 +16,7 @@ use App\Http\Controllers\LoginColaboradorController;
 use App\Http\Controllers\CadastroController;
 use App\Http\Controllers\AnamneseDoDiaController;
 use App\Http\Controllers\RelatorioController;
+use App\Http\Controllers\CronogramaGestaoController;
 
 
 // PAINEL PACIENTE
@@ -212,3 +213,9 @@ Route::get('/anamnese-dia/pdf', [AnamneseDoDiaController::class, 'pdf'])
 Route::get('/unidadesmoveis', function () {
     return view('anamnese.unidadesmoveis');
 })->name('anamnese.unidadesmoveis');
+
+// GESTÃO DE CRONOGRAMA DE VAGAS
+Route::get('/cronograma', [CronogramaGestaoController::class, 'index'])->name('cronograma.index');
+Route::post('/cronograma', [CronogramaGestaoController::class, 'store'])->name('cronograma.store');
+Route::put('/cronograma/{id}', [CronogramaGestaoController::class, 'update'])->name('cronograma.update');
+Route::delete('/cronograma/{id}', [CronogramaGestaoController::class, 'destroy'])->name('cronograma.destroy');

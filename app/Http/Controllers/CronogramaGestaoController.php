@@ -52,7 +52,7 @@ class CronogramaGestaoController extends Controller
         $vagas_tipos = Vaga::all();
         $turnos = Turno::all();
 
-        return view('painel_adm.cronograma_vagas', [
+        return view('cronograma.cronograma_gestao', [
             'cronogramas' => $cronogramas,
             'mes_ano' => $mes_ano,
             'total_ofertadas' => $total_ofertadas,
@@ -101,13 +101,11 @@ class CronogramaGestaoController extends Controller
             $data_cursor = $data_inicio->copy();
 
             while ($data_cursor->lte($data_final)) {
-                // Se replicar apenas dias úteis (Segunda a Sexta), pula sábado (6) e domingo (0)
                 if ($replicar_uteis && $data_cursor->isWeekend()) {
                     $data_cursor->addDay();
                     continue;
                 }
 
-                // Cria ou atualiza o cronograma para o dia e turno especificados
                 Cronograma::create([
                     'id_cnes_unidade' => $dados['id_cnes_unidade'],
                     'Vagas_id_vagas' => $dados['Vagas_id_vagas'],
