@@ -39,11 +39,14 @@ class AnamneseColoController extends Controller
      */
     public function create($id_prontuario)
     {
-        return view('anamnese.colo', ['id_prontuario' => $id_prontuario]);
+        return view('anamnese.colo', [
+            'id_prontuario' => $id_prontuario
+        ]);
     }
 
     /**
-     * Salva uma nova anamnese de colo (cria fato_anamnese + anamnese_siscolo juntos)
+     * Salva uma nova anamnese de colo
+     * (cria fato_anamnese + anamnese_siscolo juntos)
      */
     public function store(Request $request)
     {
@@ -68,7 +71,8 @@ class AnamneseColoController extends Controller
         DB::transaction(function () use ($dados) {
             $fato = FatoAnamnese::create([
                 'id_prontuario' => $dados['id_prontuario'],
-                'id_profissional' => auth()->id() ?? DB::table('dim_profissionais')->value('id_profissional'), // TEMPORÁRIO: fixo até o login estar pronto
+                'id_profissional' => auth()->id()
+                    ?? DB::table('dim_profissionais')->value('id_profissional'),
                 'tipo_anamnese' => 'siscolo',
                 'data_realizacao' => $dados['data_realizacao'],
             ]);
@@ -96,20 +100,35 @@ class AnamneseColoController extends Controller
             ->with('sucesso', 'Anamnese de colo salva com sucesso!');
     }
 
+    /**
+     * Mostra os detalhes da anamnese
+     */
     public function show($id)
     {
-        $anamneseColo = AnamneseColo::with('fatoAnamnese.prontuario.paciente')->findOrFail($id);
+        $anamneseColo = AnamneseColo::with('fatoAnamnese.prontuario.paciente')
+            ->findOrFail($id);
 
-        return view('anamnese-colo.detalhes', ['anamneseColo' => $anamneseColo]);
+        return view('anamnese-colo.detalhes', [
+            'anamneseColo' => $anamneseColo
+        ]);
     }
 
+    /**
+     * Mostra o formulário de edição
+     */
     public function edit($id)
     {
-        $anamneseColo = AnamneseColo::with('fatoAnamnese')->findOrFail($id);
+        $anamneseColo = AnamneseColo::with('fatoAnamnese.prontuario.paciente')
+            ->findOrFail($id);
 
-        return view('anamnese-colo.editar', ['anamneseColo' => $anamneseColo]);
+        return view('anamnese-colo.editar', [
+            'anamneseColo' => $anamneseColo
+        ]);
     }
 
+    /**
+     * Atualiza uma anamnese de colo existente
+     */
     public function update(Request $request, $id)
     {
         $dados = $request->validate([
@@ -156,10 +175,13 @@ class AnamneseColoController extends Controller
         });
 
         return redirect()
-            ->route('anamnese-colo.index')
+            ->route('anamnese-colo.show', $id)
             ->with('sucesso', 'Anamnese de colo atualizada com sucesso!');
     }
 
+    /**
+     * Exclui uma anamnese de colo
+     */
     public function destroy($id)
     {
         DB::transaction(function () use ($id) {
@@ -180,9 +202,12 @@ class AnamneseColoController extends Controller
      */
     public function pdf($id)
     {
-        $anamneseColo = AnamneseColo::with('fatoAnamnese.prontuario.paciente')->findOrFail($id);
+        $anamneseColo = AnamneseColo::with('fatoAnamnese.prontuario.paciente')
+            ->findOrFail($id);
 
-        $pdf = Pdf::loadView('anamnese-colo.pdf', ['anamneseColo' => $anamneseColo]);
+        $pdf = Pdf::loadView('anamnese-colo.pdf', [
+            'anamneseColo' => $anamneseColo
+        ]);
 
         return $pdf->download('anamnese-colo-' . $id . '.pdf');
     }

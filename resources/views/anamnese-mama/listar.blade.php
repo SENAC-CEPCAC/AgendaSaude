@@ -75,6 +75,10 @@
                        class="text-sm font-medium text-blue-600 hover:text-blue-700">
                       Ver
                     </a>
+                    <a href="{{ route('anamnese-mama.edit', $anamnese->id_sismama) }}"
+   class="text-sm font-medium text-amber-600 hover:text-amber-700">
+  Editar
+</a>
                     <a href="{{ route('anamnese-mama.pdf', $anamnese->id_sismama) }}"
                        class="text-sm font-medium text-emerald-600 hover:text-emerald-700">
                       PDF
