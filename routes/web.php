@@ -8,6 +8,7 @@ use App\Http\Controllers\AgendamentoEtapa3Controller;
 use App\Http\Controllers\AnamneseColoController;
 use App\Http\Controllers\AnamneseMamaController;
 use App\Http\Controllers\ListaAgendamentoController;
+use App\Http\Controllers\CadastroController;
 
 
 
@@ -15,7 +16,7 @@ use App\Http\Controllers\ListaAgendamentoController;
 
 Route::get('/login', function () { //WILLIAM
     return view('login.loginP');
-});
+})->name('loginPaciente');
 
 Route::get('/teste', function () { //WILLIAM
     return view('pesquisa.teste');
@@ -95,6 +96,9 @@ Route::get('/cadastro', function () {
     return view('acesso.cadastro'); //RAFAEL
 })->name('acesso.cadastro');
 
+Route::post('/cadastro', [CadastroController::class, 'store'])
+    ->name('permissao_colaborador.cadastro.store');
+
 Route::get('/novasenha', function () {
     return view('recuperacao.novasenha'); //RAFAEL
 })->name('recuperacao.novasenha');
@@ -138,3 +142,6 @@ Route::middleware('auth.nivel:1,2,3,4')->group(function () {
 Route::get('/agendamentos-gestao', [ListaAgendamentoController::class, 'index'])->name('agendamentos.index'); // Mateus
 Route::get('/agendamentos/{id}', [ListaAgendamentoController::class, 'show'])->name('agendamentos.show'); // Mateus
 Route::post('/agendamentos/{id}/validar-documento', [ListaAgendamentoController::class, 'validarDocumentos'])->name('agendamentos.validar-documento'); // Mateus
+
+Route::resource('anamnese-colo', AnamneseColoController::class);
+//Route::resource('anamnese-mama', AnamneseMamaController::class);
