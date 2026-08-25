@@ -51,8 +51,8 @@
   @endif
 
   @if ($nivelUsuario === 1 || $nivelUsuario === 2 )
-    @include('sidebar.sidebar_n2_n1')
-    <button id="mobile-menu-toggle" type="button" class="fixed left-3 top-3 z-[60] flex items-center justify-center rounded-lg bg-blue-600 p-2 text-white shadow-sm transition hover:bg-blue-800 sm:left-5 sm:top-5" aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menu">
+  @include('sidebar.sidebar_n2_n1')
+  <button id="mobile-menu-toggle" type="button" class="fixed left-3 top-3 z-[60] flex items-center justify-center rounded-lg bg-blue-600 p-2 text-white shadow-sm transition hover:bg-blue-800 sm:left-5 sm:top-5" aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menu">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="menu" aria-hidden="true" class="lucide lucide-menu h-4 w-4">
       <path d="M4 5h16"></path>
       <path d="M4 12h16"></path>
@@ -149,9 +149,12 @@
             <tbody id="agendamentosTable" class="divide-y divide-slate-100 text-sm text-slate-600">
 
               @forelse($showAgendamentos as $agendamento)
+
               <tr
+                @if((int) $nivelUsuario !==1)
                 onclick="abrirModalAgendamento({{ $agendamento->numero_agendamento ?? $agendamento->id ?? $agendamento->numero_sequencial }})"
-                class="hover:bg-slate-50 transition-colors cursor-pointer">
+                class="hover:bg-slate-50 transition-colors cursor-pointer"
+                @endif>
                 <!-- Nº Agendamento -->
                 <td class="py-4 px-6 font-medium text-slate-700">
                   <div class="flex items-center gap-1.5">
