@@ -15,7 +15,23 @@ class AnamneseColoController extends Controller
      */
     public function index(Request $request)
     {
-        return view('anamnese.colo');
+        $cpfBusca = $request->query('cpf');
+
+        $anamnesesColo = AnamneseColo::with('fatoAnamnese.prontuario.paciente')
+            ->when($cpfBusca, function ($query, $cpfBusca) {
+                $cpfLimpo = preg_replace('/\D/', '', $cpfBusca);
+
+                $query->whereHas('fatoAnamnese.prontuario.paciente', function ($q) use ($cpfLimpo) {
+                    $q->where('cpf_paciente', 'like', '%' . $cpfLimpo . '%');
+                });
+            })
+            ->latest('id_siscolo')
+            ->get();
+
+        return view('anamnese-colo.listar', [
+            'anamnesesColo' => $anamnesesColo,
+            'cpfBusca' => $cpfBusca,
+        ]);
     }
 
     /**

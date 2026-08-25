@@ -81,7 +81,7 @@ class LoginController extends Controller
             return to_route('adm.adm');
         }
 
-        return to_route('agendamentos.index');
+        return to_route('agendamento.agendamentos');
     }
 
     public function destroy()

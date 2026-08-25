@@ -37,23 +37,4 @@ class LoginColaboradorController extends Controller
             default => back()->withErrors(['email' => 'Nível de acesso inválido.']),
         };
     }
-
-    public function atualizarSenha(Request $request)
-    {
-        $dados = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
-
-        $colaborador = UserColaborador::where('email', $dados['email'])->first();
-
-        if (! $colaborador) {
-            return back()->withInput()->withErrors(['email' => 'Colaborador não encontrado.']);
-        }
-
-        $colaborador->password = Hash::make($dados['password']);
-        $colaborador->save();
-
-        return to_route('login.colaborador')->with('status', 'Senha alterada com sucesso.');
-    }
 }
