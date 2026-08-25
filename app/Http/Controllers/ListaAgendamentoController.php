@@ -6,21 +6,60 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use App\Models\UserColaborador;
 
 class ListaAgendamentoController extends Controller
 {
     /**
      * Tela de Gestão: Lista de Agendamentos (Para o Operador/Recepção)
      */
+
     public function index(Request $request)
     {
         $search = $request->input('search');
         $status = $request->input('status');
         $statusDocumentos = $request->input('status_documentos');
 
+        // Identifica o usuário autenticado
+        $paciente = Auth::user();
+        $colaboradorId = session('colaborador_id');
+
+        if ($paciente) {
+
+            // Paciente
+            $nivel = 1;
+            $cpfPaciente = $paciente->cpf_paciente;
+        } elseif ($colaboradorId) {
+
+            // Colaborador
+            $colaborador = UserColaborador::find($colaboradorId);
+
+            if (!$colaborador || !$colaborador->ativo) {
+                abort(401, 'Colaborador não autenticado.');
+            }
+
+            $nivel = (int) $colaborador->permissao;
+            $cpfPaciente = null;
+        } else {
+
+            abort(401, 'Usuário não autenticado.');
+        }
+
+
         $query = DB::table('fato_prontuario')
-            ->join('dim_pacientes', 'fato_prontuario.cpf_paciente', '=', 'dim_pacientes.cpf_paciente')
-            ->join('fato_cronogramas', 'fato_prontuario.id_agenda', '=', 'fato_cronogramas.id_agenda')
+            ->join(
+                'dim_pacientes',
+                'fato_prontuario.cpf_paciente',
+                '=',
+                'dim_pacientes.cpf_paciente'
+            )
+            ->join(
+                'fato_cronogramas',
+                'fato_prontuario.id_agenda',
+                '=',
+                'fato_cronogramas.id_agenda'
+            )
             ->select(
                 'fato_prontuario.id_prontuario as id',
                 'fato_prontuario.id_prontuario as numero_agendamento',
@@ -32,34 +71,82 @@ class ListaAgendamentoController extends Controller
                 'fato_prontuario.status_comparecimento',
                 'fato_prontuario.status_comparecimento as status',
                 'fato_prontuario.status_documento as status_documentos',
-                DB::raw("CASE WHEN fato_prontuario.status_comparecimento = 'confirmado' THEN 1 ELSE 0 END as cliente_confirmou")
+                DB::raw("
+                CASE 
+                    WHEN fato_prontuario.status_comparecimento = 'confirmado'
+                    THEN 1
+                    ELSE 0
+                END as cliente_confirmou
+            ")
             );
 
-        // Filtro por texto (Nome, CPF, Número)
+        /*
+     * PACIENTE - somente seus próprios agendamentos
+     */
+        if ($nivel === 1) {
+            $query->where(
+                'fato_prontuario.cpf_paciente',
+                $cpfPaciente
+            );
+        }
+
+        /*
+     * FILTRO DE PESQUISA
+     */
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
-                $q->where('dim_pacientes.nome_completo', 'like', "%{$search}%")
-                  ->orWhere('dim_pacientes.cpf_paciente', 'like', "%{$search}%")
-                  ->orWhere('fato_prontuario.id_prontuario', 'like', "%{$search}%");
+                $q->where(
+                    'dim_pacientes.nome_completo',
+                    'like',
+                    "%{$search}%"
+                )
+                    ->orWhere(
+                        'dim_pacientes.cpf_paciente',
+                        'like',
+                        "%{$search}%"
+                    )
+                    ->orWhere(
+                        'fato_prontuario.id_prontuario',
+                        'like',
+                        "%{$search}%"
+                    );
             });
         }
 
-        // Filtro por status do comparecimento ou agendamento
+        /*
+     * FILTRO DE STATUS
+     */
         if (!empty($status)) {
             $query->where(function ($q) use ($status) {
-                $q->where('fato_prontuario.status_comparecimento', $status)
-                  ->orWhere('fato_prontuario.status_agendamento', $status);
+                $q->where(
+                    'fato_prontuario.status_comparecimento',
+                    $status
+                )
+                    ->orWhere(
+                        'fato_prontuario.status_agendamento',
+                        $status
+                    );
             });
         }
 
-        // Filtro por status da validação dos documentos
+        /*
+     * FILTRO DE DOCUMENTOS
+     */
         if (!empty($statusDocumentos)) {
-            $query->where('fato_prontuario.status_documento', $statusDocumentos);
+            $query->where(
+                'fato_prontuario.status_documento',
+                $statusDocumentos
+            );
         }
 
-        $showAgendamentos = $query->orderBy('fato_cronogramas.data_atendimento', 'desc')->paginate(10);
+        $showAgendamentos = $query
+            ->orderBy('fato_cronogramas.data_atendimento', 'desc')
+            ->paginate(10);
 
-        return view('listaagendamentos.index', compact('showAgendamentos'));
+        return view(
+            'listaagendamentos.index',
+            compact('showAgendamentos')
+        );
     }
 
     /**
