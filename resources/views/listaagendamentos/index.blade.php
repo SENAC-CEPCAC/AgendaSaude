@@ -125,8 +125,10 @@
                 <th class="py-4 px-6 w-[16%]">CPF</th>
                 <th class="py-4 px-6 w-[28%]">Paciente</th>
                 <th class="py-4 px-6 w-[16%]">Horário</th>
+                @if($nivelUsuario !==1)
                 <th class="py-4 px-4 w-[14%] text-center">Status Documentos</th>
                 <th class="py-4 px-4 w-[14%] text-center">Status Agendamento</th>
+                @endif
               </tr>
             </thead>
             <tbody id="agendamentosTable" class="divide-y divide-slate-100 text-sm text-slate-600">
@@ -163,6 +165,7 @@
                   <span class="text-slate-400 italic">Fila de Espera</span>
                   @endif
                 </td>
+                @if($nivelUsuario !==1)
 
                 <!-- Status Documentos -->
                 <td class="py-4 px-4 text-center">
@@ -213,6 +216,7 @@
                   </span>
                   @endif
                 </td>
+                @endif
               </tr>
               @empty
               <tr>
