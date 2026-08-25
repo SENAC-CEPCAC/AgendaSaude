@@ -213,7 +213,7 @@ Route::resource('anamnese-colo', AnamneseColoController::class)->except(['create
 
 Route::get('/anamnese-mama/{id}/pdf', [AnamneseMamaController::class, 'pdf'])->name('anamnese-mama.pdf');
 Route::get('/anamnese-mama/create/{id_prontuario}', [AnamneseMamaController::class, 'create'])->name('anamnese-mama.create');
-Route::resource('anamnese-mama', AnamneseMamaController::class)->except(['create', 'edit', 'update']);
+Route::resource('anamnese-mama', AnamneseMamaController::class)->except(['create']);
 
 Route::get('/anamnese-dia', [AnamneseDoDiaController::class, 'index'])
     ->name('anamnese-dia.index');
