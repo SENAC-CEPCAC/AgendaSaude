@@ -10,8 +10,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class RelatorioController extends Controller
 {
     /**
-     * 1. RELATÓRIO DE PACIENTES ATENDIDOS
-     * Tabelas: fato_prontuario + dim_pacientes + fato_cronogramas + dim_vagas + dim_turno + dim_cnes_unidades
+     * 1. QUERY DE PACIENTES ATENDIDOS (ÁREA OPERACIONAL)
      */
     private function getQueryAtendidos($busca = null, $dataInicio = null, $dataFim = null)
     {
@@ -22,20 +21,21 @@ class RelatorioController extends Controller
             ->leftJoin('dim_turno as t', 'c.Turno_id_turno', '=', 't.id_turno')
             ->leftJoin('dim_cnes_unidades as u', 'c.id_cnes_unidade', '=', 'u.id_cnes_unidade')
             ->where(function ($q) {
-                $q->where('p.status_comparecimento', 'presente')
+                $q->whereIn('p.status_comparecimento', ['presente', 'atrasado', 'confirmado'])
                   ->orWhere('p.status_agendamento', 'confirmado');
             });
 
-        if ($busca) {
+        if (!empty($busca)) {
             $query->where(function ($q) use ($busca) {
                 $q->where('pac.nome_completo', 'like', "%{$busca}%")
                   ->orWhere('pac.cpf_paciente', 'like', "%{$busca}%")
                   ->orWhere('pac.cartao_sus', 'like', "%{$busca}%")
+                  ->orWhere('p.numero_sequencial', 'like', "%{$busca}%")
                   ->orWhere('v.tipo_exame', 'like', "%{$busca}%");
             });
         }
 
-        if ($dataInicio && $dataFim) {
+        if (!empty($dataInicio) && !empty($dataFim)) {
             $query->whereBetween('c.data_atendimento', [$dataInicio, $dataFim]);
         }
 
@@ -52,13 +52,12 @@ class RelatorioController extends Controller
             'u.nome_unidade',
             'u.codigo_cnes',
             'p.status_comparecimento',
-            'p.status_documentos'
+            'p.status_documento as status_documentos'
         )->orderBy('c.data_atendimento', 'desc');
     }
 
     /**
-     * 2. RELATÓRIO DE QUESTIONÁRIOS DE ANAMNESE (SISMAMA E SISCOLO)
-     * Tabelas: fato_anamnese + fato_prontuario + dim_pacientes + dim_profissionais + anamnese_sismama + anamnese_siscolo
+     * 2. QUERY DE QUESTIONÁRIOS DE ANAMNESE COM TODOS OS CAMPOS DAS MIGRATIONS
      */
     private function getQueryAnamneses($busca = null, $dataInicio = null, $dataFim = null, $tipoProtocolo = null)
     {
@@ -71,11 +70,11 @@ class RelatorioController extends Controller
             ->leftJoin('fato_cronogramas as c', 'p.id_agenda', '=', 'c.id_agenda')
             ->leftJoin('dim_cnes_unidades as u', 'c.id_cnes_unidade', '=', 'u.id_cnes_unidade');
 
-        if ($tipoProtocolo && in_array($tipoProtocolo, ['sismama', 'siscolo'])) {
+        if (!empty($tipoProtocolo) && in_array($tipoProtocolo, ['sismama', 'siscolo'])) {
             $query->where('a.tipo_anamnese', $tipoProtocolo);
         }
 
-        if ($busca) {
+        if (!empty($busca)) {
             $query->where(function ($q) use ($busca) {
                 $q->where('pac.nome_completo', 'like', "%{$busca}%")
                   ->orWhere('pac.cpf_paciente', 'like', "%{$busca}%")
@@ -83,7 +82,7 @@ class RelatorioController extends Controller
             });
         }
 
-        if ($dataInicio && $dataFim) {
+        if (!empty($dataInicio) && !empty($dataFim)) {
             $query->whereBetween('a.data_realizacao', [$dataInicio, $dataFim]);
         }
 
@@ -102,31 +101,43 @@ class RelatorioController extends Controller
             'prof.registro_profissional as crm',
             'prof.cargo_funcao',
             'u.nome_unidade',
-            // SISMAMA
+            
+            // TODOS OS CAMPOS DA MIGRATION anamnese_sismama
             'mama.nodulo_mama_direita',
             'mama.nodulo_mama_esquerda',
             'mama.risco_elevado_cancer',
-            'mama.tipo_mamografia',
+            'mama.mamas_examinadas_anteriormente',
             'mama.fez_mamografia_anterior',
             'mama.ano_ultima_mamografia',
+            'mama.fez_radioterapia_mama',
+            'mama.fez_cirurgia_mama',
+            'mama.tipo_mamografia',
             'mama.achado_descarga_papilar_dir',
+            'mama.achado_descarga_papilar_esq',
             'mama.achado_nodulo_localizacao_dir',
+            'mama.achado_nodulo_localizacao_esq',
             'mama.achado_linfonodo_palpavel_dir',
-            // SISCOLO
+            'mama.achado_linfonodo_palpavel_esq',
+            
+            // TODOS OS CAMPOS DA MIGRATION anamnese_siscolo
             'colo.motivo_exame',
             'colo.fez_preventivo_anterior',
             'colo.ano_ultimo_preventivo',
-            'colo.usa_pilula',
             'colo.usa_diu',
             'colo.esta_gravida',
+            'colo.usa_pilula',
+            'colo.usa_hormonio_menopausa',
+            'colo.ja_fez_radioterapia',
+            'colo.data_ultima_menstruacao',
+            'colo.sangramento_apos_relacao',
+            'colo.sangramento_apos_menopausa',
             'colo.inspecao_colo',
             'colo.sinais_dst'
         )->orderBy('a.data_realizacao', 'desc');
     }
 
     /**
-     * 3. RELATÓRIO DE DESISTÊNCIAS E EXPIRAÇÕES 24H
-     * Tabelas: fato_prontuario + dim_pacientes + dim_telefones_paciente + fato_cronogramas + dim_vagas
+     * 3. QUERY DE DESISTÊNCIAS E CANCELAMENTOS (ÁREA DE AUDITORIA)
      */
     private function getQueryDesistencias($busca = null, $dataInicio = null, $dataFim = null)
     {
@@ -136,16 +147,20 @@ class RelatorioController extends Controller
             ->leftJoin('fato_cronogramas as c', 'p.id_agenda', '=', 'c.id_agenda')
             ->leftJoin('dim_vagas as v', 'c.Vagas_id_vagas', '=', 'v.id_vagas')
             ->where(function ($q) {
-                $q->where('p.status_comparecimento', 'cancelado')
+                $q->whereIn('p.status_comparecimento', ['cancelado', 'nao_compareceu', 'faltou'])
                   ->orWhere('p.status_agendamento', 'cancelado_prazo_24h')
                   ->orWhere('p.status_documento', 'rejeitado');
             });
 
-        if ($busca) {
+        if (!empty($busca)) {
             $query->where(function ($q) use ($busca) {
                 $q->where('pac.nome_completo', 'like', "%{$busca}%")
                   ->orWhere('pac.cpf_paciente', 'like', "%{$busca}%");
             });
+        }
+
+        if (!empty($dataInicio) && !empty($dataFim)) {
+            $query->whereBetween('c.data_atendimento', [$dataInicio, $dataFim]);
         }
 
         return $query->select(
@@ -157,14 +172,14 @@ class RelatorioController extends Controller
             'c.data_atendimento',
             'p.updated_at as data_cancelamento',
             'v.tipo_exame',
+            'p.status_comparecimento',
             'p.status_agendamento',
             'p.motivo_rejeicao_documento'
         )->orderBy('p.updated_at', 'desc');
     }
 
     /**
-     * 4. RELATÓRIO DA FILA DE ESPERA CRONOLÓGICA
-     * Tabelas: fato_prontuario + dim_pacientes + dim_telefones_paciente + fato_cronogramas + dim_vagas
+     * 4. QUERY DA FILA DE ESPERA (ÁREA DE VAGAS)
      */
     private function getQueryFilaEspera($busca = null)
     {
@@ -178,7 +193,7 @@ class RelatorioController extends Controller
                   ->orWhere('p.status_comparecimento', 'espera');
             });
 
-        if ($busca) {
+        if (!empty($busca)) {
             $query->where(function ($q) use ($busca) {
                 $q->where('pac.nome_completo', 'like', "%{$busca}%")
                   ->orWhere('pac.cpf_paciente', 'like', "%{$busca}%");
@@ -194,13 +209,13 @@ class RelatorioController extends Controller
             'tel.numero as telefone',
             'p.created_at as data_entrada',
             'v.tipo_exame',
-            'p.status_documentos',
+            'p.status_documento as status_documentos',
             'p.status_agendamento'
         )->orderBy('p.numero_sequencial', 'asc');
     }
 
     /**
-     * INDEX PRINCIPAL COM PAGINAÇÃO E TOTAIS
+     * TELA PRINCIPAL DE RELATÓRIOS
      */
     public function index(Request $request)
     {
@@ -214,11 +229,12 @@ class RelatorioController extends Controller
         $desistencias = $this->getQueryDesistencias($busca, $dataInicio, $dataFim)->paginate(15, ['*'], 'desistencias_page');
         $filaEspera = $this->getQueryFilaEspera($busca)->paginate(15, ['*'], 'fila_page');
 
+        // Totalizadores independentes por área
         $totais = [
-            'atendidos' => $this->getQueryAtendidos()->count(),
-            'anamneses' => $this->getQueryAnamneses()->count(),
-            'desistencias' => $this->getQueryDesistencias()->count(),
-            'fila_espera' => $this->getQueryFilaEspera()->count(),
+            'atendidos'    => $this->getQueryAtendidos(null, $dataInicio, $dataFim)->count(),
+            'desistencias' => $this->getQueryDesistencias(null, $dataInicio, $dataFim)->count(),
+            'fila_espera'  => $this->getQueryFilaEspera(null)->count(),
+            'anamneses'    => $this->getQueryAnamneses(null, $dataInicio, $dataFim)->count(),
         ];
 
         return view('relatorios.index', compact(
@@ -250,40 +266,93 @@ class RelatorioController extends Controller
     }
 
     /**
-     * EXPORTAÇÃO EM CSV / EXCEL
+     * EXPORTAÇÃO EM CSV POR ÁREA ESPECÍFICA (COM SUPORTE A FILTROS ATIVOS)
      */
-    public function exportarCsv(string $tipo)
+    public function exportarCsv(Request $request, string $tipo)
     {
-        $fileName = "relatorio_{$tipo}_" . date('Y-m-d_His') . ".csv";
+        $busca = $request->get('search');
+        $dataInicio = $request->get('data_inicio');
+        $dataFim = $request->get('data_fim');
 
-        return new StreamedResponse(function () use ($tipo) {
+        $fileName = "relatorio_area_{$tipo}_" . date('Ymd_His') . ".csv";
+
+        return new StreamedResponse(function () use ($tipo, $busca, $dataInicio, $dataFim) {
             $handle = fopen('php://output', 'w');
-            fputs($handle, "\xEF\xBB\xBF"); // UTF-8 BOM
+            fputs($handle, "\xEF\xBB\xBF");
 
             if ($tipo === 'atendidos') {
-                fputcsv($handle, ['Prontuário', 'CPF', 'Paciente', 'SUS', 'Data Atendimento', 'Município', 'Unidade CNES', 'Tipo Exame', 'Turno', 'Status'], ';');
-                foreach ($this->getQueryAtendidos()->get() as $row) {
-                    fputcsv($handle, ['#' . $row->numero_sequencial, $row->cpf_paciente, $row->nome_paciente, $row->cartao_sus, $row->data_atendimento, $row->municipio_atendimento, $row->nome_unidade, $row->tipo_exame, $row->turno, $row->status_comparecimento], ';');
-                }
-            } elseif ($tipo === 'anamneses') {
-                fputcsv($handle, ['ID Anamnese', 'Prontuário', 'CPF', 'Paciente', 'Data Realização', 'Protocolo', 'Médico', 'CRM', 'Resumo'], ';');
-                foreach ($this->getQueryAnamneses()->get() as $row) {
-                    $resumo = $row->tipo_anamnese === 'sismama'
-                        ? "Nódulo Dir: " . ($row->nodulo_mama_direita ? 'Sim' : 'Não') . " | Risco Câncer: " . ($row->risco_elevado_cancer ? 'Sim' : 'Não')
-                        : "Motivo: {$row->motivo_exame} | Preventivo Anterior: " . ($row->fez_preventivo_anterior ? 'Sim' : 'Não');
-
-                    fputcsv($handle, [$row->id_fato_anamnese, '#' . $row->numero_sequencial, $row->cpf_paciente, $row->nome_paciente, $row->data_realizacao, strtoupper($row->tipo_anamnese), $row->nome_profissional, $row->crm, $resumo], ';');
+                fputcsv($handle, ['Prontuário', 'CPF', 'Paciente', 'Cartão SUS', 'Data Atendimento', 'Município', 'Unidade CNES', 'Tipo Exame', 'Turno', 'Status Comparecimento'], ';');
+                
+                $dados = $this->getQueryAtendidos($busca, $dataInicio, $dataFim)->get();
+                foreach ($dados as $row) {
+                    fputcsv($handle, [
+                        '#' . ($row->numero_sequencial ?? $row->id_prontuario),
+                        $row->cpf_paciente,
+                        $row->nome_paciente,
+                        $row->cartao_sus ?? 'Não informado',
+                        $row->data_atendimento,
+                        $row->municipio_atendimento ?? 'Municipal',
+                        $row->nome_unidade ?? 'Unidade Geral',
+                        $row->tipo_exame,
+                        $row->turno ?? 'Integral',
+                        strtoupper($row->status_comparecimento)
+                    ], ';');
                 }
             } elseif ($tipo === 'desistencias') {
-                fputcsv($handle, ['Prontuário', 'CPF', 'Paciente', 'Telefone', 'Data Agendada', 'Data Cancelamento', 'Tipo Exame', 'Motivo'], ';');
-                foreach ($this->getQueryDesistencias()->get() as $row) {
-                    fputcsv($handle, ['#' . $row->numero_sequencial, $row->cpf_paciente, $row->nome_paciente, $row->telefone, $row->data_atendimento, $row->data_cancelamento, $row->tipo_exame, $row->motivo_rejeicao_documento ?: 'Cancelamento / Expiração 24h'], ';');
+                fputcsv($handle, ['Prontuário', 'CPF', 'Paciente', 'Telefone', 'Data Agendada', 'Data Cancelamento', 'Tipo Exame', 'Motivo / Status'], ';');
+                
+                $dados = $this->getQueryDesistencias($busca, $dataInicio, $dataFim)->get();
+                foreach ($dados as $row) {
+                    $motivo = $row->motivo_rejeicao_documento ?: strtoupper(str_replace('_', ' ', $row->status_comparecimento));
+                    fputcsv($handle, [
+                        '#' . ($row->numero_sequencial ?? $row->id_prontuario),
+                        $row->cpf_paciente,
+                        $row->nome_paciente,
+                        $row->telefone ?? 'Sem telefone',
+                        $row->data_atendimento,
+                        $row->data_cancelamento ?? $row->data_atendimento,
+                        $row->tipo_exame,
+                        $motivo
+                    ], ';');
                 }
             } elseif ($tipo === 'fila_espera') {
-                fputcsv($handle, ['Posição', 'Prontuário', 'CPF', 'Paciente', 'Cartão SUS', 'Telefone', 'Data Entrada', 'Exame', 'Documentos'], ';');
+                fputcsv($handle, ['Posição', 'Prontuário', 'CPF', 'Paciente', 'Cartão SUS', 'Telefone', 'Data Entrada', 'Tipo Exame', 'Status Documentos'], ';');
+                
                 $pos = 1;
-                foreach ($this->getQueryFilaEspera()->get() as $row) {
-                    fputcsv($handle, [$pos++, '#' . $row->numero_sequencial, $row->cpf_paciente, $row->nome_paciente, $row->cartao_sus, $row->telefone, $row->data_entrada, $row->tipo_exame, $row->status_documentos], ';');
+                $dados = $this->getQueryFilaEspera($busca)->get();
+                foreach ($dados as $row) {
+                    fputcsv($handle, [
+                        $pos++,
+                        '#' . ($row->numero_sequencial ?? $row->id_prontuario),
+                        $row->cpf_paciente,
+                        $row->nome_paciente,
+                        $row->cartao_sus ?? 'Não informado',
+                        $row->telefone ?? 'Sem telefone',
+                        $row->data_entrada,
+                        $row->tipo_exame,
+                        strtoupper($row->status_documentos ?? 'pendente')
+                    ], ';');
+                }
+            } elseif ($tipo === 'anamneses') {
+                fputcsv($handle, ['ID Anamnese', 'Prontuário', 'CPF', 'Paciente', 'Data Realização', 'Protocolo', 'Médico', 'CRM', 'Resumo Clínico'], ';');
+                
+                $dados = $this->getQueryAnamneses($busca, $dataInicio, $dataFim)->get();
+                foreach ($dados as $row) {
+                    $resumo = $row->tipo_anamnese === 'sismama'
+                        ? "Nódulo Dir: " . ($row->nodulo_mama_direita ? 'Sim' : 'Não') . " | Risco Câncer: " . ($row->risco_elevado_cancer ? 'Sim' : 'Não') . " | Mamografia Ant: " . ($row->fez_mamografia_anterior ? 'Sim' : 'Não')
+                        : "Motivo: {$row->motivo_exame} | Preventivo Ant: " . ($row->fez_preventivo_anterior ? 'Sim' : 'Não') . " | Pílula: " . ($row->usa_pilula ? 'Sim' : 'Não');
+
+                    fputcsv($handle, [
+                        $row->id_fato_anamnese,
+                        '#' . ($row->numero_sequencial ?? $row->id_prontuario),
+                        $row->cpf_paciente,
+                        $row->nome_paciente,
+                        $row->data_realizacao,
+                        strtoupper($row->tipo_anamnese),
+                        $row->nome_profissional,
+                        $row->crm,
+                        $resumo
+                    ], ';');
                 }
             }
 
@@ -291,6 +360,9 @@ class RelatorioController extends Controller
         }, 200, [
             'Content-Type' => 'text/csv; charset=UTF-8',
             'Content-Disposition' => "attachment; filename=\"{$fileName}\"",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0'
         ]);
     }
 }
