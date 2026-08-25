@@ -9,7 +9,7 @@ return new class extends Migration
     /**
      * PSEUDOCÓDIGO DE EXECUÇÃO:
      * 1. CRIE A TABELA 'dim_pacientes'.
-     * 2. DEFINA 'id_paciente' COMO CHAVE PRIMÁRIA.
+     * 2. DEFINA 'cpf_paciente' COMO CHAVE PRIMÁRIA (CHAR 11).
      * 3. ADICIONE DOCUMENTOS: 'cartao_sus' (VARCHAR 15), 'cpf' (CHAR 11).
      * 4. ADICIONE NOMES: 'nome_completo' (VARCHAR 150), 'nome_mae' (VARCHAR 150), 'apelido' (VARCHAR 50).
      * 5. ADICIONE DADOS DEMOGRÁFICOS: 'data_nascimento', 'sexo' (CHAR 1), 'raca_cor' (VARCHAR 20), 'escolaridade' (VARCHAR 50).
@@ -18,10 +18,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('dim_pacientes', function (Blueprint $table) {
-            // DADOS PESSOAIS
-            $table->increments('id_paciente');
+            // DADOS PESSOAIS (cpf_paciente é o CPF como chave primária única)
+            $table->char('cpf_paciente', 11)->primary();
             $table->string('cartao_sus', 15)->nullable();
-            $table->char('cpf', 11)->unique();
             $table->string('nome_completo', 150);
             $table->string('nome_mae', 150)->nullable();
             $table->string('apelido', 50)->nullable();
@@ -35,6 +34,8 @@ return new class extends Migration
             $table->dateTime('data_cadastro')->useCurrent();
             $table->timestamps();
         });
+
+        
     }
     /**
      * Reverse the migrations.

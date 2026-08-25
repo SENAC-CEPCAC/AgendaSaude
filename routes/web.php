@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AgendamentoEtapa1Controller;
 use App\Http\Controllers\AgendamentoEtapa2Controller;
 use App\Http\Controllers\AgendamentoEtapa3Controller;
@@ -84,59 +84,75 @@ Route::get('/recuperacao', function () {
     return view('login.recuperacaoP');
 });
 
+// ==========================================
+// 1. ÁREA PÚBLICA & ACESSO
+// ==========================================
 Route::get('/', function () {
     return view('acesso.index'); //RAFAEL
 });
 
 Route::get('/login', function () {
-    return view('acesso.login'); //RAFAEL
+    return view('acesso.login');
 })->name('acesso.login');
+Route::post('/login', [LoginController::class, 'logar'])->name('acesso.login.post');
+Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 
 Route::get('/cadastro', function () {
-    return view('acesso.cadastro'); //RAFAEL
+    return view('acesso.cadastro');
 })->name('acesso.cadastro');
+Route::post('/cadastro/store', [CadastroController::class, 'store'])->name('acesso.cadastro.store');
 
-Route::post('/cadastro', [CadastroController::class, 'store'])
-    ->name('permissao_colaborador.cadastro.store');
-
-Route::get('/novasenha', function () {
-    return view('recuperacao.novasenha'); //RAFAEL
-})->name('recuperacao.novasenha');
+Route::get('/logincolaborador', [LoginColaboradorController::class, 'index'])->name('login.colaborador');
+Route::post('/logincolaborador', [LoginColaboradorController::class, 'login'])->name('login.colaborador.attempt');
+Route::post('/login-admin', [LoginColaboradorController::class, 'login'])->name('login.admin.attempt');
 
 Route::get('/recuperacao', function () {
-    return view('recuperacao.recuperacao'); //RAFAEL
+    return view('recuperacao.recuperacao');
 })->name('recuperacao.recuperacao');
+
+Route::get('/novasenha', function () {
+    return view('recuperacao.novasenha');
+})->name('recuperacao.novasenha');
+Route::post('/novasenha', [LoginController::class, 'atualizarSenha'])->name('recuperacao.senha.atualizar');
+
+// Layout Padrão e Telas de Teste/Colaborador
+Route::get('/layoutpadrao', function () {
+    return view('LayoutPadrao.layoutpadrao');
+})->name('layoutpadrao.layoutpadrao');
 
 Route::get('/colaborador', function () {
     return view('colaborador.colaborador');
-});
-Route::get('/index', function () {
-    return view('acesso.index');
-});
+})->name('colaborador.colaborador');
 
-// Autenticação
+Route::get('/teste', function () {
+    return view('pesquisa.teste');
+})->name('pesquisa.teste');
+
+// Pesquisa de Satisfação / Feedback
+Route::get('/feedback', [FeedbackController::class, 'create'])->name('feedback.create');
+Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
+Route::get('/satisfacaocliente', function () {
+    return view('pesquisa.satisfacaocliente');
+})->name('pesquisa.satisfacaocliente');
+
+// ==========================================
+// 2. PACIENTE (NÍVEL 1) & FLUXO DE AGENDAMENTO
+// ==========================================
 Route::middleware('auth.nivel:1,2,3,4')->group(function () {
-    // N1
-    Route::post('/AgendaSaude', [AgendamentoEtapa1Controller::class, 'AgendamentoEtapa1Controller'])->name('agendamento.etapa1'); //WILLIAM
+    Route::get('/agendamento/etapa-1', [AgendamentoEtapa1Controller::class, 'index'])->name('agendamento.etapa1');
+    Route::post('/agendamento/etapa-1', [AgendamentoEtapa1Controller::class, 'salvar_etapa_1'])->name('agendamento.salvar_etapa_1');
 
-    route::post('/AgendaSaude', [AgendamentoEtapa2Controller::class, 'AgendamentoEtapa2Controller'])->name('agendamento.etapa2'); //WILLIAM
+    Route::get('/agendamento/etapa-2', [AgendamentoEtapa2Controller::class, 'index'])->name('agendamento.etapa2');
+    Route::post('/agendamento/etapa-2', [AgendamentoEtapa2Controller::class, 'salvar_etapa_2'])->name('agendamento.salvar_etapa_2');
 
-    route::post('/AgendaSaude', [AgendamentoEtapa3Controller::class, 'AgendamentoEtapa3Controller'])->name('agendamento.etapa3'); //WILLIAM
-    // N2 
+    Route::get('/agendamento/etapa-3', [AgendamentoEtapa3Controller::class, 'index'])->name('agendamento.etapa3');
+    Route::post('/agendamento/etapa-3', [AgendamentoEtapa3Controller::class, 'store'])->name('agendamento.store');
 
-    // N3 
+    Route::get('/confirmado', function () {
+        return view('components.confirmado');
+    })->name('agendamento.confirmado');
 
-    // N4
-
-
-
-    //Route::post('/imcCalcular', [ImcController::class, 'calcularImc'])->name('imc.calcular');
-
-    //Route::post('/imc', [ImcController::class, 'store'])->name('imc.store');
-
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dash.index');
-    Route::delete('/dashboard/delete/{id}', [DashboardController::class, 'destroy'])->name('dash.delete');
-    Route::put('/dashboard/update/{id}', [DashboardController::class, 'update'])->name('dash.update');
+    Route::get('/agendamentos', [ListaAgendamentoController::class, 'index'])->name('agendamento.agendamentos');
 });
 
 Route::get('/agendamentos-gestao', [ListaAgendamentoController::class, 'index'])->name('agendamentos.index'); // Mateus

@@ -1,70 +1,115 @@
 @php
-    $diasDisponiveis = range(13, 30);
-    $diaSelecionado = 15;
-    $diasAltaDisponibilidade = [14, 16];
+    $diasNoMes = $ultimoDiaMes ? $ultimoDiaMes->day : 31;
+    $mesAnterior = $dataBase->copy()->subMonth()->format('Y-m');
+    $mesProximo = $dataBase->copy()->addMonth()->format('Y-m');
 @endphp
 
-<!-- Calendar Component -->
-<section class="bg-surface-container-lowest rounded-lg shadow-[0_12px_12px_rgba(0,62,126,0.04)] border border-outline-variant/30 overflow-hidden flex flex-col" data-calendario>
-    <div class="flex justify-between items-center p-md border-b border-outline-variant/30">
-        <button class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-surface-container text-on-surface-variant transition-colors" type="button" aria-label="Mês anterior">
+<!-- Calendário Interativo Integrado ao Banco de Dados -->
+<section class="bg-surface-container-lowest rounded-xl shadow-xs border border-outline-variant/50 overflow-hidden flex flex-col my-4" data-calendario>
+    
+    <!-- Cabeçalho do Mês e Navegação -->
+    <div class="flex justify-between items-center px-4 py-3 border-b border-outline-variant/30 bg-slate-50/50">
+        <a 
+            href="{{ route('agendamento.etapa2', ['mes_ano' => $mesAnterior]) }}" 
+            class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-200 text-slate-700 transition-colors" 
+            aria-label="Mês anterior"
+        >
             <span class="material-symbols-outlined text-[20px]">chevron_left</span>
-        </button>
-        <div class="font-h3 text-h3 text-primary-container">Novembro 2023</div>
-        <button class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-surface-container text-on-surface-variant transition-colors" type="button" aria-label="Próximo mês">
+        </a>
+
+        <div class="text-sm font-bold text-primary capitalize">
+            {{ $nomeMesAno }}
+        </div>
+
+        <a 
+            href="{{ route('agendamento.etapa2', ['mes_ano' => $mesProximo]) }}" 
+            class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-200 text-slate-700 transition-colors" 
+            aria-label="Próximo mês"
+        >
             <span class="material-symbols-outlined text-[20px]">chevron_right</span>
-        </button>
+        </a>
     </div>
 
-    <div class="p-md">
-        <div class="grid grid-cols-7 gap-1 mb-sm text-center">
+    <div class="p-4">
+        <!-- Dias da Semana -->
+        <div class="grid grid-cols-7 gap-1 mb-2 text-center">
             @foreach (['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'] as $diaSemana)
-                <div class="font-label-md text-label-md text-on-surface-variant py-sm">{{ $diaSemana }}</div>
+                <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider py-1">{{ $diaSemana }}</div>
             @endforeach
         </div>
 
+        <!-- Grade de Dias do Mês -->
         <div class="grid grid-cols-7 gap-1 text-center">
-            @foreach ([29, 30, 31] as $dia)
-                <div class="font-body-sm text-body-sm text-outline p-2 opacity-50">{{ $dia }}</div>
-            @endforeach
+            
+            <!-- Espaçamento dos dias antes do dia 1 -->
+            @for ($i = 0; $i < $diaSemanaInicio; $i++)
+                <div class="w-9 h-9 mx-auto"></div>
+            @endfor
 
-            @foreach (range(1, 12) as $dia)
-                <div class="font-body-sm text-body-sm text-outline p-2 line-through opacity-50" aria-disabled="true">{{ $dia }}</div>
-            @endforeach
-
-            @foreach ($diasDisponiveis as $dia)
+            <!-- Dias Reais do Mês -->
+            @for ($dia = 1; $dia <= $diasNoMes; $dia++)
                 @php
-                    $selecionado = $dia === $diaSelecionado;
-                    $altaDisponibilidade = in_array($dia, $diasAltaDisponibilidade, true);
+                    $dataString = $dataBase->copy()->day($dia)->format('Y-m-d');
+                    $possuiCronograma = isset($mapaCronogramas[$dataString]);
+                    $infoCrono = $possuiCronograma ? $mapaCronogramas[$dataString] : null;
+                    $esgotado = $possuiCronograma && $infoCrono['esgotado'];
+                    $vagasRestantes = $possuiCronograma ? $infoCrono['vagas_restantes'] : 0;
+                    $selecionado = ($dataString === $dataSelecionada);
                 @endphp
-                <button
-                    type="button"
-                    data-calendar-day
-                    data-available="true"
-                    data-date="2023-11-{{ str_pad($dia, 2, '0', STR_PAD_LEFT) }}"
-                    aria-label="{{ $dia }} de novembro de 2023"
-                    aria-pressed="{{ $selecionado ? 'true' : 'false' }}"
-                    @class([
-                        'font-body-sm text-body-sm p-2 rounded-full relative flex items-center justify-center w-10 h-10 mx-auto transition-colors',
-                        'bg-primary-container text-on-primary shadow-md font-medium' => $selecionado,
-                        'text-on-surface hover:bg-surface-container' => ! $selecionado,
-                    ])
-                >
-                    {{ $dia }}
-                    @if ($altaDisponibilidade)
-                        <span class="absolute bottom-1 w-1 h-1 bg-secondary-container rounded-full" aria-hidden="true"></span>
-                    @endif
-                </button>
-            @endforeach
 
-            @foreach ([1, 2] as $dia)
-                <div class="font-body-sm text-body-sm text-outline p-2 opacity-50">{{ $dia }}</div>
-            @endforeach
+                @if ($possuiCronograma)
+                    <!-- DIA CADASTRADO PELO GESTOR (DISPONÍVEL PARA CLIQUE) -->
+                    <button
+                        type="button"
+                        data-calendar-day
+                        data-available="true"
+                        data-id-agenda="{{ $infoCrono['id_agenda'] }}"
+                        data-vagas-disponiveis="{{ $vagasRestantes }}"
+                        data-date="{{ $dataString }}"
+                        data-dia-formatado="{{ $infoCrono['data_formatada'] }}"
+                        data-esgotado="{{ $esgotado ? 'true' : 'false' }}"
+                        data-turno="{{ $infoCrono['turno_nome'] }}"
+                        class="btn-dia-calendario font-body-sm text-xs p-1 rounded-full relative flex items-center justify-center w-9 h-9 mx-auto transition-all cursor-pointer font-bold
+                            {{ $selecionado && !$esgotado ? 'bg-primary text-white shadow-md scale-105 ring-2 ring-blue-900/30' : '' }}
+                            {{ $selecionado && $esgotado ? 'bg-amber-500 text-white shadow-md' : '' }}
+                            {{ !$selecionado && $esgotado ? 'text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-300' : '' }}
+                            {{ !$selecionado && !$esgotado ? 'text-blue-900 bg-blue-50/80 hover:bg-blue-100 border border-blue-200' : '' }}"
+                    >
+                        {{ $dia }}
+                        @if ($esgotado)
+                            <span class="absolute bottom-0.5 w-1.5 h-1.5 bg-amber-500 rounded-full" title="Vagas Esgotadas"></span>
+                        @elseif ($vagasRestantes > 5)
+                            <span class="absolute bottom-0.5 w-1.5 h-1.5 bg-emerald-500 rounded-full" title="Vagas Disponíveis"></span>
+                        @endif
+                    </button>
+                @else
+                    <!-- DIA SEM CRONOGRAMA CADASTRADO (BLOQUEADO / INDISPONÍVEL) -->
+                    <div 
+                        class="font-body-sm text-xs p-1 rounded-full flex items-center justify-center w-9 h-9 mx-auto text-slate-300 line-through opacity-40 select-none cursor-not-allowed" 
+                        title="Sem atendimento cadastrado nesta data"
+                        aria-disabled="true"
+                    >
+                        {{ $dia }}
+                    </div>
+                @endif
+            @endfor
+
         </div>
     </div>
 
-    <div class="bg-surface-container-low px-md py-sm border-t border-outline-variant/30 flex items-center gap-2">
-        <span class="w-2 h-2 bg-secondary-container rounded-full inline-block"></span>
-        <span class="font-label-md text-label-md text-on-surface-variant">Dias com alta disponibilidade</span>
+    <!-- Legenda Inferior -->
+    <div class="bg-slate-50 px-4 py-2.5 border-t border-outline-variant/30 flex flex-wrap items-center justify-between gap-2 text-[11px]">
+        <div class="flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 bg-blue-600 rounded-full inline-block"></span>
+            <span class="text-slate-600 font-medium">Dias com Atendimento</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 bg-amber-500 rounded-full inline-block"></span>
+            <span class="text-amber-800 font-medium">Vagas Esgotadas (Espera)</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+            <span class="text-slate-400 line-through text-xs font-semibold">12</span>
+            <span class="text-slate-400 font-medium">Sem Atendimento</span>
+        </div>
     </div>
 </section>

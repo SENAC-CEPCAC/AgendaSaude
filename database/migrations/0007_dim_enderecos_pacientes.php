@@ -10,7 +10,7 @@ return new class extends Migration
      * PSEUDOCÓDIGO DE EXECUÇÃO:
      * 1. CRIE A TABELA 'dim_enderecos_pacientes'.
      * 2. DEFINA 'id_endereco' COMO CHAVE PRIMÁRIA.
-     * 3. VINCULE 'id_paciente' À TABELA 'dim_pacientes'.
+     * 3. VINCULE 'cpf_paciente' À TABELA 'dim_pacientes'.
      * 4. ADICIONE CAMPOS DE ENDEREÇO (LOGRADOURO, NÚMERO, BAIRRO, MUNICÍPIO, UF, CEP, PONTO DE REFERÊNCIA).
      */
     public function up(): void
@@ -19,10 +19,10 @@ return new class extends Migration
 
             $table->increments('id_endereco');
 
-            $table->unsignedInteger('id_paciente');
+            $table->char('cpf_paciente', 11);
 
-            $table->foreign('id_paciente')
-                    ->references('id_paciente')
+            $table->foreign('cpf_paciente')
+                    ->references('cpf_paciente')
                     ->on('dim_pacientes')
                     ->onDelete('cascade');
 
