@@ -13,6 +13,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AdmController;
 use App\Http\Controllers\UserColaborador;
 use App\Http\Controllers\LoginColaboradorController;
+use App\Http\Controllers\CadastroController;
 
 
 
@@ -99,7 +100,7 @@ Route::get('/login', function () {
 })->name('acesso.login');
 
 Route::post('/login', [LoginController::class, 'logar'])->name('login.attempt');
-Route::post('/cadastro', [LoginController::class, 'cadastrar'])->name('cadastro.store');
+Route::post('/cadastro', [CadastroController::class, 'store'])->name('cadastro.store');
 Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 
 

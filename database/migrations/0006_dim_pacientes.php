@@ -34,6 +34,12 @@ return new class extends Migration
             $table->dateTime('data_cadastro')->useCurrent();
             $table->timestamps();
         });
+
+        if (! Schema::hasColumn('users', 'cpf_paciente')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->char('cpf_paciente', 11)->nullable()->unique()->after('name');
+            });
+        }
     }
     /**
      * Reverse the migrations.

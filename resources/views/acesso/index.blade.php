@@ -81,7 +81,7 @@
             </div>
 
             <div class="flex flex-col gap-4 items-center justify-center max-w-[385px] max-h-[400px] mx-auto my-5 px-[5px] conteudo_hero">
-                <h1 class="font-sans font-bold text-center md:text-start text-[26px] text-azul hero_conteudo">Sua Saúde Onde Você Estiver</h1>
+                <h1 class="font-sans font-bold text-center md:text-start text-[26px] text-azul hero_conteudo">Sua saúde onde você estiver</h1>
                 <p class="font-sans mb-5 text-center md:text-start text-[16px] text-cinza-escuro hero_descricao">
                     Agendamento rápido, unidades móveis de confiança e atendimento especializado com agilidade e praticidade.
                 </p>
