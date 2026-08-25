@@ -15,15 +15,15 @@ class GestorTesteSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Cria ou atualiza na tabela 'users' (Login padrão por E-mail)
-        User::updateOrCreate(
-            ['email' => 'gestor@agendasaude.com'],
-            [
-                'name' => 'Gestor Geral (Nível 4)',
-                'password' => Hash::make('12345678'),
-                'nivel' => 4,
-            ]
-        );
+        // // 1. Cria ou atualiza na tabela 'users' (Login padrão por E-mail)
+        // User::updateOrCreate(
+        //     ['email' => 'gestor@agendasaude.com'],
+        //     [
+        //         'name' => 'Gestor Geral (Nível 4)',
+        //         'password' => Hash::make('12345678'),
+        //         'nivel' => 4,
+        //     ]
+        // );
 
         // 2. Se a tabela users_colaboradores existir, cria também para login por Matrícula
         try {
@@ -33,9 +33,9 @@ class GestorTesteSeeder extends Seeder
                     'nome' => 'Gestor Geral (Nível 4)',
                     'email' => 'gestor@agendasaude.com',
                     'password' => Hash::make('12345678'),
-                    'nivel' => 4,
-                    'cargo_funcao' => 'Gestor Geral',
-                    'registro_profissional' => 'ADM-N4-001',
+                    'permissao' => 4,
+                    'cidade' => 'Salvador',
+                    'ativo' => true,
                 ]
             );
         } catch (\Throwable $th) {

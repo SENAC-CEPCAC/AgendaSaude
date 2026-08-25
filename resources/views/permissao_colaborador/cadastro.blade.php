@@ -145,8 +145,8 @@
             <!-- ================================= -->
 
             <form
-                id="formCadastroPaciente"
-                action="{{ route('permissao_colaborador.cadastro.store') }}"
+                id="formCadastroColaborador"
+                action="{{ route('adm.colaboradores.store') }}"
                 method="POST">
 
                 @csrf

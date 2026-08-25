@@ -104,8 +104,6 @@ class CadastroController extends Controller
                 'email' => $dados['email'],
                 'password' => Hash::make($dados['password']),
                 'cpf_paciente' => $cpfLimpo,
-                'cpf' => $cpfLimpo,
-                'telefone' => $celularLimpo,
                 'nivel' => 1,
             ]);
         });

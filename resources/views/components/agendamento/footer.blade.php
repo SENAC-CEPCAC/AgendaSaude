@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-{{-- Footer do layout de agendamento (o botão principal de avançar agora é renderizado exclusivamente no final de cada formulário de etapa) --}}
-=======
 @php
     $rotasProximas = [
         'agendamento.etapa1' => 'agendamento.etapa2',
@@ -26,4 +23,3 @@
         </div>
     </footer>
 @endif
->>>>>>> c6463960cfaa456585db638854b2e9274e0a7f51

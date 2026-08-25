@@ -48,11 +48,31 @@ class CronogramaGestaoController extends Controller
         $dias_atendimento = $cronogramas->pluck('data_atendimento')->unique()->count();
 
         // 4. Carregamento dos dados auxiliares para formulários e filtros
+        if (Vaga::count() === 0) {
+            Vaga::updateOrCreate(['id_vagas' => 1], ['tipo_exame' => 'Preventivo (Siscolo)']);
+            Vaga::updateOrCreate(['id_vagas' => 2], ['tipo_exame' => 'Mamografia (Sismama)']);
+        }
+        if (CnesUnidade::count() === 0) {
+            CnesUnidade::updateOrCreate(
+                ['codigo_cnes' => '2658914'],
+                ['nome_unidade' => 'Unidade Móvel de Saúde da Mulher 01 - Centro / Itinerante']
+            );
+            CnesUnidade::updateOrCreate(
+                ['codigo_cnes' => '3049182'],
+                ['nome_unidade' => 'Unidade Móvel de Prevenção e Diagnóstico 02 - Zona Leste']
+            );
+        }
+        if (Turno::count() === 0) {
+            Turno::updateOrCreate(['id_turno' => 1], ['turno' => 'Manhã']);
+            Turno::updateOrCreate(['id_turno' => 2], ['turno' => 'Tarde']);
+            Turno::updateOrCreate(['id_turno' => 3], ['turno' => 'Integral']);
+        }
+
         $unidades = CnesUnidade::all();
         $vagas_tipos = Vaga::all();
         $turnos = Turno::all();
 
-        return view('painel_adm.cronograma_vagas', [
+        return view('cronograma.cronograma_gestao', [
             'cronogramas' => $cronogramas,
             'mes_ano' => $mes_ano,
             'total_ofertadas' => $total_ofertadas,
@@ -101,13 +121,11 @@ class CronogramaGestaoController extends Controller
             $data_cursor = $data_inicio->copy();
 
             while ($data_cursor->lte($data_final)) {
-                // Se replicar apenas dias úteis (Segunda a Sexta), pula sábado (6) e domingo (0)
                 if ($replicar_uteis && $data_cursor->isWeekend()) {
                     $data_cursor->addDay();
                     continue;
                 }
 
-                // Cria ou atualiza o cronograma para o dia e turno especificados
                 Cronograma::create([
                     'id_cnes_unidade' => $dados['id_cnes_unidade'],
                     'Vagas_id_vagas' => $dados['Vagas_id_vagas'],

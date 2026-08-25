@@ -39,13 +39,25 @@
   $nivelUsuario = (int) ($usuario?->nivel ?? $usuario?->permissao ?? 0);
   @endphp
 
-  @if ($nivelUsuario === 4)
-  @include('sidebar.sidebar_n4')
-  <div id="sidebar-overlay" class="fixed inset-0 z-40 hidden bg-slate-900/30" aria-hidden="true"></div>
-  <button id="mobile-menu-toggle" type="button" aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menu" class="fixed left-4 top-4 z-30 rounded-lg bg-blue-600 p-1 text-white shadow-md transition hover:bg-blue-700">
-    <span class="material-symbols-outlined">[=]</span>
+  <button id="mobile-menu-toggle" type="button" class="fixed left-3 top-3 z-[60] flex items-center justify-center rounded-lg bg-blue-600 p-2 text-white shadow-sm transition hover:bg-blue-800 sm:left-5 sm:top-5" aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menu">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="menu" aria-hidden="true" class="lucide lucide-menu h-4 w-4">
+      <path d="M4 5h16"></path>
+      <path d="M4 12h16"></path>
+      <path d="M4 19h16"></path>
+    </svg>
   </button>
+
+  @if ((int) $nivelUsuario === 4)
+
+  @include('sidebar.sidebar_n4')
+
+  @elseif ((int) $nivelUsuario === 1 || (int) $nivelUsuario === 2)
+
+  @include('sidebar.sidebar_n1_n2')
+
   @endif
+
+
 
   <div id="app-root" class="min-h-screen bg-[#f8fafc] text-slate-800 font-sans antialiased">
 
@@ -63,15 +75,19 @@
           <h1 class="text-2xl font-bold uppercase tracking-wide text-[#0f172a]">Agendamentos</h1>
           <p class="text-xs text-slate-500 mt-1">Gestão da fila inteligente, validação de documentos e controle de 24h.</p>
         </div>
+        @if ($nivelUsuario !==3)
         <div>
           <a href="{{ route('agendamento.etapa1') }}" target="_blank" class="inline-flex items-center gap-2 bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold px-4 py-2.5 rounded-lg shadow-sm transition-all">
             Novo Agendamento
           </a>
         </div>
+        @endif
       </div>
+
 
       <!-- Filtros e Busca -->
       <form id="filterForm" method="GET" action="{{ url()->current() }}" class="bg-white rounded-xl border border-slate-100 p-4 md:p-6 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xs">
+        @if($nivelUsuario !==1)
         <div class="relative w-full md:w-96 flex items-center">
           <i data-lucide="search" class="absolute left-4 text-slate-400 w-5 h-5 pointer-events-none"></i>
           <input
@@ -82,7 +98,7 @@
             class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 pl-12 pr-4 text-sm text-slate-600 placeholder:text-slate-400 focus:outline-none focus:border-sky-500 focus:bg-white transition-all"
             placeholder="Buscar por paciente, CPF ou Nº...">
         </div>
-
+        @endif
         <div class="flex flex-wrap items-center gap-3 w-full md:w-auto justify-end">
 
           <!-- Filtro Status Documentos -->
@@ -124,15 +140,18 @@
                 <th class="py-4 px-6 w-[28%]">Paciente</th>
                 <th class="py-4 px-6 w-[16%]">Horário</th>
                 <th class="py-4 px-4 w-[14%] text-center">Status Documentos</th>
-                <th class="py-4 px-4 w-[14%] text-center">Status Agendamento</th>
+                <th class="py-4 px-4 w-[14%] text-center"> Status Agendamento</th>
               </tr>
             </thead>
             <tbody id="agendamentosTable" class="divide-y divide-slate-100 text-sm text-slate-600">
 
               @forelse($showAgendamentos as $agendamento)
+
               <tr
+                @if((int) $nivelUsuario !==1)
                 onclick="abrirModalAgendamento({{ $agendamento->numero_agendamento ?? $agendamento->id ?? $agendamento->numero_sequencial }})"
-                class="hover:bg-slate-50 transition-colors cursor-pointer">
+                class="hover:bg-slate-50 transition-colors cursor-pointer"
+                @endif>
                 <!-- Nº Agendamento -->
                 <td class="py-4 px-6 font-medium text-slate-700">
                   <div class="flex items-center gap-1.5">
@@ -162,6 +181,7 @@
                   @endif
                 </td>
 
+
                 <!-- Status Documentos -->
                 <td class="py-4 px-4 text-center">
                   @php
@@ -184,7 +204,7 @@
                   <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700">
                     Pendente
                   </span>
-                  @endif
+
                 </td>
 
                 <!-- Status Agendamento -->
@@ -193,9 +213,13 @@
                   $statusAgend = strtolower($agendamento->status_agendamento ?? $agendamento->status ?? 'em_espera');
                   @endphp
 
-                  @if($statusAgend === 'confirmado')
+                  @if($statusAgend === 'confirmado' || $statusAgend === 'agendado')
                   <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-green-700">
                     Confirmado
+                  </span>
+                  @elseif($statusAgend === 'espera' || $statusAgend === 'em_espera')
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300">
+                    Lista de Espera
                   </span>
                   @elseif($statusAgend === 'aguardando_confirmacao')
                   <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-yellow-100 text-yellow-700">
@@ -211,6 +235,7 @@
                   </span>
                   @endif
                 </td>
+                @endif
               </tr>
               @empty
               <tr>
@@ -344,7 +369,6 @@
     }
   </script>
 
-  @if ($nivelUsuario === 4)
   <script>
     const sidebar = document.getElementById('sidebar');
     const menuToggle = document.getElementById('mobile-menu-toggle');
@@ -363,7 +387,7 @@
     menuClose.addEventListener('click', () => setSidebarExpanded(false));
     sidebarOverlay.addEventListener('click', () => setSidebarExpanded(false));
   </script>
-  @endif
+
 
 </body>
 

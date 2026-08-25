@@ -190,15 +190,19 @@
 <body class="bg-surface text-on-surface font-body-md text-body-md antialiased flex">
         @include('sidebar.sidebar_n4')
         <div id="sidebar-overlay" class="fixed inset-0 z-40 hidden bg-slate-900/30" aria-hidden="true"></div>
-        <button id="mobile-menu-toggle" type="button" aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menu" class="fixed left-4 top-4 z-30 rounded-lg bg-blue-600 p-1 text-white shadow-md transition hover:bg-blue-700">
-                <span class="material-symbols-outlined">menu</span>
+        <button id="mobile-menu-toggle" type="button" class="fixed left-3 top-3 z-[60] flex items-center justify-center rounded-lg bg-blue-600 p-2 text-white shadow-sm transition hover:bg-blue-800 sm:left-5 sm:top-5" aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menu">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="menu" aria-hidden="true" class="lucide lucide-menu h-4 w-4">
+                        <path d="M4 5h16"></path>
+                        <path d="M4 12h16"></path>
+                        <path d="M4 19h16"></path>
+                </svg>
         </button>
         <!-- Main Content Area -->
         <main id="main-content" class="flex-1 ml-0 w-full min-h-screen pb-20 md:pb-0">
                 <!-- TopAppBar (Mobile & Web) -->
                 <header class="sticky top-0 z-30 md:ml-44 flex justify-between items-center px-5 h-16 w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm font-['Inter'] antialiased">
                         <div class="flex items-center gap-4">
-                                                               
+
                                 <div class="text-lg font-bold text-[#003E7E] dark:text-blue-400 font-h3 text-h3 md:hidden">Agenda Saúde</div>
                                 <div class="hidden md:block font-h3 text-h3 text-on-surface">Visão Geral</div>
                         </div>
@@ -215,7 +219,7 @@
                 <div class="p-margin mx-auto max-w-7xl flex flex-col gap-lg">
                         <!-- Welcome Header -->
                         <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mt-sm">
-                                <div>                                        
+                                <div>
                                         <p class="font-body-md text-body-md text-on-surface-variant mt-1">Aqui está o resumo das operações de hoje.</p>
                                 </div>
                                 <div class="text-sm font-label-md text-label-md text-on-surface-variant bg-surface-container-low px-3 py-1.5 rounded-full border border-outline-variant">
