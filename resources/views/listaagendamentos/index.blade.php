@@ -39,8 +39,6 @@
   $nivelUsuario = (int) ($usuario?->nivel ?? $usuario?->permissao ?? 0);
   @endphp
 
-  @if ($nivelUsuario === 4)
-  @include('sidebar.sidebar_n4')
   <button id="mobile-menu-toggle" type="button" class="fixed left-3 top-3 z-[60] flex items-center justify-center rounded-lg bg-blue-600 p-2 text-white shadow-sm transition hover:bg-blue-800 sm:left-5 sm:top-5" aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menu">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="menu" aria-hidden="true" class="lucide lucide-menu h-4 w-4">
       <path d="M4 5h16"></path>
@@ -48,18 +46,18 @@
       <path d="M4 19h16"></path>
     </svg>
   </button>
+
+  @if ((int) $nivelUsuario === 4)
+
+  @include('sidebar.sidebar_n4')
+
+  @elseif ((int) $nivelUsuario === 1 || (int) $nivelUsuario === 2)
+
+  @include('sidebar.sidebar_n1_n2')
+
   @endif
 
-  @if ($nivelUsuario === 1 || $nivelUsuario === 2 )
-  @include('sidebar.sidebar_n2_n1')
-  <button id="mobile-menu-toggle" type="button" class="fixed left-3 top-3 z-[60] flex items-center justify-center rounded-lg bg-blue-600 p-2 text-white shadow-sm transition hover:bg-blue-800 sm:left-5 sm:top-5" aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menu">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="menu" aria-hidden="true" class="lucide lucide-menu h-4 w-4">
-      <path d="M4 5h16"></path>
-      <path d="M4 12h16"></path>
-      <path d="M4 19h16"></path>
-    </svg>
-  </button>
-  @endif
+
 
   <div id="app-root" class="min-h-screen bg-[#f8fafc] text-slate-800 font-sans antialiased">
 
@@ -182,7 +180,7 @@
                   <span class="text-slate-400 italic">Fila de Espera</span>
                   @endif
                 </td>
-               
+
 
                 <!-- Status Documentos -->
                 <td class="py-4 px-4 text-center">
@@ -206,7 +204,7 @@
                   <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700">
                     Pendente
                   </span>
-                  
+
                 </td>
 
                 <!-- Status Agendamento -->
