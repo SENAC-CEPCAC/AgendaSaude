@@ -146,7 +146,7 @@
 
                 <form
                     id="formCadastroPaciente"
-                    action="{{ route('acesso.cadastro') }}"
+                    action="{{ route('cadastro.store') }}"
                     method="POST">
 
                     @csrf
@@ -494,14 +494,13 @@
 
                         <!-- BOTÃO -->
 
-                        <div class="d-flex justify-content-between align-items-center mt-5">
+                        <div class="d-flex justify-content-between  align-items-center mt-5">
                             <button
                                 type="button"
                                 id="btnVoltar"
-                                class="btn btn-primary px-4">
-
-                                Voltar
-
+                                class="btn  no-underline btn-primary px-4">
+                                <a href="{{ route('acesso.index') }}" class="text-white">
+                                Voltar</a>
                             </button>
 
                             <button

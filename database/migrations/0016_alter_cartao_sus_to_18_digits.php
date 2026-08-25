@@ -6,12 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function down(): void
-    {
-        Schema::table('users_colaboradores', function (Blueprint $table) {
-            $table->dropColumn('cidade');
-        });
-    }
     public function up(): void
     {
         Schema::table('dim_pacientes', function (Blueprint $table) {
@@ -19,7 +13,6 @@ return new class extends Migration
         });
     }
 
-<<<<<<<< HEAD:database/migrations/0016_alter_cartao_sus_to_18_digits.php
     public function down(): void
     {
         Schema::table('dim_pacientes', function (Blueprint $table) {
@@ -27,6 +20,3 @@ return new class extends Migration
         });
     }
 };
-========
-};
->>>>>>>> 3f2461e4e166b0d76aa9cee9f8b393e50fb72e9c:database/migrations/0024_adicionar_cidade_user_colaborador.php

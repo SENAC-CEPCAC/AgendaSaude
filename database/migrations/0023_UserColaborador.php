@@ -8,17 +8,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('users_colaboradores', function (Blueprint $table) {
-            $table->id();
-            $table->string('nome');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->string('matricula', 100);
-            $table->string('cidade');
-            $table->unsignedTinyInteger('permissao');
-            $table->boolean('ativo')->default(true);
-            $table->timestamps();
-        });
+        if (! Schema::hasTable('users_colaboradores')) {
+            Schema::create('users_colaboradores', function (Blueprint $table) {
+                $table->id();
+                $table->string('nome');
+                $table->string('email')->unique();
+                $table->string('password');
+                $table->string('matricula', 100);
+                $table->string('cidade');
+                $table->unsignedTinyInteger('permissao');
+                $table->boolean('ativo')->default(true);
+                $table->timestamps();
+            });
+        }
     }
 
     public function down(): void
