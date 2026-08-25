@@ -89,6 +89,7 @@
 
       <!-- Filtros e Busca -->
       <form id="filterForm" method="GET" action="{{ url()->current() }}" class="bg-white rounded-xl border border-slate-100 p-4 md:p-6 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xs">
+        @if($nivelUsuario !==1)
         <div class="relative w-full md:w-96 flex items-center">
           <i data-lucide="search" class="absolute left-4 text-slate-400 w-5 h-5 pointer-events-none"></i>
           <input
@@ -99,7 +100,7 @@
             class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 pl-12 pr-4 text-sm text-slate-600 placeholder:text-slate-400 focus:outline-none focus:border-sky-500 focus:bg-white transition-all"
             placeholder="Buscar por paciente, CPF ou Nº...">
         </div>
-
+        @endif
         <div class="flex flex-wrap items-center gap-3 w-full md:w-auto justify-end">
 
           <!-- Filtro Status Documentos -->
@@ -140,10 +141,8 @@
                 <th class="py-4 px-6 w-[16%]">CPF</th>
                 <th class="py-4 px-6 w-[28%]">Paciente</th>
                 <th class="py-4 px-6 w-[16%]">Horário</th>
-                @if($nivelUsuario !==1)
                 <th class="py-4 px-4 w-[14%] text-center">Status Documentos</th>
-                <th class="py-4 px-4 w-[14%] text-center">Status Agendamento</th>
-                @endif
+                <th class="py-4 px-4 w-[14%] text-center"> Status Agendamento</th>
               </tr>
             </thead>
             <tbody id="agendamentosTable" class="divide-y divide-slate-100 text-sm text-slate-600">
@@ -183,7 +182,7 @@
                   <span class="text-slate-400 italic">Fila de Espera</span>
                   @endif
                 </td>
-                @if($nivelUsuario !==1)
+               
 
                 <!-- Status Documentos -->
                 <td class="py-4 px-4 text-center">
@@ -207,7 +206,7 @@
                   <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700">
                     Pendente
                   </span>
-                  @endif
+                  
                 </td>
 
                 <!-- Status Agendamento -->
