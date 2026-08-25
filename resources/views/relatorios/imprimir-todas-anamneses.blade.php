@@ -19,7 +19,7 @@
 </head>
 <body onload="window.print()">
     <div class="header">
-        <h1>SUS - Relatório Unificado de Anamneses Clínicas</h1>
+        <h1>Agenda Saúde - Relatório Unificado de Anamneses Clínicas</h1>
         <p>Tabelas fato_anamnese, anamnese_sismama e anamnese_siscolo</p>
     </div>
 
