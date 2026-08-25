@@ -69,22 +69,24 @@
   <div class="card">
     <h2 class="text-2xl font-bold" >AGENDA SAUDE</h2>
     <br>
-    <form>
+    <form method="POST" action="{{ route('login.attempt') }}">
+      @csrf
       <h6 class="email text-xs">E-mail</h6>
-      <input type="text" id="username" placeholder="Usuário" required />
+      <input type="email" name="email" id="username" placeholder="E-mail" value="{{ old('email') }}" required />
       <h6 class="text-xs">Senha</h6>
-      <input type="password" id="password" placeholder="Senha" required />
+      <input type="password" name="password" id="password" placeholder="Senha" required />
       <h6 class="ml-37 text-xs esqueci">
         <a href="{{ route('recuperacao.recuperacao') }}">Esqueci a senha</a>
       </h6>
       <br>
       <button type="submit">Entrar</button>
+
+      <a href="{{ route('acesso.index') }}" class="mt-5 block text-center text-sm text-blue-800 hover:underline">Voltar</a>
     </form>
-    <div id="errorMessage" class="error"></div>
+    @if ($errors->any())
+      <div class="error">{{ $errors->first() }}</div>
+    @endif
   </div>
 
-  <script type="module" src="../permissoes_pageColaborador/js/acesso_restrito.js"></script>
-
 </body>
-
 </html>

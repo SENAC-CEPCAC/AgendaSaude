@@ -10,7 +10,7 @@ return new class extends Migration
      * PSEUDOCÓDIGO DE EXECUÇÃO:
      * 1. CRIE A TABELA 'fato_prontuario'.
      * 2. DEFINA 'id_prontuario' COMO CHAVE PRIMÁRIA.
-     * 3. VINCULE 'id_paciente' COM 'dim_pacientes' E 'id_agenda' COM 'fato_cronogramas'.
+     * 3. VINCULE 'cpf_paciente' COM 'dim_pacientes' E 'id_agenda' COM 'fato_cronogramas'.
      * 4. ADICIONE 'status_comparecimento' (ENUM: 'agendado', 'presente', 'faltou', 'cancelado').
      */
     public function up(): void
@@ -19,10 +19,10 @@ return new class extends Migration
 
             $table->increments('id_prontuario');
 
-            $table->unsignedInteger('id_paciente');
+            $table->char('cpf_paciente', 11);
             
-            $table->foreign('id_paciente')
-                    ->references('id_paciente')
+            $table->foreign('cpf_paciente')
+                    ->references('cpf_paciente')
                     ->on('dim_pacientes')
                     ->onDelete('cascade');
 
@@ -33,7 +33,15 @@ return new class extends Migration
                     ->on('fato_cronogramas')
                     ->onDelete('cascade');
 
-            $table->enum('status_comparecimento', ['agendado', 'presente', 'faltou', 'cancelado'])->default('agendado');
+            $table->enum('status_comparecimento', [
+                'agendado',       // Vaga titular confirmada no agendamento inicial
+                'confirmado',     // Respondeu ao WhatsApp confirmando presença
+                'espera',         // Entrou na lista de espera inteligente (vagas cheias)
+                'presente',       // Chegou na unidade móvel
+                'faltou',         // Não compareceu
+                'cancelado'       // Desistiu / vaga liberada para o próximo
+            ])->default('agendado');
+            
             $table->timestamps();
         });
     }

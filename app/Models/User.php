@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -14,7 +13,12 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     /**
-     * The attributes that are mass assignable.
+     * A tabela associada ao model.
+     */
+    protected $table = 'users';
+
+    /**
+     * Atributos que podem ser preenchidos em massa.
      *
      * @var list<string>
      */
@@ -22,10 +26,14 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'cpf_paciente',
+        'cpf',
+        'telefone',
+        'nivel',
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * Atributos ocultos na serialização.
      *
      * @var list<string>
      */
@@ -35,9 +43,23 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * Relacionamento com o paciente.
      *
-     * @return array<string, string>
+     * users.cpf_paciente
+     *        ↓
+     * dim_pacientes.cpf_paciente
+     */
+    public function paciente()
+    {
+        return $this->belongsTo(
+            Paciente::class,
+            'cpf_paciente',
+            'cpf_paciente'
+        );
+    }
+
+    /**
+     * Atributos convertidos.
      */
     protected function casts(): array
     {

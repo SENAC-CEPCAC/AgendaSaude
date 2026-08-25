@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Meus Agendamentos</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-on-surface": "#f0f0f6",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-variant": "#e2e2e8",
+                        "surface-container-highest": "#e2e2e8",
+                        "secondary-fixed-dim": "#f9bd00",
+                        "on-primary-container": "#82abf2",
+                        "background": "#f9f9ff",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#d6e3ff",
+                        "on-tertiary-container": "#f29261",
+                        "on-secondary-fixed": "#251a00",
+                        "on-background": "#1a1c20",
+                        "tertiary-fixed": "#ffdbcb",
+                        "surface-container": "#ededf3",
+                        "secondary": "#785a00",
+                        "on-secondary-fixed-variant": "#5b4300",
+                        "tertiary-container": "#6d2b01",
+                        "tertiary-fixed-dim": "#ffb692",
+                        "surface-bright": "#f9f9ff",
+                        "surface-container-high": "#e8e8ee",
+                        "inverse-surface": "#2f3035",
+                        "on-secondary-container": "#6c5000",
+                        "surface": "#f9f9ff",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#434750",
+                        "on-secondary": "#ffffff",
+                        "surface-tint": "#325ea0",
+                        "on-surface": "#1a1c20",
+                        "outline-variant": "#c3c6d2",
+                        "outline": "#737781",
+                        "on-tertiary-fixed-variant": "#773207",
+                        "on-tertiary-fixed": "#341100",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#ffdf9d",
+                        "primary-fixed-dim": "#a9c7ff",
+                        "surface-container-low": "#f3f3f9",
+                        "on-primary-fixed": "#001b3d",
+                        "surface-dim": "#d9d9e0",
+                        "secondary-container": "#fdc008",
+                        "on-primary-fixed-variant": "#114686",
+                        "inverse-primary": "#a9c7ff",
+                        "error-container": "#ffdad6",
+                        "on-error-container": "#93000a",
+                        "primary-container": "#003e7e",
+                        "tertiary": "#4a1b00",
+                        "primary": "#002856",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "unit": "4px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "lg": "24px",
+                        "gutter": "16px",
+                        "xl": "32px",
+                        "margin": "20px"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Inter", "sans-serif"],
+                        "body-md": ["Inter", "sans-serif"],
+                        "body-lg": ["Inter", "sans-serif"],
+                        "label-bold": ["Inter", "sans-serif"],
+                        "h2": ["Inter", "sans-serif"],
+                        "label-md": ["Inter", "sans-serif"],
+                        "h3": ["Inter", "sans-serif"],
+                        "h1": ["Inter", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "label-bold": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "h2": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0em", "fontWeight": "500" }],
+                        "h3": ["20px", { "lineHeight": "28px", "letterSpacing": "0em", "fontWeight": "600" }],
+                        "h1": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        @supports (padding-bottom: env(safe-area-inset-bottom)) {
+            .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background min-h-screen text-on-background font-body-md antialiased selection:bg-primary selection:text-on-primary">
+<header class="bg-white dark:bg-slate-900 text-[#003E7E] dark:text-blue-400 font-['Inter'] font-semibold text-lg docked full-width top-0 border-b border-gray-200 dark:border-gray-800 shadow-[0_12px_12px_rgba(0,62,126,0.04)] transition-all duration-200 flex justify-between items-center w-full px-5 py-3 sticky z-40">
+<div class="flex items-center gap-sm">
+<img alt="Profile picture" class="w-10 h-10 rounded-full object-cover border border-outline-variant" data-alt="A close-up, high-quality portrait of a professional patient smiling warmly, lit by soft, natural, high-key lighting characteristic of modern clinical aesthetics. The background is a clean, abstract white space to emphasize trust and clarity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwh-qDBX7Xss3dB6QiESOg5FAt2PsCe-VV9G0f4UVcrRC0y-jKVtcv0iu9izDwOWXHC031HnMILxVr6uUE5JoiAORYmILNr-jbim3i5metbM8MyLa6bn6TRBg_eXvKbNjNffrz8TgaAj0I1RLTKTfQsr4Ka-IWtWEYE49RC62pXjW6wtEaxmLs9WZBfevPuADkyvRm10amXvUVhw_qhcKzuHq9rm-hf6jRvmjS8qVFtQqagZ-y9Zsk_miEPcNY1iE_sZX_xUUCkb0"/>
+<h1 class="text-xl font-bold text-[#003E7E] dark:text-blue-400 m-0">Agendamentos</h1>
+</div>
+<button aria-label="Notifications" class="w-10 h-10 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 active:scale-95">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<main class="px-margin pt-md pb-[120px] max-w-3xl mx-auto flex flex-col gap-lg">
+<div class="bg-surface-container-low rounded-lg p-md border border-outline-variant flex items-start gap-sm">
+<span class="material-symbols-outlined text-primary mt-xs">info</span>
+<div class="flex flex-col gap-xs">
+<p class="font-label-bold text-label-bold text-primary uppercase">Aviso Importante</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Cancelamentos ou remarcações devem ser feitos com no mínimo <strong>24 horas de antecedência</strong> para liberar a vaga para outro paciente.</p>
+</div>
+</div>
+<section class="flex flex-col gap-md">
+<div class="bg-surface-container-lowest rounded-lg p-md shadow-[0_12px_12px_rgba(0,62,126,0.04)] border border-outline-variant flex flex-col gap-md relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary"></div>
+<div class="flex justify-between items-start">
+<div class="flex flex-col gap-xs">
+<div class="flex items-center gap-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">calendar_month</span>
+<span class="font-label-bold text-label-bold">24 OUT 2023 • 14:30</span>
+</div>
+<h2 class="font-h3 text-h3 text-on-background mt-sm">Clínica Geral</h2>
+</div>
+<div class="bg-primary-fixed text-on-primary-fixed px-sm py-xs rounded-full font-label-bold text-label-bold uppercase tracking-wider flex items-center gap-[4px]">
+<span class="material-symbols-outlined text-[14px] icon-fill">check_circle</span>
+                        Confirmado
+                    </div>
+</div>
+<div class="flex items-start gap-sm p-sm bg-surface-container-low rounded-md">
+<span class="material-symbols-outlined text-outline">location_on</span>
+<div class="flex flex-col">
+<span class="font-label-bold text-label-bold text-on-surface">Unidade Móvel Centro</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Praça da Matriz, ao lado do coreto</span>
+</div>
+</div>
+<div class="flex gap-sm mt-xs pt-md border-t border-surface-variant">
+<button class="flex-1 h-[40px] rounded-lg border border-outline-variant text-primary font-label-md text-label-md flex items-center justify-center gap-xs hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">edit_calendar</span>
+                        Remarcar
+                    </button>
+<button class="flex-1 h-[40px] rounded-lg text-error font-label-md text-label-md flex items-center justify-center gap-xs hover:bg-error-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">cancel</span>
+                        Cancelar
+                    </button>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-lg p-md shadow-[0_12px_12px_rgba(0,62,126,0.04)] border border-outline-variant flex flex-col gap-md relative overflow-hidden opacity-90">
+<div class="absolute top-0 left-0 w-1 h-full bg-secondary-fixed-dim"></div>
+<div class="flex justify-between items-start">
+<div class="flex flex-col gap-xs">
+<div class="flex items-center gap-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">calendar_month</span>
+<span class="font-label-bold text-label-bold">05 NOV 2023 • 09:00</span>
+</div>
+<h2 class="font-h3 text-h3 text-on-background mt-sm">Odontologia</h2>
+</div>
+<div class="bg-secondary-fixed text-on-secondary-fixed px-sm py-xs rounded-full font-label-bold text-label-bold uppercase tracking-wider flex items-center gap-[4px]">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+                        Em Espera
+                    </div>
+</div>
+<div class="flex items-start gap-sm p-sm bg-surface-container-low rounded-md">
+<span class="material-symbols-outlined text-outline">location_on</span>
+<div class="flex flex-col">
+<span class="font-label-bold text-label-bold text-on-surface">Unidade Móvel Norte</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Terminal Rodoviário, Setor B</span>
+</div>
+</div>
+<div class="flex gap-sm mt-xs pt-md border-t border-surface-variant">
+<button class="flex-1 h-[40px] rounded-lg border border-outline-variant text-primary font-label-md text-label-md flex items-center justify-center gap-xs hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">edit_calendar</span>
+                        Remarcar
+                    </button>
+<button class="flex-1 h-[40px] rounded-lg text-error font-label-md text-label-md flex items-center justify-center gap-xs hover:bg-error-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">cancel</span>
+                        Cancelar
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<nav class="bg-white dark:bg-slate-900 font-['Inter'] text-[12px] font-medium docked full-width bottom-0 rounded-t-lg border-t border-gray-100 dark:border-gray-800 shadow-[0_-4px_12px_rgba(0,0,0,0.05)] transition-transform duration-200 fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 pb-safe md:hidden">
+<button class="flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 hover:text-[#003E7E] dark:hover:text-blue-300 transition-all duration-200 active:scale-90 w-16 h-14">
+<span class="material-symbols-outlined mb-1">home</span>
+<span>Início</span>
+</button>
+<button class="flex flex-col items-center justify-center text-[#003E7E] dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 rounded-xl px-3 py-1 hover:text-[#003E7E] dark:hover:text-blue-300 transition-all duration-200 active:scale-90 w-16 h-14">
+<span class="material-symbols-outlined mb-1 icon-fill">calendar_month</span>
+<span>Agenda</span>
+</button>
+<button class="flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 hover:text-[#003E7E] dark:hover:text-blue-300 transition-all duration-200 active:scale-90 w-16 h-14">
+<span class="material-symbols-outlined mb-1">event_note</span>
+<span>Histórico</span>
+</button>
+<button class="flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 hover:text-[#003E7E] dark:hover:text-blue-300 transition-all duration-200 active:scale-90 w-16 h-14">
+<span class="material-symbols-outlined mb-1">person</span>
+<span>Perfil</span>
+</button>
+</nav>
+</body></html>

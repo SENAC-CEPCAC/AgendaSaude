@@ -32,7 +32,6 @@ class AnamneseColo extends Model
         'data_ultima_menstruacao' => 'date',
     ];
 
-   
     public function fatoAnamnese()
     {
         return $this->belongsTo(FatoAnamnese::class, 'id_fato_anamnese', 'id_fato_anamnese');
