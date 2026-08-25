@@ -91,7 +91,7 @@
                 </div>
 
                 <!-- FORMULÁRIO -->
-                <form id="formCadastroPaciente" action="{{ route('cadastro.store') }}" method="POST" novalidate>
+                <form id="formCadastroPaciente" action="{{ route('acesso.cadastro.store') }}" method="POST" novalidate>
                     @csrf
 
                     <!-- ========================================== -->
@@ -202,9 +202,15 @@
                         </div>
 
                         <!-- BOTÕES DA ETAPA 1 -->
+<<<<<<< HEAD
                         <div class="d-flex justify-content-between  align-items-center mt-5 pt-3 border-top">
                             <a href="{{ route('acesso.index') }}" class="btn btn-outline-secondary px-4">
                                 ← Voltar
+=======
+                        <div class="d-flex justify-content-between align-items-center mt-5 pt-3 border-top">
+                            <a href="{{ route('acesso.index') }}" class="btn btn-outline-secondary px-4">
+                                ← Voltar ao início
+>>>>>>> a99c217a251b99d0ecb4834ca4e4330e2b728ca1
                             </a>
                             <button type="button" id="btnProximo" class="btn btn-primary px-4 fw-semibold">
                                 Próximo →
@@ -253,7 +259,11 @@
                         <!-- BOTÕES DA ETAPA 2 -->
                         <div class="d-flex justify-content-between align-items-center mt-5 pt-3 border-top">
                             <button type="button" id="btnVoltarStep2" class="btn btn-outline-secondary px-4">
+<<<<<<< HEAD
                                 ← Voltar
+=======
+                                ← Voltar para etapa 1
+>>>>>>> a99c217a251b99d0ecb4834ca4e4330e2b728ca1
                             </button>
                             <button type="submit" id="btnCadastrar" class="btn btn-success px-5 fw-bold">
                                 Concluir Cadastro
