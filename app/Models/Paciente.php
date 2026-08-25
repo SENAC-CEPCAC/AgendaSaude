@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Paciente extends Model
 {
@@ -97,5 +98,14 @@ class Paciente extends Model
     public function telefones()
     {
         return $this->hasMany(TelefonePaciente::class, 'cpf_paciente', 'cpf_paciente');
+    }
+
+     public function user(): HasOne
+    {
+        return $this->hasOne(
+            User::class,
+            'cpf_paciente',
+            'cpf_paciente'
+        );
     }
 }

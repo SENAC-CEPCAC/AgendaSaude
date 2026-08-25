@@ -53,7 +53,7 @@ class Prontuario extends Model
      */
     public function anamnese()
     {
-        return $this->hasOne(Anamnese::class, 'id_prontuario', 'id_prontuario');
+        return $this->hasOne(FatoAnamnese::class, 'id_prontuario', 'id_prontuario');
     }
 
     /**
@@ -61,6 +61,6 @@ class Prontuario extends Model
      */
     public function feedback()
     {
-        return $this->hasOne(feedback::class, 'fato_prontuario_id_prontuario', 'id_prontuario');
+        return $this->hasOne(FatoFeedback::class, 'fato_prontuario_id_prontuario', 'id_prontuario');
     }
 }
