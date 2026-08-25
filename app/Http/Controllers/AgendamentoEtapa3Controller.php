@@ -65,16 +65,16 @@ class AgendamentoEtapa3Controller extends Controller
         $dados_etapa_1 = session('agendamento.etapa_1', []);
         $dados_etapa_2 = session('agendamento.etapa_2', []);
 
-        // 2. Identificação do paciente (autenticado ou primeiro paciente de demonstração)
-        $cpf_paciente = Paciente::first()?->cpf_paciente ?? '12345678901';
-        if (!empty($dados_validados['cpf_paciente'])) {
-            $cpf_limpo = preg_replace('/[^0-9]/', '', $dados_validados['cpf_paciente']);
-            $paciente_encontrado = Paciente::find($cpf_limpo);
-            if ($paciente_encontrado) {
-                $cpf_paciente = $paciente_encontrado->cpf_paciente;
-            }
-        } elseif (auth()->check()) {
-            $cpf_paciente = auth()->user()->identificacao ?? auth()->id();
+        // 2. Identificação do paciente e validação da chave estrangeira
+        $cpf_usuario = auth()->user()?->cpf;
+        $cpf_paciente = !empty($dados_validados['cpf_paciente'])
+            ? preg_replace('/[^0-9]/', '', $dados_validados['cpf_paciente'])
+            : preg_replace('/[^0-9]/', '', (string) $cpf_usuario);
+
+        if (strlen($cpf_paciente) !== 11 || !Paciente::where('cpf_paciente', $cpf_paciente)->exists()) {
+            return back()
+                ->withInput()
+                ->withErrors(['cpf_paciente' => 'O CPF informado não possui cadastro de paciente.']);
         }
 
         // 3. Identificação do cronograma

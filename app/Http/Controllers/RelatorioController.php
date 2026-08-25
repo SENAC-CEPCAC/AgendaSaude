@@ -57,7 +57,7 @@ class RelatorioController extends Controller
     }
 
     /**
-     * 2. QUERY DE QUESTIONÁRIOS DE ANAMNESE (ÁREA CLÍNICA)
+     * 2. QUERY DE QUESTIONÁRIOS DE ANAMNESE COM TODOS OS CAMPOS DAS MIGRATIONS
      */
     private function getQueryAnamneses($busca = null, $dataInicio = null, $dataFim = null, $tipoProtocolo = null)
     {
@@ -101,23 +101,36 @@ class RelatorioController extends Controller
             'prof.registro_profissional as crm',
             'prof.cargo_funcao',
             'u.nome_unidade',
-            // SISMAMA
+            
+            // TODOS OS CAMPOS DA MIGRATION anamnese_sismama
             'mama.nodulo_mama_direita',
             'mama.nodulo_mama_esquerda',
             'mama.risco_elevado_cancer',
-            'mama.tipo_mamografia',
+            'mama.mamas_examinadas_anteriormente',
             'mama.fez_mamografia_anterior',
             'mama.ano_ultima_mamografia',
+            'mama.fez_radioterapia_mama',
+            'mama.fez_cirurgia_mama',
+            'mama.tipo_mamografia',
             'mama.achado_descarga_papilar_dir',
+            'mama.achado_descarga_papilar_esq',
             'mama.achado_nodulo_localizacao_dir',
+            'mama.achado_nodulo_localizacao_esq',
             'mama.achado_linfonodo_palpavel_dir',
-            // SISCOLO
+            'mama.achado_linfonodo_palpavel_esq',
+            
+            // TODOS OS CAMPOS DA MIGRATION anamnese_siscolo
             'colo.motivo_exame',
             'colo.fez_preventivo_anterior',
             'colo.ano_ultimo_preventivo',
-            'colo.usa_pilula',
             'colo.usa_diu',
             'colo.esta_gravida',
+            'colo.usa_pilula',
+            'colo.usa_hormonio_menopausa',
+            'colo.ja_fez_radioterapia',
+            'colo.data_ultima_menstruacao',
+            'colo.sangramento_apos_relacao',
+            'colo.sangramento_apos_menopausa',
             'colo.inspecao_colo',
             'colo.sinais_dst'
         )->orderBy('a.data_realizacao', 'desc');
@@ -265,8 +278,6 @@ class RelatorioController extends Controller
 
         return new StreamedResponse(function () use ($tipo, $busca, $dataInicio, $dataFim) {
             $handle = fopen('php://output', 'w');
-            
-            // Injeta UTF-8 BOM para compatibilidade com o Microsoft Excel
             fputs($handle, "\xEF\xBB\xBF");
 
             if ($tipo === 'atendidos') {

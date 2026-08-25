@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class AnamneseMama extends Model
 {
-    protected $table = 'sismama';
+    protected $table = 'anamnese_sismama';
     protected $primaryKey = 'id_sismama';
 
     public $timestamps = false;
@@ -30,7 +30,6 @@ class AnamneseMama extends Model
         'achado_linfonodo_palpavel_esq',
     ];
 
-  
     public function fatoAnamnese()
     {
         return $this->belongsTo(FatoAnamnese::class, 'id_fato_anamnese', 'id_fato_anamnese');
