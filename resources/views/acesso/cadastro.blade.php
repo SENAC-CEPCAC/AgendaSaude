@@ -253,11 +253,7 @@
                         <!-- BOTÕES DA ETAPA 2 -->
                         <div class="d-flex justify-content-between align-items-center mt-5 pt-3 border-top">
                             <button type="button" id="btnVoltarStep2" class="btn btn-outline-secondary px-4">
-<<<<<<< HEAD
                                 ← Voltar
-=======
-                                ← Voltar para etapa 1
->>>>>>> a99c217a251b99d0ecb4834ca4e4330e2b728ca1
                             </button>
                             <button type="submit" id="btnCadastrar" class="btn btn-success px-5 fw-bold">
                                 Concluir Cadastro
