@@ -17,17 +17,16 @@ class LoginController extends Controller
     public function cadastrar(Request $request)
     {
         $dados = $request->validate([
-            'nome' => ['required', 'string', 'max:255'],
-            'sobrenome' => ['required', 'string', 'max:255'],
+            'nome_completo' => ['required', 'string', 'max:255'],
             'cpf' => ['required', 'string', 'max:14', 'unique:users,cpf'],
-            'telefone' => ['required', 'string', 'max:20'],
+            'celular' => ['required', 'string', 'max:20'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'max:255'],
-            'termos' => ['accepted'],
         ]);
 
-        $dados['name'] = $dados['nome'];
-        unset($dados['nome'], $dados['termos']);
+        $dados['name'] = $dados['nome_completo'];
+        $dados['telefone'] = $dados['celular'];
+        unset($dados['nome_completo'], $dados['celular']);
         $dados['nivel'] = 1;
         $dados['password'] = Hash::make($dados['password']);
 

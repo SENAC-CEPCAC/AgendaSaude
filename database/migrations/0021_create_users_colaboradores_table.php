@@ -6,23 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         if (! Schema::hasTable('users_colaboradores')) {
             Schema::create('users_colaboradores', function (Blueprint $table) {
                 $table->id();
-                $table->string('nome');
-                $table->string('email')->unique();
-                $table->string('password');
-                $table->string('matricula', 100);
-                $table->string('cidade');
-                $table->unsignedTinyInteger('permissao');
-                $table->boolean('ativo')->default(true);
                 $table->timestamps();
             });
         }
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::dropIfExists('users_colaboradores');
