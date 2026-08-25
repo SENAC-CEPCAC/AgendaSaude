@@ -202,15 +202,9 @@
                         </div>
 
                         <!-- BOTÕES DA ETAPA 1 -->
-<<<<<<< HEAD
                         <div class="d-flex justify-content-between  align-items-center mt-5 pt-3 border-top">
                             <a href="{{ route('acesso.index') }}" class="btn btn-outline-secondary px-4">
                                 ← Voltar
-=======
-                        <div class="d-flex justify-content-between align-items-center mt-5 pt-3 border-top">
-                            <a href="{{ route('acesso.index') }}" class="btn btn-outline-secondary px-4">
-                                ← Voltar ao início
->>>>>>> a99c217a251b99d0ecb4834ca4e4330e2b728ca1
                             </a>
                             <button type="button" id="btnProximo" class="btn btn-primary px-4 fw-semibold">
                                 Próximo →

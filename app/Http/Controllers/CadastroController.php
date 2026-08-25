@@ -2,11 +2,7 @@
 
 namespace App\Http\Controllers;
 
-<<<<<<< HEAD
-use App\Models\Cadastro;
-=======
 use App\Models\Paciente;
->>>>>>> a99c217a251b99d0ecb4834ca4e4330e2b728ca1
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

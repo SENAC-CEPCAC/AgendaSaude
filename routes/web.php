@@ -39,6 +39,9 @@ Route::get('/recuperacao', function () { //WILLIAM
     return view('login.recuperacaoP');
 });
 
+Route::get('/layoutpadrao', function () {
+    return view('LayoutPadrao.layoutpadrao');
+})->name('layoutpadrao.layoutpadrao');
 
 Route::get('/satisfacaocliente', function () {
     return view('pesquisa.satisfacaocliente'); //ISABELA
@@ -55,6 +58,7 @@ Route::get('/unidadesmoveis', function () {
 Route::get('/feedback', function () {
     return view('pesquisa.feedback'); //ISABELA
 });
+
 
 Route::post('/cadastro/store', [CadastroController::class, 'store'])->name('acesso.cadastro.store');
 
@@ -100,11 +104,12 @@ Route::get('/login', function () {
     return view('acesso.login');
 })->name('acesso.login');
 
-
+Route::post('/login', [LoginController::class, 'logar'])->name('acesso.login');
+Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 
 //ACESSO ÀS PÁGINAS DO FLUXO DE AGENDAMENTO
 Route::middleware('auth.nivel:1,2,3,4')->group(function () {
-    Route::get('/agendamentos-gestao', [ListaAgendamentoController::class, 'index'])->name('agendamentos.index'); // Mateus
+    Route::get('/agendamentos', [ListaAgendamentoController::class, 'index'])->name('agendamento.agendamentos'); // Mateus
     Route::get('/agendamentos/{id}', [ListaAgendamentoController::class, 'show'])->name('agendamentos.show'); // Mateus
     Route::post('/agendamentos/{id}/validar-documento', [ListaAgendamentoController::class, 'validarDocumentos'])->name('agendamentos.validar-documento'); // Mateus
 

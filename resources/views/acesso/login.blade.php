@@ -69,7 +69,7 @@
   <div class="card">
     <h2 class="text-2xl font-bold" >AGENDA SAUDE</h2>
     <br>
-    <form method="POST" action="{{ route('login.attempt') }}">
+    <form method="POST" action="{{ route('acesso.login') }}">
       @csrf
       <h6 class="email text-xs">E-mail</h6>
       <input type="email" name="email" id="username" placeholder="E-mail" value="{{ old('email') }}" required />
