@@ -27,7 +27,7 @@
             @csrf
             <label class="email pt-5 text-sm ml-1 block">E-mail do usuário</label>
             <input class="input border-1 border-gray-300 rounded-md pl-10" type="email" name="email" id="email"
-                placeholder="Digite seu e-mail" value="{{ old('email', request('email')) }}" required>
+                placeholder="Digite seu e-mail" value="{{ old('email') }}" required>
             <h4 class="email pt-5 text-sm ml-1">Digite uma nova senha:</h4>
             <input class="input border-1 border-gray-300 rounded-md pl-10" type="password" name="password" id="password"
                 placeholder="Insira a nova senha" required minlength="8">

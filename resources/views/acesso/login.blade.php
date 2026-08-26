@@ -58,6 +58,17 @@
       margin-top: 10px;
       text-align: center;
     }
+
+    .status {
+      margin-top: 10px;
+      padding: 12px 16px;
+      border: 1px solid #d1fae5;
+      border-radius: 8px;
+      background: #ecfdf5;
+      color: #047857;
+      font-size: 14px;
+      line-height: 20px;
+    }
   </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
@@ -83,6 +94,9 @@
 
       <a href="{{ route('acesso.index') }}" class="mt-5 block text-center text-sm text-blue-800 hover:underline">Voltar</a>
     </form>
+    @if (session('status'))
+      <div class="status">{{ session('status') }}</div>
+    @endif
     @if ($errors->any())
       <div class="error">{{ $errors->first() }}</div>
     @endif

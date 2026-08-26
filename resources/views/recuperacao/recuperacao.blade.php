@@ -23,24 +23,19 @@
         <div class="border border-slate-50 rounded-xl shadow-md bg-white w-80 h-100 shadow-sm p-15 ">
         <h2 class="text-3xl ">Recuperação</h2>
         
-        <div>
+        <form method="GET" action="{{ route('recuperacao.novasenha') }}">
             <h4 class="email text-xs pt-10 ml-1">Digite seu E-mail</h4>
             <input class="input pt-2 border-1 border-gray-300 rounded-md pl-4" type="email" name="email" id="email"
-                placeholder="Digite seu e-mail">
-             <button class="butao cursor-pointer hover:bg-blue-700 font-bold bg-clip-border px-15.5 py-1 bg-blue-500 text-white rounded-lg mt-2" type="submit">Recuperar</button>
-                  
-             <h4 class="text-xs pt-2 mt-6 ml-1">Digite o código:</h4>
-            <input class="input pt-2 border-1 border-gray-300 rounded-md pl-4"  name="number" id="number"
-                placeholder="Insira o código">
-            
-            <button class="butao cursor-pointer hover:bg-blue-700 font-bold bg-clip-border px-15.5  py-1 bg-blue-500 text-white rounded-lg mt-2" type="submit">Confirmar</a></button>
+                placeholder="Digite seu e-mail" value="{{ old('email') }}" required>
+            <button id="recuperar-button" class="butao cursor-pointer hover:bg-blue-700 font-bold bg-clip-border px-15.5 py-1 bg-blue-500 text-white rounded-lg mt-2" type="submit">Recuperar</button>
 
             <a href="{{ route('acesso.index') }}" class="mt-5 block text-center text-sm text-blue-800 hover:underline">Voltar</a>
-        </div>  
+        </form>
         </div>
        
         
 
     </div>
+
 </body>
 </html>

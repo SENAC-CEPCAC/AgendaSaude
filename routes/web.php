@@ -54,6 +54,10 @@ Route::get('/recuperacao', function () {
 Route::get('/novasenha', function () {
     return view('recuperacao.novasenha');
 })->name('recuperacao.novasenha');
+Route::get('/novasenhauser', function () {
+    return view('recuperacao.novasenhauser');
+})->name('recuperacao.novasenhauser');
+
 Route::post('/novasenha', [LoginController::class, 'atualizarSenha'])->name('recuperacao.senha.atualizar');
 
 // Layout Padrão e Telas de Teste/Colaborador
