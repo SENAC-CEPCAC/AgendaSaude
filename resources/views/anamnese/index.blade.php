@@ -44,20 +44,19 @@ $nivelUsuario = (int) ($usuario?->nivel ?? $usuario?->permissao ?? 0);
       <header id="top-bar" class="h-16 bg-white border border-slate-200/80 px-4 md:px-6 flex items-center justify-between sticky top-4 z-20 shadow-sm rounded-xl mb-6">
         <div class="flex items-center gap-3">
           <div id="breadcrumb" class="flex items-center gap-2 text-xs text-slate-400 font-medium">
-            <span>Portal Gestão N1</span>
+            <span>Portal Gestão N3</span>
             <span>/</span>
-            <span class="text-slate-700 font-semibold">Triagem de Prontuários & Documentos</span>
+            <span class="text-slate-700 font-semibold">Pacientes</span>
           </div>
         </div>
 
         <div id="top-bar-actions" class="flex items-center gap-4">
           <div class="flex items-center gap-3 pl-4 border-l border-slate-100">
             <div class="w-9 h-9 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center font-bold text-blue-900 text-xs">
-              OP
+              M
             </div>
             <div class="hidden sm:block text-left">
-              <p class="text-xs font-bold text-slate-700">Operador Triagem</p>
-              <p class="text-[10px] text-slate-400 font-semibold leading-none mt-0.5">Nível 1 - Recepção</p>
+              <p class="text-[10px] text-slate-400 font-semibold leading-none mt-0.5">Nível 3 - Médico</p>
             </div>
           </div>
         </div>
@@ -132,16 +131,15 @@ $nivelUsuario = (int) ($usuario?->nivel ?? $usuario?->permissao ?? 0);
               <option value="cancelado" {{ $filtro_status === 'cancelado' ? 'selected' : '' }}>Cancelado</option>
             </select>
 
-            <!-- Filtro de Documento -->
-            <select
-              name="status_documento"
-              onchange="this.form.submit()"
-              class="bg-white border border-slate-200 text-slate-700 rounded-xl px-3 py-2 text-xs font-medium focus:outline-none focus:border-blue-900 transition-all cursor-pointer">
-              <option value="">Status Documentos (Todos)</option>
-              <option value="pendente" {{ $filtro_documento === 'pendente' ? 'selected' : '' }}>Pendente</option>
-              <option value="aprovado" {{ $filtro_documento === 'aprovado' ? 'selected' : '' }}>Aprovado</option>
-              <option value="rejeitado" {{ $filtro_documento === 'rejeitado' ? 'selected' : '' }}>Rejeitado (Reanexar)</option>
-            </select>
+            <!-- Filtro de Data de Atendimento -->
+<input
+  type="date"
+  name="data_atendimento"
+  value="{{ $filtro_data ?? '' }}"
+  onchange="this.form.submit()"
+  class="bg-white border border-slate-200 text-slate-700 rounded-xl px-3 
+  py-2 text-xs font-medium focus:outline-none focus:border-blue-900 transition-all 
+  cursor-pointer">
 
             @if($termo_busca || $filtro_status || $filtro_documento)
             <a href="{{ route('triagem.index') }}" class="text-xs text-slate-500 hover:text-slate-800 underline">Limpar</a>

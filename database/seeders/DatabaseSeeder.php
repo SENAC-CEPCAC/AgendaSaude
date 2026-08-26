@@ -36,12 +36,12 @@ class DatabaseSeeder extends Seeder
         if (app()->environment('local', 'testing')) {
             
             // Usuário padrão de autenticação para testes
-            if (!User::where('email', 'test@example.com')->exists()) {
-                User::factory()->create([
-                    'name' => 'Test User',
-                    'email' => 'test@example.com',
-                ]); // [FAKE] Usuário de teste para login inicial
-            }
+            //if (!User::where('email', 'test@example.com')->exists()) {
+                //User::factory()->create([
+                //    'name' => 'Test User',
+                  //  'email' => 'test@example.com',
+               // ]); // [FAKE] Usuário de teste para login inicial
+           // }
 
             User::where('email', 'admin@agendasaude.com')->delete();
 

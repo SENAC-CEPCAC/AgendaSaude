@@ -21,6 +21,7 @@ use App\Http\Controllers\ProntuarioVisualizacaoController;
 use App\Http\Controllers\CnesUnidadeController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\PoliticaController;
+use App\Http\Controllers\AnamnesePacienteController;
 
 // ==========================================
 // 1. ÁREA PÚBLICA & ACESSO
@@ -219,5 +220,5 @@ Route::get('/unidadesmoveis', function () {
 })->name('anamnese.unidadesmoveis');
 
 
-Route::get('/anamnese-paciente', [AnamneseDoDiaController::class, 'anamnesePaciente'])->name('anamnese.paciente');
-
+Route::get('/anamnese-paciente', [AnamnesePacienteController::class, 'index'])
+    ->name('anamnese.paciente');
