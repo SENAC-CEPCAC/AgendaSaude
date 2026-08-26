@@ -34,6 +34,8 @@ return new class extends Migration
             $table->dateTime('data_cadastro')->useCurrent();
             $table->timestamps();
         });
+
+        
     }
     /**
      * Reverse the migrations.

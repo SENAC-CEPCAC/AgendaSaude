@@ -1,80 +1,218 @@
 <?php
 
-/**
- * =========================================================================
- * CONTROLLER DE GESTÃO DE AGENDAMENTOS (MATEUS)
- * Arquivo: app/Http/Controllers/ListaAgendamentoController.php
- * =========================================================================
- */
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use App\Models\UserColaborador;
 
 class ListaAgendamentoController extends Controller
 {
     /**
      * Tela de Gestão: Lista de Agendamentos (Para o Operador/Recepção)
      */
+
     public function index(Request $request)
     {
         $search = $request->input('search');
         $status = $request->input('status');
         $statusDocumentos = $request->input('status_documentos');
 
+        // Identifica o usuário autenticado
+        $paciente = Auth::user();
+        $colaboradorId = session('colaborador_id');
+
+        if ($paciente) {
+
+            // Paciente
+            $nivel = 1;
+            $cpfPaciente = $paciente->cpf_paciente;
+        } elseif ($colaboradorId) {
+
+            // Colaborador
+            $colaborador = UserColaborador::find($colaboradorId);
+
+            if (!$colaborador || !$colaborador->ativo) {
+                abort(401, 'Colaborador não autenticado.');
+            }
+
+            $nivel = (int) $colaborador->permissao;
+            $cpfPaciente = null;
+        } else {
+
+            abort(401, 'Usuário não autenticado.');
+        }
+
+
         $query = DB::table('fato_prontuario')
-            ->join('dim_pacientes', 'fato_prontuario.cpf_paciente', '=', 'dim_pacientes.cpf_paciente')
-            ->join('fato_cronogramas', 'fato_prontuario.id_agenda', '=', 'fato_cronogramas.id_agenda')
+            ->join(
+                'dim_pacientes',
+                'fato_prontuario.cpf_paciente',
+                '=',
+                'dim_pacientes.cpf_paciente'
+            )
+            ->join(
+                'fato_cronogramas',
+                'fato_prontuario.id_agenda',
+                '=',
+                'fato_cronogramas.id_agenda'
+            )
             ->select(
                 'fato_prontuario.id_prontuario as id',
                 'fato_prontuario.id_prontuario as numero_agendamento',
+                'fato_prontuario.numero_sequencial',
                 'dim_pacientes.cpf_paciente',
                 'dim_pacientes.nome_completo as nome_paciente',
+                'dim_pacientes.cartao_sus',
                 'fato_cronogramas.data_atendimento as horario_agendamento',
+                'fato_prontuario.status_comparecimento',
                 'fato_prontuario.status_comparecimento as status',
                 'fato_prontuario.status_documento as status_documentos',
-                DB::raw("CASE WHEN fato_prontuario.status_comparecimento = 'confirmado' THEN 1 ELSE 0 END as cliente_confirmou")
+                'fato_prontuario.status_agendamento',
+                DB::raw("
+                CASE 
+                    WHEN fato_prontuario.status_comparecimento = 'confirmado'
+                    THEN 1
+                    ELSE 0
+                END as cliente_confirmou
+            ")
             );
 
-        // Filtro por texto (Nome, CPF, Número)
+        /*
+         * PACIENTE - somente seus próprios agendamentos
+         */
+        if ($nivel === 1 && !empty($cpfPaciente)) {
+            $query->where(
+                'fato_prontuario.cpf_paciente',
+                $cpfPaciente
+            );
+        }
+
+        /*
+     * FILTRO DE PESQUISA
+     */
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
-                $q->where('dim_pacientes.nome_completo', 'like', "%{$search}%")
-                  ->orWhere('dim_pacientes.cpf_paciente', 'like', "%{$search}%")
-                  ->orWhere('fato_prontuario.id_prontuario', 'like', "%{$search}%");
+                $q->where(
+                    'dim_pacientes.nome_completo',
+                    'like',
+                    "%{$search}%"
+                )
+                    ->orWhere(
+                        'dim_pacientes.cpf_paciente',
+                        'like',
+                        "%{$search}%"
+                    )
+                    ->orWhere(
+                        'fato_prontuario.id_prontuario',
+                        'like',
+                        "%{$search}%"
+                    );
             });
         }
 
-        // Filtro por status do agendamento
+        /*
+     * FILTRO DE STATUS
+     */
         if (!empty($status)) {
-            $query->where('fato_prontuario.status_comparecimento', $status);
+            $query->where(function ($q) use ($status) {
+                $q->where(
+                    'fato_prontuario.status_comparecimento',
+                    $status
+                )
+                    ->orWhere(
+                        'fato_prontuario.status_agendamento',
+                        $status
+                    );
+            });
         }
 
-        // Filtro por status da validação dos documentos
+        /*
+     * FILTRO DE DOCUMENTOS
+     */
         if (!empty($statusDocumentos)) {
-            $query->where('fato_prontuario.status_documento', $statusDocumentos);
+            $query->where(
+                'fato_prontuario.status_documento',
+                $statusDocumentos
+            );
         }
 
-        $showAgendamentos = $query->orderBy('fato_cronogramas.data_atendimento', 'desc')->paginate(10);
+        $showAgendamentos = $query
+            ->orderBy('fato_cronogramas.data_atendimento', 'desc')
+            ->paginate(10);
 
-        return view('listaagendamentos.index', compact('showAgendamentos'));
+        return view(
+            'listaagendamentos.index',
+            compact('showAgendamentos')
+        );
     }
 
     /**
-     * Retorna dados para o Modal via AJAX
+     * Retorna dados completos para o Modal via AJAX, incluindo URLs públicas dos documentos
      */
     public function show($id)
     {
         $agendamento = DB::table('fato_prontuario')
             ->join('dim_pacientes', 'fato_prontuario.cpf_paciente', '=', 'dim_pacientes.cpf_paciente')
             ->join('fato_cronogramas', 'fato_prontuario.id_agenda', '=', 'fato_cronogramas.id_agenda')
-            ->join('dim_vagas', 'fato_cronogramas.Vagas_id_vagas', '=', 'dim_vagas.id_vagas')
+            ->leftJoin('dim_vagas', 'fato_cronogramas.Vagas_id_vagas', '=', 'dim_vagas.id_vagas')
             ->where('fato_prontuario.id_prontuario', $id)
+            ->orWhere('fato_prontuario.numero_sequencial', $id)
+            ->select(
+                'fato_prontuario.id_prontuario',
+                'fato_prontuario.numero_sequencial',
+                'dim_pacientes.cpf_paciente',
+                'dim_pacientes.nome_completo as nome_paciente',
+                'dim_pacientes.cartao_sus',
+                'fato_cronogramas.data_atendimento as horario_agendamento',
+                'dim_vagas.tipo_exame as nome_vaga',
+                'fato_prontuario.status_documento as status_documentos',
+                'fato_prontuario.status_comparecimento',
+                'fato_prontuario.caminho_documento_rg_cpf',
+                'fato_prontuario.caminho_documento_requisicao'
+            )
             ->first();
 
+        if ($agendamento) {
+            // Gera as URLs acessíveis publicamente para exibição no modal
+            $agendamento->url_documento_rg_cpf = !empty($agendamento->caminho_documento_rg_cpf)
+                ? Storage::disk('public')->url($agendamento->caminho_documento_rg_cpf)
+                : null;
+
+            $agendamento->url_documento_requisicao = !empty($agendamento->caminho_documento_requisicao)
+                ? Storage::disk('public')->url($agendamento->caminho_documento_requisicao)
+                : null;
+        }
+
         return response()->json(['agendamento' => $agendamento]);
+    }
+
+    /**
+     * Atualização do Status de Comparecimento (Presente, Atrasado, Não Compareceu)
+     */
+    public function atualizarStatusComparecimento(Request $request, $id)
+    {
+        $request->validate([
+            'status_comparecimento' => 'required|in:presente,atrasado,nao_compareceu,faltou,confirmado,agendado,cancelado'
+        ]);
+
+        $status = $request->input('status_comparecimento');
+
+        DB::table('fato_prontuario')
+            ->where('id_prontuario', $id)
+            ->orWhere('numero_sequencial', $id)
+            ->update([
+                'status_comparecimento' => $status,
+                'updated_at' => Carbon::now()
+            ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Status de comparecimento atualizado com sucesso!'
+        ]);
     }
 
     /**
@@ -86,20 +224,21 @@ class ListaAgendamentoController extends Controller
 
         $prontuario = DB::table('fato_prontuario')
             ->where('id_prontuario', $id)
+            ->orWhere('numero_sequencial', $id)
             ->first();
 
         if (!$prontuario) {
             return response()->json(['error' => 'Agendamento não encontrado.'], 404);
         }
 
-        $novoStatus = ($decisao === 'rejeitado') ? 'cancelado' : 'confirmado';
-        $statusDoc = ($decisao === 'rejeitado') ? 'rejeitado' : 'aprovado';
+        $novoStatusComparecimento = ($decisao === 'rejeitado') ? 'cancelado' : 'confirmado';
+        $statusDoc = ($decisao === 'rejeitado') ? 'rejeitado' : ($decisao === 'validar_no_ato' ? 'validar_no_ato' : 'aprovado');
 
         DB::table('fato_prontuario')
             ->where('id_prontuario', $prontuario->id_prontuario)
             ->update([
                 'status_documento' => $statusDoc,
-                'status_comparecimento' => $novoStatus,
+                'status_comparecimento' => $novoStatusComparecimento,
                 'updated_at' => Carbon::now()
             ]);
 
@@ -115,6 +254,7 @@ class ListaAgendamentoController extends Controller
 
         $prontuario = DB::table('fato_prontuario')
             ->where('id_prontuario', $id)
+            ->orWhere('numero_sequencial', $id)
             ->first();
 
         if (!$prontuario) {
@@ -149,6 +289,7 @@ class ListaAgendamentoController extends Controller
     {
         $prontuario = DB::table('fato_prontuario')
             ->where('id_prontuario', $id)
+            ->orWhere('numero_sequencial', $id)
             ->first();
 
         if ($prontuario) {
@@ -161,5 +302,43 @@ class ListaAgendamentoController extends Controller
         }
 
         return redirect()->back()->with('success', 'Agendamento cancelado com sucesso.');
+    }
+
+    public function verDocumento($id, $tipo)
+    {
+        $agendamento = DB::table('fato_prontuario')
+            ->where('id_prontuario', $id)
+            ->orWhere('numero_sequencial', $id)
+            ->first();
+
+        if (!$agendamento) {
+            abort(404, 'Agendamento não encontrado.');
+        }
+
+        $coluna = ($tipo === 'rg' || $tipo === 'rg_cpf') ? 'caminho_documento_rg_cpf' : 'caminho_documento_requisicao';
+        $caminhoBanco = $agendamento->$coluna ?? null;
+
+        if (!$caminhoBanco) {
+            abort(404, 'Documento não informado.');
+        }
+
+        // Extrai apenas o nome do arquivo caso venha com caminho completo
+        $nomeArquivo = basename($caminhoBanco);
+
+        // Lista de locais onde o arquivo pode estar localizado
+        $candidatos = [
+            storage_path('app/public/documentos_agendamentos/' . $nomeArquivo),
+            storage_path('app/public/documentos_agendamentos/' . $caminhoBanco),
+        ];
+
+        foreach ($candidatos as $path) {
+            if (file_exists($path)) {
+                return response()->file($path, [
+                    'Cache-Control' => 'no-cache, private',
+                ]);
+            }
+        }
+
+        abort(404, 'Arquivo não encontrado no servidor: ' . $nomeArquivo);
     }
 }

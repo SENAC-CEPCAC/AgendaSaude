@@ -1,474 +1,715 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relatórios Gerenciais e Clínicos - SUS Agenda Saúde</title>
-    <!-- Tailwind CSS CDN para garantir estilização 100% imediata -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Relatórios Gerenciais e Clínicos - Agenda Saúde</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Alpine.js para controle do Modal e das Abas -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <style>
-        @media print {
-            .no-print { display: none !important; }
-            .print-only { display: block !important; }
-            body { background: white !important; }
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+              mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+            }
+          }
         }
-    </style>
-</head>
-<body class="bg-slate-50 text-slate-800 antialiased min-h-screen font-sans" x-data="{ 
-    abaAtiva: '{{ $tipo ?? 'atendidos' }}',
-    modalAberto: false,
-    anamneseSelecionada: null
-}">
-
-    <!-- TOPO / HEADER -->
-    <header class="bg-slate-900 text-white border-b border-slate-800 no-print">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-sky-600 flex items-center justify-center text-white shadow-md">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-                        Relatórios Gerenciais e Clínicos
-                        <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-400/30">SUS Oficial</span>
-                    </h1>
-                    <p class="text-xs text-slate-400">Extração consolidada: fato_prontuario • fato_cronogramas • fato_anamnese • sismama • siscolo</p>
-                </div>
-            </div>
-
-            <!-- Botões de Ação Global -->
-            <div class="flex flex-wrap items-center gap-2">
-                <template x-if="abaAtiva === 'anamneses'">
-                    <a href="{{ route('relatorios.imprimir.anamneses', request()->all()) }}" target="_blank" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                        Imprimir Todas Anamneses (PDF)
-                    </a>
-                </template>
-
-                <a :href="'{{ url('/relatorios/exportar') }}/' + abaAtiva" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                    Exportar CSV / Excel
-                </a>
-
-                <button onclick="window.print()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm border border-slate-700">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                    Imprimir Tela
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-
-        <!-- 4 CARDS DE INDICADORES / TOTAIS -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 no-print">
-            
-            <!-- Card 1: Atendidos -->
-            <div @click="abaAtiva = 'atendidos'" :class="abaAtiva === 'atendidos' ? 'bg-sky-50 border-sky-300 ring-2 ring-sky-400/20' : 'bg-white border-slate-200'" class="p-5 rounded-2xl border transition-all cursor-pointer shadow-xs hover:border-slate-300">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Pacientes Atendidos</span>
-                    <span class="p-2 bg-sky-100 text-sky-700 rounded-xl">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </span>
-                </div>
-                <div class="mt-3 flex items-baseline gap-2">
-                    <span class="text-3xl font-black text-slate-900">{{ $totais['atendidos'] ?? 0 }}</span>
-                    <span class="text-xs text-emerald-600 font-bold">Presente</span>
-                </div>
-                <p class="text-[11px] text-slate-400 mt-1">Status agendamento confirmado</p>
-            </div>
-
-            <!-- Card 2: Anamneses -->
-            <div @click="abaAtiva = 'anamneses'" :class="abaAtiva === 'anamneses' ? 'bg-indigo-50 border-indigo-300 ring-2 ring-indigo-400/20' : 'bg-white border-slate-200'" class="p-5 rounded-2xl border transition-all cursor-pointer shadow-xs hover:border-slate-300">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Questionários de Anamnese</span>
-                    <span class="p-2 bg-indigo-100 text-indigo-700 rounded-xl">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
-                    </span>
-                </div>
-                <div class="mt-3 flex items-baseline gap-2">
-                    <span class="text-3xl font-black text-slate-900">{{ $totais['anamneses'] ?? 0 }}</span>
-                    <span class="text-xs text-indigo-600 font-bold">SISMAMA & SISCOLO</span>
-                </div>
-                <p class="text-[11px] text-slate-400 mt-1">Protocolos clínicos completos</p>
-            </div>
-
-            <!-- Card 3: Desistências / 24h -->
-            <div @click="abaAtiva = 'desistencias'" :class="abaAtiva === 'desistencias' ? 'bg-amber-50 border-amber-300 ring-2 ring-amber-400/20' : 'bg-white border-slate-200'" class="p-5 rounded-2xl border transition-all cursor-pointer shadow-xs hover:border-slate-300">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Desistências / 24h</span>
-                    <span class="p-2 bg-amber-100 text-amber-700 rounded-xl">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </span>
-                </div>
-                <div class="mt-3 flex items-baseline gap-2">
-                    <span class="text-3xl font-black text-slate-900">{{ $totais['desistencias'] ?? 0 }}</span>
-                    <span class="text-xs text-amber-700 font-bold">Expirados</span>
-                </div>
-                <p class="text-[11px] text-slate-400 mt-1">Prazo 24h sem confirmação</p>
-            </div>
-
-            <!-- Card 4: Fila de Espera -->
-            <div @click="abaAtiva = 'fila_espera'" :class="abaAtiva === 'fila_espera' ? 'bg-purple-50 border-purple-300 ring-2 ring-purple-400/20' : 'bg-white border-slate-200'" class="p-5 rounded-2xl border transition-all cursor-pointer shadow-xs hover:border-slate-300">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Fila de Espera Ativa</span>
-                    <span class="p-2 bg-purple-100 text-purple-700 rounded-xl">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </span>
-                </div>
-                <div class="mt-3 flex items-baseline gap-2">
-                    <span class="text-3xl font-black text-slate-900">{{ $totais['fila_espera'] ?? 0 }}</span>
-                    <span class="text-xs text-purple-700 font-bold">Fila Cronológica</span>
-                </div>
-                <p class="text-[11px] text-slate-400 mt-1">Aguardando liberação de vagas</p>
-            </div>
+      }
+    </script>
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  </head>
+  <body class="bg-[#f8fafc]">
+    <div id="app-root" class="min-h-screen bg-[#f8fafc] text-slate-800 font-sans antialiased" x-data="{ 
+        macroArea: '{{ $area ?? 'cronograma' }}',
+        subAbaAtendimento: '{{ $tipoAtendimento ?? 'atendidos' }}',
+        busca: '{{ $busca ?? '' }}',
+        dataInicio: '{{ $dataInicio ?? '' }}',
+        dataFim: '{{ $dataFim ?? '' }}',
+        modalAberto: false,
+        anamneseSelecionada: null,
+        gerarUrlDownload() {
+          const params = new URLSearchParams();
+          if (this.busca) params.append('search', this.busca);
+          if (this.dataInicio) params.append('data_inicio', this.dataInicio);
+          if (this.dataFim) params.append('data_fim', this.dataFim);
+          const tipoExport = this.macroArea === 'cronograma' ? 'cronograma' : this.subAbaAtendimento;
+          return '{{ url('/relatorios/exportar') }}/' + tipoExport + '?' + params.toString();
+        }
+    }">
+      
+      <!-- Top Bar / Header
+      <header id="top-bar" class="h-16 bg-white border-b border-slate-100 px-4 md:px-8 flex items-center justify-between sticky top-0 z-20 shadow-xs">
+        <div class="flex items-center gap-3">
+          <div id="breadcrumb" class="flex items-center gap-2 text-xs text-slate-400 font-medium">
+            <span>Portal Gestão</span>
+            <span>/</span>
+            <span class="text-slate-600 font-semibold">Relatórios Gerenciais</span>
+          </div>
         </div>
 
-        <!-- BARRA DE FILTROS E ABAS -->
-        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4 no-print">
-            
-            <!-- Navegação por Abas -->
-            <div class="flex flex-wrap items-center gap-2 border-b border-slate-100 pb-4">
-                <button @click="abaAtiva = 'atendidos'" :class="abaAtiva === 'atendidos' ? 'bg-sky-600 text-white font-bold' : 'bg-slate-50 text-slate-700 hover:bg-slate-100 font-medium'" class="px-4 py-2.5 rounded-xl text-xs transition-all flex items-center gap-2">
-                    <span>1. Pacientes Atendidos</span>
-                </button>
-                <button @click="abaAtiva = 'anamneses'" :class="abaAtiva === 'anamneses' ? 'bg-sky-600 text-white font-bold' : 'bg-slate-50 text-slate-700 hover:bg-slate-100 font-medium'" class="px-4 py-2.5 rounded-xl text-xs transition-all flex items-center gap-2">
-                    <span>2. Questionários de Anamnese (SISCOLO / SISMAMA)</span>
-                </button>
-                <button @click="abaAtiva = 'desistencias'" :class="abaAtiva === 'desistencias' ? 'bg-sky-600 text-white font-bold' : 'bg-slate-50 text-slate-700 hover:bg-slate-100 font-medium'" class="px-4 py-2.5 rounded-xl text-xs transition-all flex items-center gap-2">
-                    <span>3. Desistências e Cancelamentos</span>
-                </button>
-                <button @click="abaAtiva = 'fila_espera'" :class="abaAtiva === 'fila_espera' ? 'bg-sky-600 text-white font-bold' : 'bg-slate-50 text-slate-700 hover:bg-slate-100 font-medium'" class="px-4 py-2.5 rounded-xl text-xs transition-all flex items-center gap-2">
-                    <span>4. Fila de Espera</span>
-                </button>
+        <div id="top-bar-actions" class="flex items-center gap-4">
+          <button id="notification-button" class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg relative transition-colors cursor-pointer">
+            <i data-lucide="bell" class="w-5 h-5"></i>
+            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full"></span>
+          </button>
+
+          <div id="user-profile" class="flex items-center gap-3 pl-4 border-l border-slate-100">
+            <div id="user-avatar" class="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-slate-600 text-xs shadow-inner">
+              AD
             </div>
+            <div id="user-info" class="hidden sm:block text-left">
+              <p id="user-name" class="text-xs font-bold text-slate-700">Dr. Marcos Gabriel</p>
+              <p id="user-role" class="text-[10px] text-slate-400 font-semibold leading-none mt-0.5">Gestor Geral / Operador</p>
+            </div>
+          </div>
+        </div>
+      </header> -->
 
-            <!-- Formulário de Filtro e Busca -->
-            <form method="GET" action="{{ route('relatorios.index') }}" class="flex flex-col md:flex-row items-center justify-between gap-4">
-                <input type="hidden" name="tipo" :value="abaAtiva">
+  <button id="mobile-menu-toggle" type="button" class="fixed left-3 top-3 z-[60] flex items-center justify-center rounded-lg bg-blue-600 p-2 text-white shadow-sm transition hover:bg-blue-800 sm:left-5 sm:top-5" aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menu">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="menu" aria-hidden="true" class="lucide lucide-menu h-4 w-4">
+      <path d="M4 5h16"></path>
+      <path d="M4 12h16"></path>
+      <path d="M4 19h16"></path>
+    </svg>
+  </button>
 
-                <div class="relative w-full md:max-w-md">
-                    <input type="text" name="search" value="{{ $busca ?? '' }}" placeholder="Buscar por paciente, CPF ou exame..." class="w-full pl-4 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-sky-500 focus:bg-white transition-all">
-                </div>
+      <!-- Conteúdo Principal -->
+      <main id="main-content" class="max-w-7xl w-full mx-auto p-6 md:p-8 space-y-6">
+        @include('sidebar.sidebar_n4')
+        <!-- Cabeçalho e Ações -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 class="text-2xl font-bold uppercase tracking-wide text-[#0f172a]">Dashboard</h1>
+            <p class="text-xs text-slate-500 mt-1">Visão consolidada dividida em <strong>Área de Cronograma</strong> e <strong>Área de Atendimentos</strong>.</p>
+          </div>
 
-                <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
-                    <span class="text-xs text-slate-500 font-medium">Período:</span>
-                    <input type="date" name="data_inicio" value="{{ $dataInicio ?? '' }}" class="px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-700">
-                    <span class="text-xs text-slate-400">até</span>
-                    <input type="date" name="data_fim" value="{{ $dataFim ?? '' }}" class="px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-700">
-                    
-                    <button type="submit" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-xl transition-all">
-                        Filtrar
-                    </button>
-                </div>
-            </form>
+          <div class="flex flex-wrap items-center gap-2">
+            <!-- Botão de Impressão de Anamneses -->
+            <template x-if="macroArea === 'atendimentos' && subAbaAtendimento === 'anamneses'">
+              <a href="{{ route('relatorios.anamneses.imprimir-todas', request()->all()) }}" target="_blank" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs">
+                <i data-lucide="file-text" class="w-4 h-4"></i>
+                Imprimir Todas Anamneses (PDF)
+              </a>
+            </template>
+
+            <!-- Exportar CSV Dinâmico -->
+            <a :href="gerarUrlDownload()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs">
+              <i data-lucide="download" class="w-4 h-4"></i>
+              <span>Exportar CSV (<span x-text="macroArea === 'cronograma' ? 'CRONOGRAMA' : subAbaAtendimento.toUpperCase().replace('_', ' ')"></span>)</span>
+            </a>
+
+            <button onclick="window.print()" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer">
+              <i data-lucide="printer" class="w-4 h-4"></i>
+              Imprimir
+            </button>
+          </div>
         </div>
 
-        <!-- 1. ABA DE ATENDIDOS -->
-        <div x-show="abaAtiva === 'atendidos'" class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-            <div class="px-6 py-4 bg-slate-50/70 border-b border-slate-200">
-                <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wide">Relatório de Pacientes Atendidos (fato_prontuario)</h3>
+        <!-- SELETOR DAS 2 MACRO-ÁREAS (CRONOGRAMA vs ATENDIMENTOS) -->
+        <div class="bg-white p-2 rounded-2xl border border-slate-200 shadow-xs flex gap-2">
+          <button 
+            @click="macroArea = 'cronograma'" 
+            :class="macroArea === 'cronograma' ? 'bg-sky-600 text-white font-bold shadow-xs' : 'bg-transparent text-slate-600 hover:bg-slate-50 font-medium'"
+            class="flex-1 py-3 px-4 rounded-xl text-xs md:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
+          >
+            <i data-lucide="calendar" class="w-4 h-4"></i>
+            <span>ÁREA 1: RELATÓRIO DE CRONOGRAMA & CAPACIDADE</span>
+          </button>
+
+          <button 
+            @click="macroArea = 'atendimentos'" 
+            :class="macroArea === 'atendimentos' ? 'bg-sky-600 text-white font-bold shadow-xs' : 'bg-transparent text-slate-600 hover:bg-slate-50 font-medium'"
+            class="flex-1 py-3 px-4 rounded-xl text-xs md:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
+          >
+            <i data-lucide="users" class="w-4 h-4"></i>
+            <span>ÁREA 2: RELATÓRIO DE ATENDIMENTOS & CLÍNICA</span>
+          </button>
+        </div>
+
+        <!-- ======================================================= -->
+        <!-- MACRO-ÁREA 1: CRONOGRAMA & CAPACIDADE DE VAGAS           -->
+        <!-- ======================================================= -->
+        <div x-show="macroArea === 'cronograma'" class="space-y-6">
+          
+          <!-- 4 Cards de Vagas e Ocupação do Cronograma -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-white p-5 rounded-xl border border-slate-100 shadow-xs">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Vagas Ofertadas</span>
+                <span class="p-2 bg-sky-100 text-sky-700 rounded-lg">
+                  <i data-lucide="calendar-plus" class="w-4 h-4"></i>
+                </span>
+              </div>
+              <div class="mt-3 flex items-baseline gap-2">
+                <span class="text-3xl font-bold text-slate-900">{{ $totais['vagas_ofertadas'] ?? 0 }}</span>
+                <span class="text-xs text-sky-600 font-bold">Capacidade</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-1">Em {{ $totais['total_agendas'] ?? 0 }} agendas programadas</p>
             </div>
+
+            <div class="bg-white p-5 rounded-xl border border-slate-100 shadow-xs">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Vagas Preenchidas</span>
+                <span class="p-2 bg-indigo-100 text-indigo-700 rounded-lg">
+                  <i data-lucide="user-check" class="w-4 h-4"></i>
+                </span>
+              </div>
+              <div class="mt-3 flex items-baseline gap-2">
+                <span class="text-3xl font-bold text-slate-900">{{ $totais['vagas_preenchidas'] ?? 0 }}</span>
+                <span class="text-xs text-indigo-600 font-bold">Agendados</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-1">Horários reservados</p>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl border border-slate-100 shadow-xs">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Vagas Livres</span>
+                <span class="p-2 bg-emerald-100 text-emerald-700 rounded-lg">
+                  <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                </span>
+              </div>
+              <div class="mt-3 flex items-baseline gap-2">
+                <span class="text-3xl font-bold text-slate-900">{{ $totais['vagas_livres'] ?? 0 }}</span>
+                <span class="text-xs text-emerald-600 font-bold">Disponíveis</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-1">Restantes para agendamento</p>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl border border-slate-100 shadow-xs">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Taxa de Ocupação</span>
+                <span class="p-2 bg-amber-100 text-amber-700 rounded-lg">
+                  <i data-lucide="pie-chart" class="w-4 h-4"></i>
+                </span>
+              </div>
+              <div class="mt-3 flex items-baseline gap-2">
+                <span class="text-3xl font-bold text-slate-900">{{ $totais['taxa_ocupacao'] ?? 0 }}%</span>
+                <span class="text-xs text-amber-700 font-bold">Média</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-1">Aproveitamento das cotas</p>
+            </div>
+          </div>
+
+          <!-- Filtro da Área de Cronograma -->
+          <form method="GET" action="{{ route('relatorios.index') }}" class="bg-white rounded-xl border border-slate-100 p-4 md:p-6 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xs">
+            <input type="hidden" name="area" value="cronograma">
+
+            <div class="relative w-full md:w-96 flex items-center">
+              <i data-lucide="search" class="absolute left-4 text-slate-400 w-5 h-5 pointer-events-none"></i>
+              <input 
+                type="text" 
+                name="search" 
+                value="{{ $busca ?? '' }}" 
+                placeholder="Buscar por município, unidade ou procedimento..." 
+                class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 pl-12 pr-4 text-sm text-slate-600 placeholder:text-slate-400 focus:outline-none focus:border-sky-500 focus:bg-white transition-all"
+              >
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3 w-full md:w-auto justify-end">
+              <span class="text-xs text-slate-400 font-medium">Período:</span>
+              <input type="date" name="data_inicio" value="{{ $dataInicio ?? '' }}" class="bg-white border border-slate-200 text-slate-600 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-sky-500 transition-all">
+              <span class="text-xs text-slate-400">até</span>
+              <input type="date" name="data_fim" value="{{ $dataFim ?? '' }}" class="bg-white border border-slate-200 text-slate-600 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-sky-500 transition-all">
+              
+              <button type="submit" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-bold transition-all cursor-pointer">
+                Filtrar Cronogramas
+              </button>
+            </div>
+          </form>
+
+          <!-- Tabela de Cronogramas -->
+          <div class="bg-white rounded-xl border border-slate-100 shadow-xs overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse text-xs">
-                    <thead>
-                        <tr class="bg-slate-50 text-slate-500 uppercase font-bold border-b border-slate-200 text-[11px]">
-                            <th class="py-3 px-6">Prontuário</th>
-                            <th class="py-3 px-6">Paciente / CPF</th>
-                            <th class="py-3 px-6">Data Atendimento</th>
-                            <th class="py-3 px-6">Tipo Exame / Unidade</th>
-                            <th class="py-3 px-6">Turno</th>
-                            <th class="py-3 px-6 text-center">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100 text-slate-600">
-                        @forelse($atendidos as $item)
-                        <tr class="hover:bg-slate-50/80">
-                            <td class="py-4 px-6 font-mono font-bold text-slate-900">#{{ $item->numero_sequencial ?? $item->id_prontuario }}</td>
-                            <td class="py-4 px-6">
-                                <div class="font-bold text-slate-900">{{ $item->nome_paciente }}</div>
-                                <div class="text-[11px] text-slate-400 font-mono">CPF: {{ $item->cpf_paciente }} • SUS: {{ $item->cartao_sus }}</div>
-                            </td>
-                            <td class="py-4 px-6 font-medium text-slate-700">{{ $item->data_atendimento }}</td>
-                            <td class="py-4 px-6">
-                                <div class="font-bold text-slate-800">{{ $item->tipo_exame }}</div>
-                                <div class="text-[11px] text-slate-400">{{ $item->nome_unidade }}</div>
-                            </td>
-                            <td class="py-4 px-6">{{ $item->turno }}</td>
-                            <td class="py-4 px-6 text-center">
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700">
-                                    {{ strtoupper($item->status_comparecimento) }}
-                                </span>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="6" class="py-8 text-center text-slate-400">Nenhum atendimento encontrado para o período.</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-slate-50 border-b border-slate-100 text-[11px] font-bold tracking-wider text-slate-500 uppercase">
+                    <th class="py-4 px-6 w-[10%]">ID Agenda</th>
+                    <th class="py-4 px-6 w-[15%]">Data</th>
+                    <th class="py-4 px-6 w-[20%]">Município</th>
+                    <th class="py-4 px-6 w-[22%]">Unidade CNES</th>
+                    <th class="py-4 px-6 w-[15%]">Procedimento / Turno</th>
+                    <th class="py-4 px-4 w-[18%] text-center">Ocupação das Vagas</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-sm text-slate-600">
+                  @forelse($cronogramas as $c)
+                    @php
+                      $ofertadas = $c->qnt_oferecidas_vagas;
+                      $preenchidas = $c->prenchida_vagas;
+                      $percentual = $ofertadas > 0 ? min(100, round(($preenchidas / $ofertadas) * 100)) : 0;
+                      $livres = max(0, $ofertadas - $preenchidas);
+                    @endphp
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="py-4 px-6 font-mono font-medium text-slate-700">#{{ $c->id_agenda }}</td>
+                      <td class="py-4 px-6 text-xs text-slate-700 font-semibold">{{ \Carbon\Carbon::parse($c->data_atendimento)->format('d/m/Y') }}</td>
+                      <td class="py-4 px-6 font-semibold text-slate-800">{{ $c->municipio_atendimento }}</td>
+                      <td class="py-4 px-6">
+                        <div class="font-semibold text-slate-700 text-xs">{{ $c->nome_unidade }}</div>
+                        <div class="text-[11px] text-slate-400 font-mono">CNES: {{ $c->codigo_cnes ?? 'N/I' }}</div>
+                      </td>
+                      <td class="py-4 px-6 text-xs">
+                        <div class="font-bold text-slate-800">{{ $c->tipo_exame }}</div>
+                        <span class="inline-block mt-0.5 px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-600">
+                          {{ strtoupper($c->turno) }}
+                        </span>
+                      </td>
+                      <td class="py-4 px-4">
+                        <div class="space-y-1">
+                          <div class="flex justify-between text-[11px] font-semibold">
+                            <span class="text-slate-700">{{ $preenchidas }} / {{ $ofertadas }} vagas</span>
+                            <span class="{{ $percentual >= 100 ? 'text-rose-600' : 'text-emerald-600' }}">{{ $percentual }}%</span>
+                          </div>
+                          <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                            <div 
+                              class="h-full {{ $percentual >= 100 ? 'bg-rose-500' : ($percentual > 75 ? 'bg-amber-500' : 'bg-emerald-500') }} transition-all" 
+                              style="width: {{ $percentual }}%;"
+                            ></div>
+                          </div>
+                          <div class="text-[10px] text-slate-400 text-right">
+                            {{ $livres }} {{ $livres == 1 ? 'vaga restante' : 'vagas restantes' }}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  @empty
+                    <tr>
+                      <td colspan="6" class="py-8 text-center text-slate-500 font-medium">Nenhum cronograma encontrado para o período selecionado.</td>
+                    </tr>
+                  @endforelse
+                </tbody>
+              </table>
+            </div>
+            @if(method_exists($cronogramas, 'links'))
+              <div class="p-4 border-t border-slate-100">{{ $cronogramas->appends(['area' => 'cronograma'])->links() }}</div>
+            @endif
+          </div>
+
+        </div>
+
+
+        <!-- ======================================================= -->
+        <!-- MACRO-ÁREA 2: ATENDIMENTOS & CLÍNICA                     -->
+        <!-- ======================================================= -->
+        <div x-show="macroArea === 'atendimentos'" class="space-y-6" style="display: none;">
+          
+          <!-- 4 Cards de Totais por Sub-área -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div @click="subAbaAtendimento = 'atendidos'" :class="subAbaAtendimento === 'atendidos' ? 'bg-sky-50/60 border-sky-300 ring-2 ring-sky-400/20' : 'bg-white border-slate-100'" class="p-5 rounded-xl border transition-all cursor-pointer shadow-xs">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Pacientes Atendidos</span>
+                <span class="p-2 bg-sky-100 text-sky-700 rounded-lg">
+                  <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                </span>
+              </div>
+              <div class="mt-3 flex items-baseline gap-2">
+                <span class="text-3xl font-bold text-slate-900">{{ $totais['atendidos'] ?? 0 }}</span>
+                <span class="text-xs text-emerald-600 font-bold">Presente</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-1">Status confirmado / presente</p>
+            </div>
+
+            <div @click="subAbaAtendimento = 'anamneses'" :class="subAbaAtendimento === 'anamneses' ? 'bg-indigo-50/60 border-indigo-300 ring-2 ring-indigo-400/20' : 'bg-white border-slate-100'" class="p-5 rounded-xl border transition-all cursor-pointer shadow-xs">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Questionários Clínicos</span>
+                <span class="p-2 bg-indigo-100 text-indigo-700 rounded-lg">
+                  <i data-lucide="clipboard-list" class="w-4 h-4"></i>
+                </span>
+              </div>
+              <div class="mt-3 flex items-baseline gap-2">
+                <span class="text-3xl font-bold text-slate-900">{{ $totais['anamneses'] ?? 0 }}</span>
+                <span class="text-xs text-indigo-600 font-bold">SISMAMA / SISCOLO</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-1">Fichas clínicas preenchidas</p>
+            </div>
+
+            <div @click="subAbaAtendimento = 'desistencias'" :class="subAbaAtendimento === 'desistencias' ? 'bg-amber-50/60 border-amber-300 ring-2 ring-amber-400/20' : 'bg-white border-slate-100'" class="p-5 rounded-xl border transition-all cursor-pointer shadow-xs">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Desistências / 24h</span>
+                <span class="p-2 bg-amber-100 text-amber-700 rounded-lg">
+                  <i data-lucide="user-x" class="w-4 h-4"></i>
+                </span>
+              </div>
+              <div class="mt-3 flex items-baseline gap-2">
+                <span class="text-3xl font-bold text-slate-900">{{ $totais['desistencias'] ?? 0 }}</span>
+                <span class="text-xs text-amber-700 font-bold">Expirados</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-1">Prazo 24h ou cancelamento</p>
+            </div>
+
+            <div @click="subAbaAtendimento = 'fila_espera'" :class="subAbaAtendimento === 'fila_espera' ? 'bg-purple-50/60 border-purple-300 ring-2 ring-purple-400/20' : 'bg-white border-slate-100'" class="p-5 rounded-xl border transition-all cursor-pointer shadow-xs">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Fila de Espera Ativa</span>
+                <span class="p-2 bg-purple-100 text-purple-700 rounded-lg">
+                  <i data-lucide="clock" class="w-4 h-4"></i>
+                </span>
+              </div>
+              <div class="mt-3 flex items-baseline gap-2">
+                <span class="text-3xl font-bold text-slate-900">{{ $totais['fila_espera'] ?? 0 }}</span>
+                <span class="text-xs text-purple-700 font-bold">Em Espera</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-1">Aguardando vagas</p>
+            </div>
+          </div>
+
+          <!-- Barra de Abas e Filtros de Atendimento -->
+          <div class="bg-white rounded-xl border border-slate-100 p-4 md:p-6 space-y-4 shadow-xs">
+            <div class="flex flex-wrap items-center gap-2 border-b border-slate-100 pb-4">
+              <button @click="subAbaAtendimento = 'atendidos'" :class="subAbaAtendimento === 'atendidos' ? 'bg-sky-600 text-white font-bold' : 'bg-slate-50 text-slate-600 hover:bg-slate-100 font-medium'" class="px-4 py-2 rounded-xl text-xs transition-all cursor-pointer">
+                1. Pacientes Atendidos
+              </button>
+              <button @click="subAbaAtendimento = 'anamneses'" :class="subAbaAtendimento === 'anamneses' ? 'bg-sky-600 text-white font-bold' : 'bg-slate-50 text-slate-600 hover:bg-slate-100 font-medium'" class="px-4 py-2 rounded-xl text-xs transition-all cursor-pointer">
+                2. Questionários de Anamnese (SISCOLO / SISMAMA)
+              </button>
+              <button @click="subAbaAtendimento = 'desistencias'" :class="subAbaAtendimento === 'desistencias' ? 'bg-sky-600 text-white font-bold' : 'bg-slate-50 text-slate-600 hover:bg-slate-100 font-medium'" class="px-4 py-2 rounded-xl text-xs transition-all cursor-pointer">
+                3. Desistências e Cancelamentos
+              </button>
+              <button @click="subAbaAtendimento = 'fila_espera'" :class="subAbaAtendimento === 'fila_espera' ? 'bg-sky-600 text-white font-bold' : 'bg-slate-50 text-slate-600 hover:bg-slate-100 font-medium'" class="px-4 py-2 rounded-xl text-xs transition-all cursor-pointer">
+                4. Fila de Espera
+              </button>
+            </div>
+
+            <!-- Filtros de Busca e Período -->
+            <form method="GET" action="{{ route('relatorios.index') }}" class="flex flex-col md:flex-row items-center justify-between gap-4">
+              <input type="hidden" name="area" value="atendimentos">
+              <input type="hidden" name="tipo" :value="subAbaAtendimento">
+
+              <div class="relative w-full md:w-96 flex items-center">
+                <i data-lucide="search" class="absolute left-4 text-slate-400 w-5 h-5 pointer-events-none"></i>
+                <input 
+                  type="text" 
+                  name="search" 
+                  x-model="busca"
+                  value="{{ $busca ?? '' }}" 
+                  placeholder="Buscar por paciente, CPF ou exame..." 
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 pl-12 pr-4 text-sm text-slate-600 placeholder:text-slate-400 focus:outline-none focus:border-sky-500 focus:bg-white transition-all"
+                >
+              </div>
+
+              <div class="flex flex-wrap items-center gap-3 w-full md:w-auto justify-end">
+                <span class="text-xs text-slate-400 font-medium">Período:</span>
+                <input type="date" name="data_inicio" x-model="dataInicio" value="{{ $dataInicio ?? '' }}" class="bg-white border border-slate-200 text-slate-600 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-sky-500 transition-all">
+                <span class="text-xs text-slate-400">até</span>
+                <input type="date" name="data_fim" x-model="dataFim" value="{{ $dataFim ?? '' }}" class="bg-white border border-slate-200 text-slate-600 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-sky-500 transition-all">
+                
+                <button type="submit" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-bold transition-all cursor-pointer">
+                  Filtrar Atendimentos
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- 2.1 Tabela de Atendidos -->
+          <div x-show="subAbaAtendimento === 'atendidos'" class="bg-white rounded-xl border border-slate-100 shadow-xs overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-slate-50 border-b border-slate-100 text-[11px] font-bold tracking-wider text-slate-500 uppercase">
+                    <th class="py-4 px-6 w-[12%]">Prontuário</th>
+                    <th class="py-4 px-6 w-[28%]">Paciente / CPF</th>
+                    <th class="py-4 px-6 w-[16%]">Data Atendimento</th>
+                    <th class="py-4 px-6 w-[20%]">Tipo Exame / Unidade</th>
+                    <th class="py-4 px-6 w-[10%]">Turno</th>
+                    <th class="py-4 px-4 w-[14%] text-center">Status</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-sm text-slate-600">
+                  @forelse($atendidos as $item)
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="py-4 px-6 font-mono font-medium text-slate-700">#{{ $item->numero_sequencial ?? $item->id_prontuario }}</td>
+                      <td class="py-4 px-6">
+                        <div class="font-semibold text-slate-700">{{ $item->nome_paciente }}</div>
+                        <div class="text-xs text-slate-400 font-mono">CPF: {{ $item->cpf_paciente }} • SUS: {{ $item->cartao_sus }}</div>
+                      </td>
+                      <td class="py-4 px-6 text-xs text-slate-700 font-medium">{{ $item->data_atendimento }}</td>
+                      <td class="py-4 px-6">
+                        <div class="font-semibold text-slate-700 text-xs">{{ $item->tipo_exame }}</div>
+                        <div class="text-[11px] text-slate-400">{{ $item->nome_unidade }}</div>
+                      </td>
+                      <td class="py-4 px-6 text-xs">{{ $item->turno }}</td>
+                      <td class="py-4 px-4 text-center">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-green-700">
+                          {{ strtoupper($item->status_comparecimento) }}
+                        </span>
+                      </td>
+                    </tr>
+                  @empty
+                    <tr>
+                      <td colspan="6" class="py-8 text-center text-slate-500 font-medium">Nenhum atendimento encontrado para o período.</td>
+                    </tr>
+                  @endforelse
+                </tbody>
+              </table>
             </div>
             @if(method_exists($atendidos, 'links'))
-                <div class="p-4 border-t border-slate-100">{{ $atendidos->links() }}</div>
+              <div class="p-4 border-t border-slate-100">{{ $atendidos->appends(['area' => 'atendimentos', 'tipo' => 'atendidos'])->links() }}</div>
             @endif
-        </div>
+          </div>
 
-        <!-- 2. ABA DE QUESTIONÁRIOS DE ANAMNESE (SISMAMA / SISCOLO) -->
-        <div x-show="abaAtiva === 'anamneses'" class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-            <div class="px-6 py-4 bg-slate-50/70 border-b border-slate-200 flex items-center justify-between">
-                <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wide">Questionários Clínicos de Anamnese (fato_anamnese)</h3>
-                <a href="{{ route('relatorios.imprimir.anamneses', request()->all()) }}" target="_blank" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                    Imprimir Todas em PDF
-                </a>
-            </div>
+          <!-- 2.2 Tabela de Questionários de Anamnese -->
+          <div x-show="subAbaAtendimento === 'anamneses'" class="bg-white rounded-xl border border-slate-100 shadow-xs overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse text-xs">
-                    <thead>
-                        <tr class="bg-slate-50 text-slate-500 uppercase font-bold border-b border-slate-200 text-[11px]">
-                            <th class="py-3 px-6">Prontuário</th>
-                            <th class="py-3 px-6">Paciente / CPF</th>
-                            <th class="py-3 px-6">Data</th>
-                            <th class="py-3 px-6">Protocolo</th>
-                            <th class="py-3 px-6">Profissional Responsável</th>
-                            <th class="py-3 px-6 text-center">Ficha Clínica</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100 text-slate-600">
-                        @forelse($anamneses as $anamnese)
-                        <tr class="hover:bg-slate-50/80">
-                            <td class="py-4 px-6 font-mono font-bold text-slate-900">#{{ $anamnese->numero_sequencial ?? $anamnese->id_prontuario }}</td>
-                            <td class="py-4 px-6">
-                                <div class="font-bold text-slate-900">{{ $anamnese->nome_paciente }}</div>
-                                <div class="text-[11px] text-slate-400 font-mono">CPF: {{ $anamnese->cpf_paciente }}</div>
-                            </td>
-                            <td class="py-4 px-6">{{ $anamnese->data_realizacao }}</td>
-                            <td class="py-4 px-6">
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold {{ $anamnese->tipo_anamnese === 'sismama' ? 'bg-pink-100 text-pink-700' : 'bg-emerald-100 text-emerald-800' }}">
-                                    {{ strtoupper($anamnese->tipo_anamnese) }}
-                                </span>
-                            </td>
-                            <td class="py-4 px-6">
-                                <div class="font-bold text-slate-800">{{ $anamnese->nome_profissional }}</div>
-                                <div class="text-[11px] text-slate-400">{{ $anamnese->crm }} • {{ $anamnese->cargo_funcao }}</div>
-                            </td>
-                            <td class="py-4 px-6 text-center">
-                                <button 
-                                    @click="anamneseSelecionada = {{ json_encode($anamnese) }}; modalAberto = true;"
-                                    class="px-3 py-1.5 bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-lg text-xs font-bold transition-all">
-                                    Visualizar Questionário
-                                </button>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="6" class="py-8 text-center text-slate-400">Nenhum questionário de anamnese encontrado.</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-slate-50 border-b border-slate-100 text-[11px] font-bold tracking-wider text-slate-500 uppercase">
+                    <th class="py-4 px-6 w-[12%]">Prontuário</th>
+                    <th class="py-4 px-6 w-[28%]">Paciente / CPF</th>
+                    <th class="py-4 px-6 w-[14%]">Data</th>
+                    <th class="py-4 px-4 w-[14%] text-center">Protocolo</th>
+                    <th class="py-4 px-6 w-[20%]">Profissional Responsável</th>
+                    <th class="py-4 px-4 w-[12%] text-center">Ficha Clínica</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-sm text-slate-600">
+                  @forelse($anamneses as $anamnese)
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="py-4 px-6 font-mono font-medium text-slate-700">#{{ $anamnese->numero_sequencial ?? $anamnese->id_prontuario }}</td>
+                      <td class="py-4 px-6">
+                        <div class="font-semibold text-slate-700">{{ $anamnese->nome_paciente }}</div>
+                        <div class="text-xs text-slate-400 font-mono">CPF: {{ $anamnese->cpf_paciente }}</div>
+                      </td>
+                      <td class="py-4 px-6 text-xs text-slate-700">{{ $anamnese->data_realizacao }}</td>
+                      <td class="py-4 px-4 text-center">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-bold {{ $anamnese->tipo_anamnese === 'sismama' ? 'bg-pink-100 text-pink-700' : 'bg-emerald-100 text-emerald-800' }}">
+                          {{ strtoupper($anamnese->tipo_anamnese) }}
+                        </span>
+                      </td>
+                      <td class="py-4 px-6">
+                        <div class="font-semibold text-slate-700 text-xs">{{ $anamnese->nome_profissional }}</div>
+                        <div class="text-[11px] text-slate-400">{{ $anamnese->crm }} • {{ $anamnese->cargo_funcao }}</div>
+                      </td>
+                      <td class="py-4 px-4 text-center">
+                        <button 
+                          @click="anamneseSelecionada = {{ json_encode($anamnese) }}; modalAberto = true;"
+                          class="px-3 py-1.5 bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-lg text-xs font-bold transition-all cursor-pointer">
+                          Ver Ficha
+                        </button>
+                      </td>
+                    </tr>
+                  @empty
+                    <tr>
+                      <td colspan="6" class="py-8 text-center text-slate-500 font-medium">Nenhum questionário de anamnese encontrado.</td>
+                    </tr>
+                  @endforelse
+                </tbody>
+              </table>
             </div>
-        </div>
+            @if(method_exists($anamneses, 'links'))
+              <div class="p-4 border-t border-slate-100">{{ $anamneses->appends(['area' => 'atendimentos', 'tipo' => 'anamneses'])->links() }}</div>
+            @endif
+          </div>
 
-        <!-- 3. ABA DE DESISTÊNCIAS E CANCELAMENTOS -->
-        <div x-show="abaAtiva === 'desistencias'" class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-            <div class="px-6 py-4 bg-slate-50/70 border-b border-slate-200">
-                <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wide">Relatório de Desistências e Expirações 24h</h3>
-            </div>
+          <!-- 2.3 Tabela de Desistências -->
+          <div x-show="subAbaAtendimento === 'desistencias'" class="bg-white rounded-xl border border-slate-100 shadow-xs overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse text-xs">
-                    <thead>
-                        <tr class="bg-slate-50 text-slate-500 uppercase font-bold border-b border-slate-200 text-[11px]">
-                            <th class="py-3 px-6">Prontuário</th>
-                            <th class="py-3 px-6">Paciente / Telefone</th>
-                            <th class="py-3 px-6">Data Agendada</th>
-                            <th class="py-3 px-6">Data Cancelamento</th>
-                            <th class="py-3 px-6">Motivo da Liberação de Vaga</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100 text-slate-600">
-                        @forelse($desistencias as $item)
-                        <tr class="hover:bg-slate-50/80">
-                            <td class="py-4 px-6 font-mono font-bold text-slate-900">#{{ $item->numero_sequencial ?? $item->id_prontuario }}</td>
-                            <td class="py-4 px-6">
-                                <div class="font-bold text-slate-900">{{ $item->nome_paciente }}</div>
-                                <div class="text-[11px] text-slate-400">{{ $item->telefone ?? 'Sem telefone' }}</div>
-                            </td>
-                            <td class="py-4 px-6">{{ $item->data_atendimento }}</td>
-                            <td class="py-4 px-6 font-mono text-[11px]">{{ $item->data_cancelamento }}</td>
-                            <td class="py-4 px-6">
-                                <span class="px-2 py-1 rounded bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-bold">
-                                    {{ $item->motivo_rejeicao_documento ?? 'Prazo 24h expirado sem confirmação' }}
-                                </span>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="5" class="py-8 text-center text-slate-400">Nenhuma desistência registrada.</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-slate-50 border-b border-slate-100 text-[11px] font-bold tracking-wider text-slate-500 uppercase">
+                    <th class="py-4 px-6 w-[12%]">Prontuário</th>
+                    <th class="py-4 px-6 w-[28%]">Paciente / Telefone</th>
+                    <th class="py-4 px-6 w-[16%]">Data Agendada</th>
+                    <th class="py-4 px-6 w-[16%]">Data Cancelamento</th>
+                    <th class="py-4 px-6 w-[28%]">Motivo da Liberação de Vaga</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-sm text-slate-600">
+                  @forelse($desistencias as $item)
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="py-4 px-6 font-mono font-medium text-slate-700">#{{ $item->numero_sequencial ?? $item->id_prontuario }}</td>
+                      <td class="py-4 px-6">
+                        <div class="font-semibold text-slate-700">{{ $item->nome_paciente }}</div>
+                        <div class="text-xs text-slate-400">{{ $item->telefone ?? 'Sem telefone' }}</div>
+                      </td>
+                      <td class="py-4 px-6 text-xs">{{ $item->data_atendimento }}</td>
+                      <td class="py-4 px-6 font-mono text-xs">{{ $item->data_cancelamento }}</td>
+                      <td class="py-4 px-6">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-bold">
+                          {{ $item->motivo_rejeicao_documento ?? 'Prazo 24h expirado sem confirmação' }}
+                        </span>
+                      </td>
+                    </tr>
+                  @empty
+                    <tr>
+                      <td colspan="5" class="py-8 text-center text-slate-500 font-medium">Nenhuma desistência registrada.</td>
+                    </tr>
+                  @endforelse
+                </tbody>
+              </table>
             </div>
-        </div>
+            @if(method_exists($desistencias, 'links'))
+              <div class="p-4 border-t border-slate-100">{{ $desistencias->appends(['area' => 'atendimentos', 'tipo' => 'desistencias'])->links() }}</div>
+            @endif
+          </div>
 
-        <!-- 4. ABA DA FILA DE ESPERA -->
-        <div x-show="abaAtiva === 'fila_espera'" class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-            <div class="px-6 py-4 bg-slate-50/70 border-b border-slate-200">
-                <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wide">Fila de Espera Cronológica Inteligente</h3>
-            </div>
+          <!-- 2.4 Tabela da Fila de Espera -->
+          <div x-show="subAbaAtendimento === 'fila_espera'" class="bg-white rounded-xl border border-slate-100 shadow-xs overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse text-xs">
-                    <thead>
-                        <tr class="bg-slate-50 text-slate-500 uppercase font-bold border-b border-slate-200 text-[11px]">
-                            <th class="py-3 px-6">Posição</th>
-                            <th class="py-3 px-6">Paciente / CPF</th>
-                            <th class="py-3 px-6">Cartão SUS / Telefone</th>
-                            <th class="py-3 px-6">Data de Entrada</th>
-                            <th class="py-3 px-6">Tipo de Exame</th>
-                            <th class="py-3 px-6 text-center">Status Documentos</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100 text-slate-600">
-                        @forelse($filaEspera as $pos => $item)
-                        <tr class="hover:bg-slate-50/80">
-                            <td class="py-4 px-6 font-mono font-bold text-sky-700">#{{ $pos + 1 }}</td>
-                            <td class="py-4 px-6">
-                                <div class="font-bold text-slate-900">{{ $item->nome_paciente }}</div>
-                                <div class="text-[11px] text-slate-400 font-mono">CPF: {{ $item->cpf_paciente }}</div>
-                            </td>
-                            <td class="py-4 px-6">
-                                <div>{{ $item->cartao_sus }}</div>
-                                <div class="text-[11px] text-slate-400">{{ $item->telefone }}</div>
-                            </td>
-                            <td class="py-4 px-6">{{ $item->data_entrada }}</td>
-                            <td class="py-4 px-6 font-semibold">{{ $item->tipo_exame }}</td>
-                            <td class="py-4 px-6 text-center">
-                                <span class="px-2 py-1 rounded-full text-[10px] font-bold {{ $item->status_documentos === 'aprovado' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800' }}">
-                                    {{ strtoupper($item->status_documentos ?? 'pendente') }}
-                                </span>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="6" class="py-8 text-center text-slate-400">Fila de espera vazia.</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-slate-50 border-b border-slate-100 text-[11px] font-bold tracking-wider text-slate-500 uppercase">
+                    <th class="py-4 px-6 w-[10%]">Posição</th>
+                    <th class="py-4 px-6 w-[28%]">Paciente / CPF</th>
+                    <th class="py-4 px-6 w-[20%]">Cartão SUS / Telefone</th>
+                    <th class="py-4 px-6 w-[16%]">Data de Entrada</th>
+                    <th class="py-4 px-6 w-[14%]">Tipo de Exame</th>
+                    <th class="py-4 px-4 w-[12%] text-center">Documentos</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-sm text-slate-600">
+                  @forelse($filaEspera as $pos => $item)
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="py-4 px-6 font-mono font-bold text-sky-700">#{{ $pos + 1 }}</td>
+                      <td class="py-4 px-6">
+                        <div class="font-semibold text-slate-700">{{ $item->nome_paciente }}</div>
+                        <div class="text-xs text-slate-400 font-mono">CPF: {{ $item->cpf_paciente }}</div>
+                      </td>
+                      <td class="py-4 px-6 text-xs">
+                        <div>{{ $item->cartao_sus }}</div>
+                        <div class="text-slate-400">{{ $item->telefone }}</div>
+                      </td>
+                      <td class="py-4 px-6 text-xs">{{ $item->data_entrada }}</td>
+                      <td class="py-4 px-6 text-xs font-semibold text-slate-700">{{ $item->tipo_exame }}</td>
+                      <td class="py-4 px-4 text-center">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold {{ $item->status_documentos === 'aprovado' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800' }}">
+                          {{ strtoupper($item->status_documentos ?? 'pendente') }}
+                        </span>
+                      </td>
+                    </tr>
+                  @empty
+                    <tr>
+                      <td colspan="6" class="py-8 text-center text-slate-500 font-medium">Fila de espera vazia.</td>
+                    </tr>
+                  @endforelse
+                </tbody>
+              </table>
             </div>
+            @if(method_exists($filaEspera, 'links'))
+              <div class="p-4 border-t border-slate-100">{{ $filaEspera->appends(['area' => 'atendimentos', 'tipo' => 'fila_espera'])->links() }}</div>
+            @endif
+          </div>
+
         </div>
 
-    </main>
+      </main>
 
-    <!-- MODAL PROFISSIONAL COM QUESTIONÁRIO CLÍNICO COMPLETO -->
-    <div x-show="modalAberto" class="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4" style="display: none;">
-        <div @click.away="modalAberto = false" class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full border border-slate-200 overflow-hidden animate-scale-in">
-            
-            <!-- Modal Header -->
-            <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
-                <div>
-                    <h3 class="text-base font-bold flex items-center gap-2">
-                        <span>Ficha de Anamnese Clínica</span>
-                        <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-sky-500/30 text-sky-200" x-text="'Prontuário #' + (anamneseSelecionada?.numero_sequencial || anamneseSelecionada?.id_prontuario)"></span>
-                    </h3>
-                    <p class="text-xs text-slate-400" x-text="'Protocolo ' + (anamneseSelecionada?.tipo_anamnese?.toUpperCase())"></p>
+      <!-- Modal de Anamnese Clínica -->
+      <div x-show="modalAberto" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4" style="display: none;">
+        <div @click.away="modalAberto = false" class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl border border-slate-100 overflow-hidden">
+          
+          <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="font-mono font-bold text-sky-400" x-text="'#' + (anamneseSelecionada?.numero_sequencial || anamneseSelecionada?.id_prontuario)"></span>
+              <h3 class="font-bold text-white text-base">Questionário de Anamnese</h3>
+            </div>
+            <button @click="modalAberto = false" class="text-slate-400 hover:text-white p-1 cursor-pointer">
+              <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+          </div>
+
+          <div class="p-6 space-y-4 text-xs text-slate-600 max-h-[75vh] overflow-y-auto">
+            <!-- Dados do Paciente -->
+            <div class="p-4 bg-slate-50 rounded-xl space-y-2 border border-slate-100">
+              <p><strong>Paciente:</strong> <span class="font-bold text-slate-800" x-text="anamneseSelecionada?.nome_paciente"></span></p>
+              <p><strong>CPF / Cartão SUS:</strong> <span x-text="(anamneseSelecionada?.cpf_paciente) + ' • ' + (anamneseSelecionada?.cartao_sus || 'Não informado')"></span></p>
+              <p><strong>Data Realização:</strong> <span x-text="anamneseSelecionada?.data_realizacao"></span></p>
+              <p><strong>Profissional:</strong> <span x-text="(anamneseSelecionada?.nome_profissional) + ' (' + (anamneseSelecionada?.crm) + ')'"></span></p>
+            </div>
+
+            <!-- SISMAMA -->
+            <template x-if="anamneseSelecionada?.tipo_anamnese === 'sismama'">
+              <div class="border-t border-slate-100 pt-4 space-y-3">
+                <h4 class="font-bold text-pink-700 uppercase tracking-wider text-[11px]">Protocolo SISMAMA (Mamografia)</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                    <span class="text-slate-400 block text-[10px] uppercase font-bold">Nódulo Mama Direita</span>
+                    <strong :class="anamneseSelecionada?.nodulo_mama_direita ? 'text-rose-600' : 'text-emerald-600'" x-text="anamneseSelecionada?.nodulo_mama_direita ? 'SIM' : 'NÃO'"></strong>
+                  </div>
+                  <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                    <span class="text-slate-400 block text-[10px] uppercase font-bold">Nódulo Mama Esquerda</span>
+                    <strong :class="anamneseSelecionada?.nodulo_mama_esquerda ? 'text-rose-600' : 'text-emerald-600'" x-text="anamneseSelecionada?.nodulo_mama_esquerda ? 'SIM' : 'NÃO'"></strong>
+                  </div>
+                  <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                    <span class="text-slate-400 block text-[10px] uppercase font-bold">Risco Elevado Câncer</span>
+                    <strong :class="anamneseSelecionada?.risco_elevado_cancer ? 'text-rose-600' : 'text-emerald-600'" x-text="anamneseSelecionada?.risco_elevado_cancer ? 'SIM (Histórico Positivo)' : 'NÃO'"></strong>
+                  </div>
+                  <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                    <span class="text-slate-400 block text-[10px] uppercase font-bold">Mamografia Anterior</span>
+                    <strong class="text-slate-800" x-text="anamneseSelecionada?.fez_mamografia_anterior ? 'Sim em ' + anamneseSelecionada?.ano_ultima_mamografia : 'Não'"></strong>
+                  </div>
                 </div>
-                <button @click="modalAberto = false" class="text-slate-400 hover:text-white p-1 rounded-lg text-lg font-bold">✕</button>
-            </div>
+              </div>
+            </template>
 
-            <!-- Modal Body -->
-            <div class="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
-                
-                <!-- Informações do Paciente -->
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
-                    <div>
-                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Paciente</span>
-                        <strong class="text-slate-900" x-text="anamneseSelecionada?.nome_paciente"></strong>
+            <!-- SISCOLO -->
+            <template x-if="anamneseSelecionada?.tipo_anamnese === 'siscolo'">
+              <div class="border-t border-slate-100 pt-4 space-y-3">
+                <h4 class="font-bold text-emerald-800 uppercase tracking-wider text-[11px]">Protocolo SISCOLO (Preventivo)</h4>
+                <div class="space-y-2">
+                  <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                    <span class="text-slate-400 block text-[10px] uppercase font-bold">Motivo do Exame</span>
+                    <strong class="text-slate-800" x-text="anamneseSelecionada?.motivo_exame || 'Rotina Citopatológica'"></strong>
+                  </div>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                      <span class="text-slate-400 block text-[10px] uppercase font-bold">Preventivo Anterior</span>
+                      <strong class="text-slate-800" x-text="anamneseSelecionada?.fez_preventivo_anterior ? 'Sim em ' + anamneseSelecionada?.ano_ultimo_preventivo : 'Não'"></strong>
                     </div>
-                    <div>
-                        <span class="text-[10px] uppercase font-bold text-slate-400 block">CPF / SUS</span>
-                        <span class="text-slate-700 font-mono" x-text="(anamneseSelecionada?.cpf_paciente) + ' • ' + (anamneseSelecionada?.cartao_sus || 'SUS N/I')"></span>
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                      <span class="text-slate-400 block text-[10px] uppercase font-bold">Contraceptivos</span>
+                      <strong class="text-slate-800" x-text="'Pílula: ' + (anamneseSelecionada?.usa_pilula ? 'Sim' : 'Não') + ' | DIU: ' + (anamneseSelecionada?.usa_diu ? 'Sim' : 'Não')"></strong>
                     </div>
-                    <div>
-                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Data Realização</span>
-                        <span class="text-slate-700" x-text="anamneseSelecionada?.data_realizacao"></span>
-                    </div>
-                    <div>
-                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Médico / CRM</span>
-                        <span class="text-slate-700" x-text="(anamneseSelecionada?.nome_profissional) + ' (' + (anamneseSelecionada?.crm) + ')'"></span>
-                    </div>
+                  </div>
                 </div>
+              </div>
+            </template>
+          </div>
 
-                <!-- QUESTIONÁRIO SISMAMA -->
-                <template x-if="anamneseSelecionada?.tipo_anamnese === 'sismama'">
-                    <div class="space-y-4">
-                        <h4 class="text-xs font-bold text-pink-700 uppercase tracking-wider border-b pb-1">Protocolo SISMAMA (Mamografia)</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                            <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
-                                <span class="text-slate-500 font-semibold block">Nódulo Mama Direita</span>
-                                <strong :class="anamneseSelecionada?.nodulo_mama_direita ? 'text-rose-600' : 'text-emerald-600'" x-text="anamneseSelecionada?.nodulo_mama_direita ? 'SIM (Presente)' : 'NÃO'"></strong>
-                            </div>
-                            <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
-                                <span class="text-slate-500 font-semibold block">Nódulo Mama Esquerda</span>
-                                <strong :class="anamneseSelecionada?.nodulo_mama_esquerda ? 'text-rose-600' : 'text-emerald-600'" x-text="anamneseSelecionada?.nodulo_mama_esquerda ? 'SIM (Presente)' : 'NÃO'"></strong>
-                            </div>
-                            <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
-                                <span class="text-slate-500 font-semibold block">Risco Elevado de Câncer</span>
-                                <strong :class="anamneseSelecionada?.risco_elevado_cancer ? 'text-rose-600' : 'text-emerald-600'" x-text="anamneseSelecionada?.risco_elevado_cancer ? 'SIM (Histórico Familiar Positivo)' : 'NÃO'"></strong>
-                            </div>
-                            <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
-                                <span class="text-slate-500 font-semibold block">Tipo de Mamografia</span>
-                                <strong class="text-slate-800" x-text="(anamneseSelecionada?.tipo_mamografia || 'Rastreamento') + ' (Anterior: ' + (anamneseSelecionada?.fez_mamografia_anterior ? 'Sim' : 'Não') + ')'"></strong>
-                            </div>
-                            <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 sm:col-span-2">
-                                <span class="text-slate-500 font-semibold block">Achados de Exame e Linfonodos</span>
-                                <span class="text-slate-800" x-text="'Localização: ' + (anamneseSelecionada?.achado_nodulo_localizacao_dir || 'Sem alterações') + ' | Linfonodo Axilar: ' + (anamneseSelecionada?.achado_linfonodo_palpavel_dir || 'Não palpável')"></span>
-                            </div>
-                        </div>
-                    </div>
-                </template>
-
-                <!-- QUESTIONÁRIO SISCOLO -->
-                <template x-if="anamneseSelecionada?.tipo_anamnese === 'siscolo'">
-                    <div class="space-y-4">
-                        <h4 class="text-xs font-bold text-emerald-800 uppercase tracking-wider border-b pb-1">Protocolo SISCOLO (Citopatológico / Preventivo)</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                            <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 sm:col-span-2">
-                                <span class="text-slate-500 font-semibold block">Motivo do Exame</span>
-                                <strong class="text-slate-800" x-text="anamneseSelecionada?.motivo_exame || 'Exame Citopatológico de Rotina'"></strong>
-                            </div>
-                            <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
-                                <span class="text-slate-500 font-semibold block">Fez Preventivo Anterior</span>
-                                <strong class="text-slate-800" x-text="anamneseSelecionada?.fez_preventivo_anterior ? 'SIM (Ano: ' + anamneseSelecionada?.ano_ultimo_preventivo + ')' : 'NÃO (Primeira vez)'"></strong>
-                            </div>
-                            <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
-                                <span class="text-slate-500 font-semibold block">Uso de Contraceptivo / Pílula</span>
-                                <strong class="text-slate-800" x-text="'Pílula: ' + (anamneseSelecionada?.usa_pilula ? 'Sim' : 'Não') + ' | DIU: ' + (anamneseSelecionada?.usa_diu ? 'Sim' : 'Não')"></strong>
-                            </div>
-                            <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 sm:col-span-2">
-                                <span class="text-slate-500 font-semibold block">Inspeção do Colo e Sinais de IST</span>
-                                <span class="text-slate-800" x-text="(anamneseSelecionada?.inspecao_colo || 'Colo sem alterações aparentes') + ' | Sinais IST: ' + (anamneseSelecionada?.sinais_dst ? 'Sim' : 'Não')"></span>
-                            </div>
-                        </div>
-                    </div>
-                </template>
-            </div>
-
-            <!-- Modal Footer -->
-            <div class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex justify-end gap-3">
-                <button @click="window.print()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-all">
-                    Imprimir Esta Ficha
-                </button>
-                <button @click="modalAberto = false" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl text-xs font-bold transition-all">
-                    Fechar
-                </button>
-            </div>
+          <div class="px-6 py-3 bg-slate-50 border-t border-slate-100 flex justify-end gap-2">
+            <button onclick="window.print()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-xs cursor-pointer shadow-xs">
+              Imprimir Ficha
+            </button>
+            <button @click="modalAberto = false" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-xl text-xs cursor-pointer">
+              Fechar
+            </button>
+          </div>
         </div>
+      </div>
+
     </div>
 
-</body>
+    <!-- Script Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        lucide.createIcons();
+      });
+    </script>
+
+    <script>
+    const sidebar = document.getElementById('sidebar');
+    const menuToggle = document.getElementById('mobile-menu-toggle');
+    const menuClose = document.getElementById('mobile-menu-close');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+    function setSidebarExpanded(expanded) {
+      sidebar.classList.toggle('-translate-x-full', !expanded);
+      sidebarOverlay.classList.toggle('hidden', !expanded);
+      menuToggle.setAttribute('aria-expanded', String(expanded));
+      menuClose.setAttribute('aria-expanded', String(expanded));
+      sidebarOverlay.setAttribute('aria-hidden', String(!expanded));
+    }
+
+    menuToggle.addEventListener('click', () => setSidebarExpanded(true));
+    menuClose.addEventListener('click', () => setSidebarExpanded(false));
+    sidebarOverlay.addEventListener('click', () => setSidebarExpanded(false));
+  </script>
+  
+  </body>
 </html>

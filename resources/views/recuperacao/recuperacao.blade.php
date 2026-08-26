@@ -34,7 +34,9 @@
                 placeholder="Insira o código">
             
             <button class="butao cursor-pointer hover:bg-blue-700 font-bold bg-clip-border px-15.5  py-1 bg-blue-500 text-white rounded-lg mt-2" type="submit">Confirmar</a></button>
-          </div>  
+
+            <a href="{{ route('acesso.index') }}" class="mt-5 block text-center text-sm text-blue-800 hover:underline">Voltar</a>
+        </div>  
         </div>
        
         

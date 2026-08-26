@@ -8,6 +8,12 @@
 @theme {
     --font-sans: 'Inter', sans-serif;
 
+    --color-azul: #004c99;
+    --color-amarelo: #f6be00;
+    --color-cinza-escuro: #30567c;
+    --color-cinza-claro: #d0d0ce;
+    --color-branco: #fafafa;
+
     --color-background: #f9f9ff;
     --color-surface: #f9f9ff;
     --color-surface-container-lowest: #ffffff;

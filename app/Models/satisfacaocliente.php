@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class satisfacaocliente extends Model
+/**
+ * Alias de compatibilidade para FatoFeedback
+ */
+class satisfacaocliente extends FatoFeedback
 {
     //
 }

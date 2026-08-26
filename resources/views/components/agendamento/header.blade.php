@@ -1,12 +1,12 @@
 @php
     $rotasAnteriores = [
-        'agendamento.etapa1' => 'agendamento.etapa1',
+        'agendamento.etapa1' => 'agendamento.agendamentos',
         'agendamento.etapa2' => 'agendamento.etapa1',
         'agendamento.etapa3' => 'agendamento.etapa2',
     ];
 
     $rotaAtual = request()->route()?->getName();
-    $rotaVoltar = $rotasAnteriores[$rotaAtual] ?? 'agendamento.etapa1';
+    $rotaVoltar = $rotasAnteriores[$rotaAtual] ?? 'agendamento.agendamentos';
 @endphp
 
 <header class="sticky top-0 z-50 w-full bg-surface-container-lowest/90 backdrop-blur-md border-b border-surface-variant px-margin h-16 flex items-center justify-between">

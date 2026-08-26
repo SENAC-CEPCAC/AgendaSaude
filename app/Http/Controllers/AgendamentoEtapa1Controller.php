@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CnesUnidade;
 use App\Models\Vaga;
+use App\Models\Turno;
 use Illuminate\Http\Request;
 
 class AgendamentoEtapa1Controller extends Controller
@@ -13,6 +14,31 @@ class AgendamentoEtapa1Controller extends Controller
      */
     public function index()
     {
+        // Garante a existência dos tipos de exames básicos (dim_vagas)
+        if (Vaga::count() === 0) {
+            Vaga::updateOrCreate(['id_vagas' => 1], ['tipo_exame' => 'Preventivo (Siscolo)']);
+            Vaga::updateOrCreate(['id_vagas' => 2], ['tipo_exame' => 'Mamografia (Sismama)']);
+        }
+
+        // Garante a existência das unidades móveis básicas (dim_cnes_unidades)
+        if (CnesUnidade::count() === 0) {
+            CnesUnidade::updateOrCreate(
+                ['codigo_cnes' => '2658914'],
+                ['nome_unidade' => 'Unidade Móvel de Saúde da Mulher 01 - Centro / Itinerante']
+            );
+            CnesUnidade::updateOrCreate(
+                ['codigo_cnes' => '3049182'],
+                ['nome_unidade' => 'Unidade Móvel de Prevenção e Diagnóstico 02 - Zona Leste']
+            );
+        }
+
+        // Garante turnos básicos (dim_turno)
+        if (Turno::count() === 0) {
+            Turno::updateOrCreate(['id_turno' => 1], ['turno' => 'Manhã']);
+            Turno::updateOrCreate(['id_turno' => 2], ['turno' => 'Tarde']);
+            Turno::updateOrCreate(['id_turno' => 3], ['turno' => 'Integral']);
+        }
+
         // Busca todas as unidades móveis cadastradas
         $unidades_moveis = CnesUnidade::all();
 

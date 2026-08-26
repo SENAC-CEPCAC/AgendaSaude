@@ -57,6 +57,7 @@ class DatabaseSeeder extends Seeder
             // Dados fake do cenário de atendimento do Projeto Integrador
             $this->call([
                 DadosFakeSeeder::class, // [FAKE] 6 Profissionais, 2 Unidades Móveis, 4 Cronogramas, 10 Pacientes (4 Siscolo, 4 Sismama, 2 Espera) e Anamneses
+                UsuariosTesteSeeder::class, // [TESTE] Usuários de teste para os 4 perfis (N1, N2, N3, N4)
             ]);
         }
     }

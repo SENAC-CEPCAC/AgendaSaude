@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <!-- Tailwind CSS Play CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Injeta duas customizações no ecossistema do Tailwind -->
@@ -81,13 +82,13 @@
             </div>
 
             <div class="flex flex-col gap-4 items-center justify-center max-w-[385px] max-h-[400px] mx-auto my-5 px-[5px] conteudo_hero">
-                <h1 class="font-sans font-bold text-center md:text-start text-[26px] text-azul hero_conteudo">Sua Saúde Onde Você Estiver</h1>
+                <h1 class="font-sans font-bold text-center md:text-start text-[26px] text-azul hero_conteudo">Sua saúde onde você estiver</h1>
                 <p class="font-sans mb-5 text-center md:text-start text-[16px] text-cinza-escuro hero_descricao">
                     Agendamento rápido, unidades móveis de confiança e atendimento especializado com agilidade e praticidade.
                 </p>
 
                 <div class="flex flex-col items-center md:items-start gap-3 w-full hero_conteudo_btns">
-                    <a href="{{ route('acesso.cadastro') }}">
+                    <a href="{{ route('politica') }}">
                         <button class="w-[230px] h-fit px-4 py-2.5 border-[1.5px] rounded-lg border border-azul font-sans font-normal text-[14px] hover:bg-azul hover:text-azul bg-transparent hover:bg-azul/15 transition-colors hero_conteudo_btn_cadastrese" data-url="{{ route('acesso.cadastro') }}">
                             Cadastre-se
                         </button>

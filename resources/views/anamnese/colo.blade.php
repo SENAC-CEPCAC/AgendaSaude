@@ -9,7 +9,7 @@
               Anamnese · Coleta de preventivo
             </h1>
             <p class="mt-1 text-sm text-slate-400">
-              Maria Aparecida Souza · Unidade Móvel Centro ·
+              {{ $paciente->nome_completo }} · CPF {{ $paciente->cpf }} ·
               <span id="data-atual"></span>
                </p>
 
