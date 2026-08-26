@@ -13,9 +13,7 @@
     <button id="mobile-menu-toggle" type="button" class="fixed left-3 top-3 z-[60] flex items-center justify-center rounded-lg bg-blue-600 p-2 text-white shadow-sm transition hover:bg-blue-800 sm:left-5 sm:top-5" aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menu">
         <i data-lucide="menu" class="h-4 w-4"></i>
     </button>
-    <div class="fixed right-3 top-3 z-40 max-w-[calc(100%-7rem)] truncate rounded-lg bg-white px-3 py-2 text-right text-[10px] font-bold text-slate-600 shadow-sm sm:right-5 sm:top-5 sm:px-4 sm:py-2.5 sm:text-xs">
-        Olá, {{ $usuarioNome }}
-    </div>
+ 
     <main class="mx-auto w-full max-w-5xl px-4 pb-8 pt-24 sm:px-5 sm:pt-24 md:px-0 md:pt-12">
         <h1 class="mb-5 text-lg font-bold pt-10 uppercase tracking-wide text-slate-900 sm:text-xl">Gestão de acesso</h1>
 
