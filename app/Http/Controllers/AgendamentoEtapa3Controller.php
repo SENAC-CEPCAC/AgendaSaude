@@ -240,7 +240,7 @@ class AgendamentoEtapa3Controller extends Controller
                 ? 'Inscrição na Lista de Espera Inteligente confirmada! Caso surjam vagas para este dia, nossa equipe entrará em contato pelo seu telefone cadastrado.'
                 : 'Agendamento e envio de documentos realizados com sucesso!';
 
-            return redirect()->route('agendamento.confirmado')->with([
+            return redirect()->route('agendamento.agendamentos')->with([
                 'sucesso' => $msgSucesso,
                 'eh_espera' => ($status_comparecimento === 'espera'),
             ]);
