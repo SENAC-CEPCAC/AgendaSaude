@@ -12,642 +12,258 @@
     <!-- Estilo customizado -->
     <link rel="stylesheet" href="/css/perfilPaciente.css">
 
-    <!-- Fontes -->
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <link rel="preconnect"
-          href="https://fonts.googleapis.com">
-
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossorigin>
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+    </style>
 </head>
 
 <body class="bg-light">
 
-<div class="container py-5">
+    <div class="container py-5">
 
+        <!-- CABEÇALHO -->
+        <div class="text-center mb-4">
+            <h2 class="fw-bold text-dark">Crie sua conta</h2>
+            <p class="text-muted">Cadastre seus dados para agendar consultas e exames.</p>
+        </div>
 
-    <!-- ========================================= -->
-    <!-- CABEÇALHO -->
-    <!-- ========================================= -->
+        <!-- CARD PRINCIPAL -->
+        <div class="card shadow-sm border-0 mx-auto" style="max-width: 850px; border-radius: 12px;">
+            <div class="card-body p-4 p-md-5">
 
-    <div class="text-center mb-4">
+                <!-- EXIBIÇÃO DE ERROS DO BACKEND -->
+                @if ($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                        <strong class="d-block mb-1">Por favor, corrija os erros abaixo:</strong>
+                        <ul class="mb-0 ps-3">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
 
-        <h2 class="fw-semibold">
-            Crie sua conta
-        </h2>
-
-        <p class="text-muted">
-            Cadastre seus dados para acessar a plataforma.
-        </p>
-
-    </div>
-
-
-    <!-- ========================================= -->
-    <!-- CARD -->
-    <!-- ========================================= -->
-
-    <div class="card shadow-sm border-0 mx-auto"
-         style="max-width: 850px;">
-
-        <div class="card-body p-4 p-md-5">
-
-
-            <!-- ================================= -->
-            <!-- PROGRESSO -->
-            <!-- ================================= -->
-
-            <div class="d-flex align-items-center justify-content-center mb-5">
-
-
-                <!-- ETAPA 1 -->
-
-                <div class="text-center">
-
-                    <div
-                        id="step1Indicator"
-                        class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto"
-                        style="width: 42px; height: 42px;">
-
-                        1
-
+                <!-- INDICADOR DE PROGRESSO -->
+                <div class="d-flex align-items-center justify-content-center mb-5">
+                    <!-- ETAPA 1 -->
+                    <div class="text-center">
+                        <div id="step1Indicator" class="step-circle bg-primary text-white mx-auto">
+                            1
+                        </div>
+                        <small id="step1Text" class="d-block mt-2 fw-semibold text-primary">
+                            Dados pessoais
+                        </small>
                     </div>
 
-                    <small
-                        id="step1Text"
-                        class="d-block mt-2 fw-semibold">
-
-                        Dados pessoais
-
-                    </small>
-
-                </div>
-
-
-                <!-- LINHA -->
-
-                <div
-                    class="mx-3"
-                    style="width: 120px;">
-
-                    <hr>
-
-                </div>
-
-
-                <!-- ETAPA 2 -->
-
-                <div class="text-center">
-
-                    <div
-                        id="step2Indicator"
-                        class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto"
-                        style="width: 42px; height: 42px;">
-
-                        2
-
+                    <!-- LINHA DIVISÓRIA -->
+                    <div class="mx-3 flex-grow-1" style="max-width: 120px;">
+                        <hr class="my-0">
                     </div>
 
-                    <small
-                        id="step2Text"
-                        class="d-block mt-2 text-muted">
-
-                        Acesso
-
-                    </small>
-
+                    <!-- ETAPA 2 -->
+                    <div class="text-center">
+                        <div id="step2Indicator" class="step-circle bg-secondary text-white mx-auto">
+                            2
+                        </div>
+                        <small id="step2Text" class="d-block mt-2 text-muted">
+                            Dados de acesso
+                        </small>
+                    </div>
                 </div>
+
+                <!-- FORMULÁRIO -->
+                <form id="formCadastroPaciente" action="{{ route('acesso.cadastro.store') }}" method="POST" novalidate>
+                    @csrf
+
+                    <!-- ========================================== -->
+                    <!-- ETAPA 1: DADOS PESSOAIS                    -->
+                    <!-- ========================================== -->
+                    <div id="step1">
+                        <h4 class="mb-4 text-secondary fw-semibold">Dados Pessoais</h4>
+
+                        <div class="row g-3">
+                            <!-- NOME COMPLETO -->
+                            <div class="col-md-8">
+                                <label for="nome_completo" class="form-label fw-semibold">Nome completo *</label>
+                                <input type="text" class="form-control" id="nome_completo" name="nome_completo"
+                                    placeholder="Digite seu nome completo" value="{{ old('nome_completo') }}" required>
+                                <div class="invalid-feedback">Informe seu nome completo.</div>
+                            </div>
+
+                            <!-- APELIDO -->
+                            <div class="col-md-4">
+                                <label for="apelido" class="form-label fw-semibold">Apelido</label>
+                                <input type="text" class="form-control" id="apelido" name="apelido"
+                                    placeholder="Opcional" value="{{ old('apelido') }}">
+                            </div>
+
+                            <!-- NOME DA MÃE -->
+                            <div class="col-12">
+                                <label for="nome_mae" class="form-label fw-semibold">Nome da mãe *</label>
+                                <input type="text" class="form-control" id="nome_mae" name="nome_mae"
+                                    placeholder="Digite o nome completo da mãe" value="{{ old('nome_mae') }}" required>
+                                <div class="invalid-feedback">Informe o nome da mãe.</div>
+                            </div>
+
+                            <!-- CPF -->
+                            <div class="col-md-6">
+                                <label for="cpf" class="form-label fw-semibold">CPF *</label>
+                                <input type="text" class="form-control" id="cpf" name="cpf"
+                                    placeholder="000.000.000-00" maxlength="14" value="{{ old('cpf') }}" required>
+                                <div class="invalid-feedback">Informe um CPF válido (11 dígitos).</div>
+                            </div>
+
+                            <!-- CARTÃO SUS -->
+                            <div class="col-md-6">
+                                <label for="cartao_sus" class="form-label fw-semibold">Cartão SUS *</label>
+                                <input type="text" class="form-control" id="cartao_sus" name="cartao_sus"
+                                    placeholder="000000000000000" maxlength="15" value="{{ old('cartao_sus') }}" required>
+                                <div class="invalid-feedback">Informe o número do Cartão SUS (15 dígitos).</div>
+                            </div>
+
+                            <!-- CELULAR -->
+                            <div class="col-md-6">
+                                <label for="celular" class="form-label fw-semibold">Número de celular (WhatsApp) *</label>
+                                <input type="tel" class="form-control" id="celular" name="celular"
+                                    placeholder="(00) 00000-0000" maxlength="15" value="{{ old('celular') }}" required>
+                                <div class="invalid-feedback">Informe um número de celular válido com DDD.</div>
+                            </div>
+
+                            <!-- DATA DE NASCIMENTO -->
+                            <div class="col-md-6">
+                                <label for="data_nascimento" class="form-label fw-semibold">Data de nascimento *</label>
+                                <input type="date" class="form-control" id="data_nascimento" name="data_nascimento"
+                                    value="{{ old('data_nascimento') }}" required>
+                                <div class="invalid-feedback">Informe a data de nascimento.</div>
+                            </div>
+
+                            <!-- SEXO -->
+                            <div class="col-md-4">
+                                <label for="sexo" class="form-label fw-semibold">Sexo *</label>
+                                <select class="form-select" id="sexo" name="sexo" required>
+                                    <option value="">Selecione</option>
+                                    <option value="masculino" {{ old('sexo') == 'masculino' ? 'selected' : '' }}>Masculino</option>
+                                    <option value="feminino" {{ old('sexo') == 'feminino' ? 'selected' : '' }}>Feminino</option>
+                                    <option value="outro" {{ old('sexo') == 'outro' ? 'selected' : '' }}>Outro</option>
+                                </select>
+                                <div class="invalid-feedback">Selecione o sexo.</div>
+                            </div>
+
+                            <!-- RAÇA/COR -->
+                            <div class="col-md-4">
+                                <label for="raca_cor" class="form-label fw-semibold">Raça/Cor *</label>
+                                <select class="form-select" id="raca_cor" name="raca_cor" required>
+                                    <option value="">Selecione</option>
+                                    <option value="branca" {{ old('raca_cor') == 'branca' ? 'selected' : '' }}>Branca</option>
+                                    <option value="preta" {{ old('raca_cor') == 'preta' ? 'selected' : '' }}>Preta</option>
+                                    <option value="parda" {{ old('raca_cor') == 'parda' ? 'selected' : '' }}>Parda</option>
+                                    <option value="amarela" {{ old('raca_cor') == 'amarela' ? 'selected' : '' }}>Amarela</option>
+                                    <option value="indigena" {{ old('raca_cor') == 'indigena' ? 'selected' : '' }}>Indígena</option>
+                                    <option value="nao_informado" {{ old('raca_cor') == 'nao_informado' ? 'selected' : '' }}>Não informado</option>
+                                </select>
+                                <div class="invalid-feedback">Selecione a raça/cor.</div>
+                            </div>
+
+                            <!-- ESCOLARIDADE -->
+                            <div class="col-md-4">
+                                <label for="escolaridade" class="form-label fw-semibold">Escolaridade *</label>
+                                <select class="form-select" id="escolaridade" name="escolaridade" required>
+                                    <option value="">Selecione</option>
+                                    <option value="nao_alfabetizado" {{ old('escolaridade') == 'nao_alfabetizado' ? 'selected' : '' }}>Não alfabetizado</option>
+                                    <option value="fundamental_incompleto" {{ old('escolaridade') == 'fundamental_incompleto' ? 'selected' : '' }}>Fundamental incompleto</option>
+                                    <option value="fundamental_completo" {{ old('escolaridade') == 'fundamental_completo' ? 'selected' : '' }}>Fundamental completo</option>
+                                    <option value="medio_incompleto" {{ old('escolaridade') == 'medio_incompleto' ? 'selected' : '' }}>Médio incompleto</option>
+                                    <option value="medio_completo" {{ old('escolaridade') == 'medio_completo' ? 'selected' : '' }}>Médio completo</option>
+                                    <option value="superior_incompleto" {{ old('escolaridade') == 'superior_incompleto' ? 'selected' : '' }}>Superior incompleto</option>
+                                    <option value="superior_completo" {{ old('escolaridade') == 'superior_completo' ? 'selected' : '' }}>Superior completo</option>
+                                    <option value="pos_graduacao" {{ old('escolaridade') == 'pos_graduacao' ? 'selected' : '' }}>Pós-graduação</option>
+                                </select>
+                                <div class="invalid-feedback">Selecione a escolaridade.</div>
+                            </div>
+                        </div>
+
+                        <!-- BOTÕES DA ETAPA 1 -->
+                        <div class="d-flex justify-content-between  align-items-center mt-5 pt-3 border-top">
+                            <a href="{{ route('acesso.index') }}" class="btn btn-outline-secondary px-4">
+                                ← Voltar
+                            </a>
+                            <button type="button" id="btnProximo" class="btn btn-primary px-4 fw-semibold">
+                                Próximo →
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ========================================== -->
+                    <!-- ETAPA 2: DADOS DE ACESSO                   -->
+                    <!-- ========================================== -->
+                    <div id="step2" class="d-none">
+                        <h4 class="mb-4 text-secondary fw-semibold">Dados de Acesso</h4>
+
+                        <div class="row g-3">
+                            <!-- E-MAIL -->
+                            <div class="col-12">
+                                <label for="email" class="form-label fw-semibold">E-mail *</label>
+                                <input type="email" class="form-control" id="email" name="email"
+                                    placeholder="exemplo@email.com" value="{{ old('email') }}" autocomplete="email" required>
+                                <div class="form-text">Você utilizará este e-mail para acessar sua conta.</div>
+                                <div class="invalid-feedback">Informe um e-mail válido.</div>
+                            </div>
+
+                            <!-- SENHA -->
+                            <div class="col-md-6">
+                                <label for="password" class="form-label fw-semibold">Senha *</label>
+                                <input type="password" class="form-control" id="password" name="password"
+                                    placeholder="Mínimo 8 caracteres" minlength="8" required>
+                                <div class="invalid-feedback">A senha deve ter pelo menos 8 caracteres.</div>
+                            </div>
+
+                            <!-- CONFIRMAR SENHA -->
+                            <div class="col-md-6">
+                                <label for="password_confirmation" class="form-label fw-semibold">Confirmar senha *</label>
+                                <input type="password" class="form-control" id="password_confirmation" name="password_confirmation"
+                                    placeholder="Digite novamente" minlength="8" required>
+                                <div class="invalid-feedback">Confirme sua senha.</div>
+                            </div>
+                        </div>
+
+                        <!-- ALERTA DE SENHA DIVERGENTE -->
+                        <div id="erroSenha" class="alert alert-danger mt-4 d-none" role="alert">
+                            As senhas informadas não coincidem.
+                        </div>
+
+                        <!-- BOTÕES DA ETAPA 2 -->
+                        <div class="d-flex justify-content-between align-items-center mt-5 pt-3 border-top">
+                            <button type="button" id="btnVoltarStep2" class="btn btn-outline-secondary px-4">
+                                ← Voltar
+                            </button>
+                            <button type="submit" id="btnCadastrar" class="btn btn-success px-5 fw-bold">
+                                Concluir Cadastro
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
 
             </div>
-
-
-            <!-- ================================= -->
-            <!-- FORMULÁRIO -->
-            <!-- ================================= -->
-
-            <form
-                id="formCadastroPaciente"
-                action="{{ route('permissao_colaborador.cadastro.store') }}"
-                method="POST">
-
-                @csrf
-
-
-                <!-- ================================= -->
-                <!-- ETAPA 1 -->
-                <!-- ================================= -->
-
-                <div id="step1">
-
-
-                    <h4 class="mb-4">
-
-                        Dados pessoais
-
-                    </h4>
-
-
-                    <div class="row g-3">
-
-
-                        <!-- NOME -->
-
-                        <div class="col-md-8">
-
-                            <label
-                                for="nome_completo"
-                                class="form-label">
-
-                                Nome completo *
-
-                            </label>
-
-                            <input
-                                type="text"
-                                class="form-control"
-                                id="nome_completo"
-                                name="nome_completo"
-                                placeholder="Digite seu nome completo"
-                                value="{{ old('nome_completo') }}"
-                                required>
-
-                        </div>
-
-
-                        <!-- APELIDO -->
-
-                        <div class="col-md-4">
-
-                            <label
-                                for="apelido"
-                                class="form-label">
-
-                                Apelido
-
-                            </label>
-
-                            <input
-                                type="text"
-                                class="form-control"
-                                id="apelido"
-                                name="apelido"
-                                placeholder="Opcional"
-                                value="{{ old('apelido') }}">
-
-                        </div>
-
-
-                        <!-- MÃE -->
-
-                        <div class="col-12">
-
-                            <label
-                                for="nome_mae"
-                                class="form-label">
-
-                                Nome da mãe *
-
-                            </label>
-
-                            <input
-                                type="text"
-                                class="form-control"
-                                id="nome_mae"
-                                name="nome_mae"
-                                placeholder="Digite o nome completo da mãe"
-                                value="{{ old('nome_mae') }}"
-                                required>
-
-                        </div>
-
-
-                        <!-- CPF -->
-
-                        <div class="col-md-6">
-
-                            <label
-                                for="cpf"
-                                class="form-label">
-
-                                CPF *
-
-                            </label>
-
-                            <input
-                                type="text"
-                                class="form-control"
-                                id="cpf"
-                                name="cpf"
-                                placeholder="000.000.000-00"
-                                maxlength="14"
-                                value="{{ old('cpf') }}"
-                                required>
-
-                        </div>
-
-
-                        <!-- SUS -->
-
-                        <div class="col-md-6">
-
-                            <label
-                                for="cartao_sus"
-                                class="form-label">
-
-                                Cartão SUS *
-
-                            </label>
-
-                            <input
-    type="text"
-    class="form-control"
-    id="cartao_sus"
-    name="cartao_sus"
-    placeholder="000 0000 0000 0000"
-    inputmode="numeric"
-    maxlength="15"
-    value="{{ old('cartao_sus') }}"
-    required>
-
-                        </div>
-
-
-                        <!-- DATA -->
-
-                        <div class="col-md-6">
-
-                            <label
-                                for="celular"
-                                class="form-label">
-
-                                Número de celular *
-
-                            </label>
-
-                            <input
-                                type="tel"
-                                class="form-control"
-                                id="celular"
-                                name="celular"
-                                inputmode="numeric"
-                                maxlength="11"
-                                pattern="[0-9]{11}"
-                                placeholder="(00) 00000-0000"
-                                value="{{ old('celular') }}"
-                                required>
-
-                        </div>
-
-
-                        <!-- DATA -->
-
-                        <div class="col-md-4">
-
-                            <label
-                                for="data_nascimento"
-                                class="form-label">
-
-                                Data de nascimento *
-
-                            </label>
-
-                            <input
-                                type="date"
-                                class="form-control"
-                                id="data_nascimento"
-                                name="data_nascimento"
-                                value="{{ old('data_nascimento') }}"
-                                required>
-
-                        </div>
-
-
-                        <!-- SEXO -->
-
-                        <div class="col-md-4">
-
-                            <label
-                                for="sexo"
-                                class="form-label">
-
-                                Sexo *
-
-                            </label>
-
-                            <select
-                                class="form-select"
-                                id="sexo"
-                                name="sexo"
-                                required>
-
-                                <option value="">
-                                    Selecione
-                                </option>
-
-                                <option value="masculino">
-                                    Masculino
-                                </option>
-
-                                <option value="feminino">
-                                    Feminino
-                                </option>
-
-                                <option value="outro">
-                                    Outro
-                                </option>
-
-                            </select>
-
-                        </div>
-
-
-                        <!-- RAÇA -->
-
-                        <div class="col-md-4">
-
-                            <label
-                                for="raca_cor"
-                                class="form-label">
-
-                                Raça/Cor *
-
-                            </label>
-
-                            <select
-                                class="form-select"
-                                id="raca_cor"
-                                name="raca_cor"
-                                required>
-
-                                <option value="">
-                                    Selecione
-                                </option>
-
-                                <option value="branca">
-                                    Branca
-                                </option>
-
-                                <option value="preta">
-                                    Preta
-                                </option>
-
-                                <option value="parda">
-                                    Parda
-                                </option>
-
-                                <option value="amarela">
-                                    Amarela
-                                </option>
-
-                                <option value="indigena">
-                                    Indígena
-                                </option>
-
-                                <option value="nao_informado">
-                                    Não informado
-                                </option>
-
-                            </select>
-
-                        </div>
-
-
-                        <!-- ESCOLARIDADE -->
-
-                        <div class="col-12">
-
-                            <label
-                                for="escolaridade"
-                                class="form-label">
-
-                                Escolaridade *
-
-                            </label>
-
-                            <select
-                                class="form-select"
-                                id="escolaridade"
-                                name="escolaridade"
-                                required>
-
-                                <option value="">
-                                    Selecione
-                                </option>
-
-                                <option value="nao_alfabetizado">
-                                    Não alfabetizado
-                                </option>
-
-                                <option value="fundamental_incompleto">
-                                    Ensino fundamental incompleto
-                                </option>
-
-                                <option value="fundamental_completo">
-                                    Ensino fundamental completo
-                                </option>
-
-                                <option value="medio_incompleto">
-                                    Ensino médio incompleto
-                                </option>
-
-                                <option value="medio_completo">
-                                    Ensino médio completo
-                                </option>
-
-                                <option value="superior_incompleto">
-                                    Ensino superior incompleto
-                                </option>
-
-                                <option value="superior_completo">
-                                    Ensino superior completo
-                                </option>
-
-                                <option value="pos_graduacao">
-                                    Pós-graduação
-                                </option>
-
-                            </select>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- BOTÃO -->
-
-                    <div class="d-flex justify-content-end mt-5">
-
-                        <button
-                            type="button"
-                            id="btnProximo"
-                            class="btn btn-primary px-4">
-
-                            Próximo →
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <!-- ================================= -->
-                <!-- ETAPA 2 -->
-                <!-- ================================= -->
-
-                <div
-                    id="step2"
-                    class="d-none">
-
-
-                    <h4 class="mb-4">
-
-                        Dados de acesso
-
-                    </h4>
-
-
-                    <div class="row g-3">
-
-
-                        <!-- LOGIN -->
-
-                        <div class="col-12">
-
-    <label
-        for="email"
-        class="form-label">
-
-        E-mail *
-
-    </label>
-
-    <input
-        type="email"
-        class="form-control"
-        id="email"
-        name="email"
-        placeholder="Digite seu e-mail"
-        value="{{ old('email') }}"
-        autocomplete="email"
-        required>
-
-    <div class="form-text">
-
-        Você utilizará este e-mail para acessar sua conta.
-
-    </div>
-
-</div>
-
-                            <small class="text-muted">
-
-                                Esse será utilizado para entrar na plataforma.
-
-                            </small>
-
-                        </div>
-
-
-                        <!-- SENHA -->
-
-                        <div class="col-md-6">
-
-                            <label
-                                for="password"
-                                class="form-label">
-
-                                Senha *
-
-                            </label>
-
-                            <input
-                                type="password"
-                                class="form-control"
-                                id="password"
-                                name="password"
-                                placeholder="Mínimo 8 caracteres"
-                                minlength="8"
-                                required>
-
-                        </div>
-
-
-                        <!-- CONFIRMAR -->
-
-                        <div class="col-md-6">
-
-                            <label
-                                for="password_confirmation"
-                                class="form-label">
-
-                                Confirmar senha *
-
-                            </label>
-
-                            <input
-                                type="password"
-                                class="form-control"
-                                id="password_confirmation"
-                                name="password_confirmation"
-                                placeholder="Digite novamente"
-                                minlength="8"
-                                required>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- ERRO -->
-
-                    <div
-                        id="erroSenha"
-                        class="alert alert-danger mt-4 d-none">
-
-                        As senhas não são iguais.
-
-                    </div>
-
-
-                    <!-- BOTÕES -->
-
-                    <div
-                        class="d-flex justify-content-between mt-5">
-
-
-                        <button
-                            type="button"
-                            id="btnVoltar"
-                            class="btn btn-secondary">
-
-                            ← Voltar
-
-                        </button>
-
-
-                        <button
-                            type="submit"
-                            id="btnCadastrar"
-                            class="btn btn-success px-4 d-none">
-
-                            Cadastrar
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-            </form>
-
-
         </div>
     </div>
 
