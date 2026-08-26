@@ -41,16 +41,21 @@
                         Prontuario
                     </a>
                 </li>
-                <li>
-                    <a href="{{ route('anamnese.colo') }}" class="flex items-center gap-3 px-16 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 font-['Inter'] text-sm font-medium hover:text-[#003E7E] dark:hover:text-blue-300 transition-all active:scale-95 transition-transform">
-                        Serviço Colo
+                  <li>
+                    <a href="{{ route('anamnese.paciente') }}" class="flex items-center gap-3 px-18 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 font-['Inter'] text-sm font-medium hover:text-[#003E7E] dark:hover:text-blue-300 transition-all active:scale-95 transition-transform">
+                        Anamnese
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('anamnese.mama') }}" class="flex items-center gap-3 px-15 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 font-['Inter'] text-sm font-medium hover:text-[#003E7E] dark:hover:text-blue-300 transition-all active:scale-95 transition-transform">
-                        Serviço Mama
-                    </a>
-                </li>
+    <a href="{{ route('anamnese-colo.index') }}" class="flex items-center gap-3 px-16 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 font-['Inter'] text-sm font-medium hover:text-[#003E7E] dark:hover:text-blue-300 transition-all active:scale-95 transition-transform">
+        Serviço Colo
+    </a>
+</li>
+<li>
+    <a href="{{ route('anamnese-mama.index') }}" class="flex items-center gap-3 px-15 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 font-['Inter'] text-sm font-medium hover:text-[#003E7E] dark:hover:text-blue-300 transition-all active:scale-95 transition-transform">
+        Serviço Mama
+    </a>
+</li>
             </ul>
             <div method="POST" action="{{ route('logout') }}" class="mt-auto px-3 border-t border-slate-200 dark:border-slate-800 pt-4">
                 <form method="POST" action="{{ route('logout') }}">

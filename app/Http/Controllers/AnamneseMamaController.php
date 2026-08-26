@@ -35,17 +35,43 @@ class AnamneseMamaController extends Controller
     }
 
     /**
+     * Lista os prontuários com agendamento de mamografia, prontos para receber a anamnese
+     */
+    public function selecionarProntuario()
+    {
+        $prontuarios = DB::table('fato_prontuario as p')
+            ->join('fato_cronogramas as c', 'p.id_agenda', '=', 'c.id_agenda')
+            ->join('dim_vagas as v', 'c.Vagas_id_vagas', '=', 'v.id_vagas')
+            ->join('dim_pacientes as pac', 'p.cpf_paciente', '=', 'pac.cpf_paciente')
+            ->where('v.tipo_exame', 'like', '%mamo%')
+            ->select(
+                'p.id_prontuario',
+                'pac.nome_completo',
+                'pac.cpf_paciente as cpf',
+                'c.data_atendimento',
+                'c.municipio_atendimento'
+            )
+            ->orderBy('c.data_atendimento')
+            ->get();
+
+        return view('anamnese-mama.selecionar', ['prontuarios' => $prontuarios]);
+    }
+
+    /**
      * Mostra o formulário de criação
      */
     public function create($id_prontuario)
     {
+        $prontuario = \App\Models\Prontuario::with('paciente')->findOrFail($id_prontuario);
+
         return view('anamnese.mama', [
-            'id_prontuario' => $id_prontuario
+            'id_prontuario' => $id_prontuario,
+            'paciente' => $prontuario->paciente,
         ]);
     }
 
     /**
-     * Salva uma nova anamnese de mama
+     * Salva uma nova anamnese de mama (cria fato_anamnese + anamnese_sismama juntos)
      */
     public function store(Request $request)
     {
@@ -73,8 +99,7 @@ class AnamneseMamaController extends Controller
         DB::transaction(function () use ($dados) {
             $fato = FatoAnamnese::create([
                 'id_prontuario' => $dados['id_prontuario'],
-                'id_profissional' => auth()->id()
-                    ?? DB::table('dim_profissionais')->value('id_profissional'),
+                'id_profissional' => auth()->id() ?? 1, // TEMPORÁRIO: fixo até o login estar pronto
                 'tipo_anamnese' => 'sismama',
                 'data_realizacao' => $dados['data_realizacao'],
             ]);
@@ -104,41 +129,25 @@ class AnamneseMamaController extends Controller
             ->with('sucesso', 'Anamnese de mama salva com sucesso!');
     }
 
-    /**
-     * Exibe os detalhes da anamnese
-     */
     public function show($id)
     {
-        $anamneseMama = AnamneseMama::with('fatoAnamnese.prontuario.paciente')
-            ->findOrFail($id);
+        $anamneseMama = AnamneseMama::with('fatoAnamnese.prontuario.paciente')->findOrFail($id);
 
-        return view('anamnese-mama.detalhes', [
-            'anamneseMama' => $anamneseMama
-        ]);
+        return view('anamnese-mama.detalhes', ['anamneseMama' => $anamneseMama]);
     }
 
-    /**
-     * Mostra o formulário de edição
-     */
     public function edit($id)
     {
-        $anamneseMama = AnamneseMama::with('fatoAnamnese')
-            ->findOrFail($id);
+        $anamneseMama = AnamneseMama::with('fatoAnamnese')->findOrFail($id);
 
-        return view('anamnese-mama.editar', [
-            'anamneseMama' => $anamneseMama
-        ]);
+        return view('anamnese-mama.editar', ['anamneseMama' => $anamneseMama]);
     }
 
-    /**
-     * Atualiza uma anamnese de mama existente
-     */
     public function update(Request $request, $id)
     {
         $dados = $request->validate([
             'id_prontuario' => 'required|integer',
             'data_realizacao' => 'required|date',
-
             'nodulo_mama_direita' => 'required|boolean',
             'nodulo_mama_esquerda' => 'required|boolean',
             'risco_elevado_cancer' => 'required|boolean',
@@ -157,7 +166,6 @@ class AnamneseMamaController extends Controller
         ]);
 
         DB::transaction(function () use ($dados, $id) {
-
             $anamneseMama = AnamneseMama::findOrFail($id);
 
             $anamneseMama->fatoAnamnese()->update([
@@ -185,17 +193,13 @@ class AnamneseMamaController extends Controller
         });
 
         return redirect()
-            ->route('anamnese-mama.show', $id)
+            ->route('anamnese-mama.index')
             ->with('sucesso', 'Anamnese de mama atualizada com sucesso!');
     }
 
-    /**
-     * Exclui uma anamnese de mama
-     */
     public function destroy($id)
     {
         DB::transaction(function () use ($id) {
-
             $anamneseMama = AnamneseMama::findOrFail($id);
             $fato = $anamneseMama->fatoAnamnese;
 
@@ -213,12 +217,9 @@ class AnamneseMamaController extends Controller
      */
     public function pdf($id)
     {
-        $anamneseMama = AnamneseMama::with('fatoAnamnese.prontuario.paciente')
-            ->findOrFail($id);
+        $anamneseMama = AnamneseMama::with('fatoAnamnese.prontuario.paciente')->findOrFail($id);
 
-        $pdf = Pdf::loadView('anamnese-mama.pdf', [
-            'anamneseMama' => $anamneseMama
-        ]);
+        $pdf = Pdf::loadView('anamnese-mama.pdf', ['anamneseMama' => $anamneseMama]);
 
         return $pdf->download('anamnese-mama-' . $id . '.pdf');
     }

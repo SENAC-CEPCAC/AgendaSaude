@@ -1,6 +1,6 @@
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-<x-layout>
+<x-layout sidebar="n3">
 
     @php
         $fato = $anamneseMama->fatoAnamnese;

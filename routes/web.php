@@ -70,8 +70,8 @@ Route::get('/teste', function () {
 })->name('pesquisa.teste');
 
 // Pesquisa de Satisfação / Feedback
-Route::get('/feedback', [FeedbackController::class, 'create'])->name('feedback.create');
-Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
+//Route::get('/feedback', [FeedbackController::class, 'create'])->name('feedback.create');
+//Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
 Route::get('/satisfacaocliente', function () {
     return view('pesquisa.satisfacaocliente');
 })->name('pesquisa.satisfacaocliente');
@@ -164,7 +164,7 @@ Route::middleware('auth.nivel:4')->group(function () {
 });
 
 Route::middleware('auth.nivel:2,3,4')->group(function () {
-    Route::post('/adm/colaboradores', [UserColaborador::class, 'store'])->name('adm.colaboradores.store');
+    Route::post('/adm/colaboradores', [UserColaboradorController::class, 'store'])->name('adm.colaboradores.store');
 });
 
 
@@ -199,7 +199,9 @@ Route::resource('anamnese-colo', AnamneseColoController::class)->except(['create
 
 Route::get('/anamnese-mama/{id}/pdf', [AnamneseMamaController::class, 'pdf'])->name('anamnese-mama.pdf');
 Route::get('/anamnese-mama/create/{id_prontuario}', [AnamneseMamaController::class, 'create'])->name('anamnese-mama.create');
+Route::get('/anamnese-mama/agendamentos', [AnamneseMamaController::class, 'selecionarProntuario'])->name('anamnese-mama.selecionar');
 Route::resource('anamnese-mama', AnamneseMamaController::class)->except(['create']);
+
 
 Route::get('/anamnese-dia', [AnamneseDoDiaController::class, 'index'])
     ->name('anamnese-dia.index');
@@ -210,3 +212,6 @@ Route::get('/anamnese-dia/pdf', [AnamneseDoDiaController::class, 'pdf'])
 Route::get('/unidadesmoveis', function () {
     return view('anamnese.unidadesmoveis');
 })->name('anamnese.unidadesmoveis');
+
+
+Route::get('/anamnese-paciente', [AnamneseDoDiaController::class, 'anamnesePaciente'])->name('anamnese.paciente');
