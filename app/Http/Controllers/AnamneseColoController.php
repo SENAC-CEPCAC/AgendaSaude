@@ -39,7 +39,12 @@ class AnamneseColoController extends Controller
      */
     public function create($id_prontuario)
     {
-        return view('anamnese.colo', ['id_prontuario' => $id_prontuario]);
+        $prontuario = \App\Models\Prontuario::with('paciente')->findOrFail($id_prontuario);
+
+        return view('anamnese.colo', [
+            'id_prontuario' => $id_prontuario,
+            'paciente' => $prontuario->paciente,
+        ]);
     }
 
     /**
@@ -68,7 +73,7 @@ class AnamneseColoController extends Controller
         DB::transaction(function () use ($dados) {
             $fato = FatoAnamnese::create([
                 'id_prontuario' => $dados['id_prontuario'],
-                'id_profissional' => auth()->id() ?? DB::table('dim_profissionais')->value('id_profissional'), // TEMPORÁRIO: fixo até o login estar pronto
+                'id_profissional' => auth()->id() ?? \DB::table('dim_profissionais')->value('id_profissional'), // TEMPORÁRIO: fixo até o login estar pronto
                 'tipo_anamnese' => 'siscolo',
                 'data_realizacao' => $dados['data_realizacao'],
             ]);

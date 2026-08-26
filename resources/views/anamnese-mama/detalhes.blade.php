@@ -1,56 +1,92 @@
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-<x-layout>
-  <div class="mx-auto max-w-4xl px-8 py-8">
-
-    @php
-      $fato = $anamneseMama->fatoAnamnese;
-      $paciente = $fato?->prontuario?->paciente;
-    @endphp
-
-    <header class="mb-6 flex items-start justify-between gap-4">
+<x-layout sidebar="n3">
+  <div class="mx-auto max-w-3xl px-8 py-8">
+    <header class="mb-6 flex items-center justify-between">
       <div>
         <h1 class="text-lg font-semibold text-slate-800">
-          Anamnese · Solicitação de mamografia
+          Anamnese · Detalhes
         </h1>
         <p class="mt-1 text-sm text-slate-400">
-          {{ $paciente?->nome_completo ?? '—' }}
-          · CPF {{ $paciente?->cpf ?? '—' }}
-          · {{ optional($fato?->data_realizacao)->format('d/m/Y') ?? '—' }}
+          Prontuário #{{ $anamneseMama->fatoAnamnese?->id_prontuario ?? '—' }} ·
+          {{ optional($anamneseMama->fatoAnamnese?->data_realizacao)->format('d/m/Y') ?? '—' }}
         </p>
       </div>
-      <div class="flex gap-2">
-        <a href="{{ route('anamnese-mama.pdf', $anamneseMama->id_sismama) }}"
-           class="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-emerald-700">
-          Baixar PDF
-        </a>
-      </div>
+
+      <a
+        href="{{ route('anamnese-mama.index') }}"
+        class="text-sm font-medium text-blue-600 hover:text-blue-700"
+      >
+        ← Voltar à lista
+      </a>
     </header>
+
+    @php
+      $paciente = $anamneseMama->fatoAnamnese?->prontuario?->paciente;
+    @endphp
 
     <div class="flex flex-col gap-5">
 
-      <!-- ---------- Dados da solicitação ---------- -->
+      <!-- PACIENTE -->
+      <div class="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
+        <p class="mb-4 text-xs font-semibold uppercase tracking-wider text-slate-400">
+          Paciente
+        </p>
+
+        <dl class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <dt class="text-xs font-medium uppercase tracking-wide text-slate-400">
+              Nome completo
+            </dt>
+            <dd class="mt-1 text-sm text-slate-700">
+              {{ $paciente?->nome_completo ?? '—' }}
+            </dd>
+          </div>
+
+          <div>
+            <dt class="text-xs font-medium uppercase tracking-wide text-slate-400">
+              CPF
+            </dt>
+            <dd class="mt-1 text-sm text-slate-700">
+              {{ $paciente?->cpf ?? '—' }}
+            </dd>
+          </div>
+        </dl>
+      </div>
+
+      <!-- DADOS DA SOLICITAÇÃO -->
       <div class="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
         <p class="mb-4 text-xs font-semibold uppercase tracking-wider text-slate-400">
           Dados da solicitação
         </p>
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+        <dl class="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <p class="text-xs font-medium uppercase tracking-wide text-slate-400">Data da solicitação</p>
-            <p class="mt-1 text-sm text-slate-700">{{ optional($fato?->data_realizacao)->format('d/m/Y') ?? '—' }}</p>
+            <dt class="text-xs font-medium uppercase tracking-wide text-slate-400">
+              Data da solicitação
+            </dt>
+            <dd class="mt-1 text-sm text-slate-700">
+              {{ optional($anamneseMama->fatoAnamnese?->data_realizacao)->format('d/m/Y') ?? '—' }}
+            </dd>
           </div>
+
           <div>
-            <p class="text-xs font-medium uppercase tracking-wide text-slate-400">Tipo de mamografia</p>
-            <p class="mt-1 text-sm text-slate-700">{{ $anamneseMama->tipo_mamografia ?? '—' }}</p>
+            <dt class="text-xs font-medium uppercase tracking-wide text-slate-400">
+              Tipo de mamografia
+            </dt>
+            <dd class="mt-1 text-sm text-slate-700">
+              {{ $anamneseMama->tipo_mamografia ?? '—' }}
+            </dd>
           </div>
-        </div>
+        </dl>
       </div>
 
-      <!-- ---------- Histórico ---------- -->
+      <!-- HISTÓRICO -->
       <div class="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
         <p class="mb-4 text-xs font-semibold uppercase tracking-wider text-slate-400">
           Histórico
         </p>
+
         <div class="flex flex-wrap gap-2.5">
           @php
             $historico = [
@@ -63,8 +99,9 @@
               'Já fez cirurgia na mama?' => $anamneseMama->fez_cirurgia_mama,
             ];
           @endphp
+
           @foreach ($historico as $label => $valor)
-            <span class="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-600">
+            <span class="flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-600">
               <span class="{{ $valor ? 'text-emerald-600' : 'text-slate-300' }}">
                 {{ $valor ? '✓' : '—' }}
               </span>
@@ -74,67 +111,130 @@
         </div>
 
         <div class="mt-4 max-w-xs">
-          <p class="text-xs font-medium uppercase tracking-wide text-slate-400">Ano da última mamografia</p>
-          <p class="mt-1 text-sm text-slate-700">{{ $anamneseMama->ano_ultima_mamografia ?? '—' }}</p>
+          <dt class="text-xs font-medium uppercase tracking-wide text-slate-400">
+            Ano da última mamografia
+          </dt>
+          <dd class="mt-1 text-sm text-slate-700">
+            {{ $anamneseMama->ano_ultima_mamografia ?? '—' }}
+          </dd>
         </div>
       </div>
 
-      <!-- ---------- Achados clínicos ---------- -->
+      <!-- ACHADOS CLÍNICOS -->
       <div class="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
         <p class="mb-4 text-xs font-semibold uppercase tracking-wider text-slate-400">
           Achados clínicos
         </p>
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <div class="rounded-xl border border-slate-100 p-4">
-            <p class="mb-2 text-sm font-medium text-slate-700">Descarga papilar</p>
-            <div class="grid grid-cols-2 gap-3 text-sm text-slate-600">
-              <div>
-                <p class="text-xs text-slate-400">Dir</p>
-                {{ $anamneseMama->achado_descarga_papilar_dir ?? '—' }}
-              </div>
-              <div>
-                <p class="text-xs text-slate-400">Esq</p>
-                {{ $anamneseMama->achado_descarga_papilar_esq ?? '—' }}
-              </div>
-            </div>
+
+        <dl class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+
+          <div>
+            <dt class="text-xs font-medium uppercase tracking-wide text-slate-400">
+              Descarga papilar direita
+            </dt>
+            <dd class="mt-1 text-sm text-slate-700">
+              {{ $anamneseMama->achado_descarga_papilar_dir ?? '—' }}
+            </dd>
           </div>
 
-          <div class="rounded-xl border border-slate-100 p-4">
-            <p class="mb-2 text-sm font-medium text-slate-700">Nódulo · localização</p>
-            <div class="grid grid-cols-2 gap-3 text-sm text-slate-600">
-              <div>
-                <p class="text-xs text-slate-400">Dir</p>
-                {{ $anamneseMama->achado_nodulo_localizacao_dir ?? '—' }}
-              </div>
-              <div>
-                <p class="text-xs text-slate-400">Esq</p>
-                {{ $anamneseMama->achado_nodulo_localizacao_esq ?? '—' }}
-              </div>
-            </div>
+          <div>
+            <dt class="text-xs font-medium uppercase tracking-wide text-slate-400">
+              Descarga papilar esquerda
+            </dt>
+            <dd class="mt-1 text-sm text-slate-700">
+              {{ $anamneseMama->achado_descarga_papilar_esq ?? '—' }}
+            </dd>
           </div>
 
-          <div class="rounded-xl border border-slate-100 p-4">
-            <p class="mb-2 text-sm font-medium text-slate-700">Linfonodo palpável</p>
-            <div class="grid grid-cols-2 gap-3 text-sm text-slate-600">
-              <div>
-                <p class="text-xs text-slate-400">Dir</p>
-                {{ $anamneseMama->achado_linfonodo_palpavel_dir ?? '—' }}
-              </div>
-              <div>
-                <p class="text-xs text-slate-400">Esq</p>
-                {{ $anamneseMama->achado_linfonodo_palpavel_esq ?? '—' }}
-              </div>
-            </div>
+          <div>
+            <dt class="text-xs font-medium uppercase tracking-wide text-slate-400">
+              Linfonodo palpável
+            </dt>
+            <dd class="mt-1 text-sm text-slate-700">
+              Dir: {{ $anamneseMama->achado_linfonodo_palpavel_dir ?? '—' }}
+              <br>
+              Esq: {{ $anamneseMama->achado_linfonodo_palpavel_esq ?? '—' }}
+            </dd>
           </div>
-        </div>
+
+          <div>
+            <dt class="text-xs font-medium uppercase tracking-wide text-slate-400">
+              Nódulo · localização direita
+            </dt>
+            <dd class="mt-1 text-sm text-slate-700">
+              {{ $anamneseMama->achado_nodulo_localizacao_dir ?? '—' }}
+            </dd>
+          </div>
+
+          <div>
+            <dt class="text-xs font-medium uppercase tracking-wide text-slate-400">
+              Nódulo · localização esquerda
+            </dt>
+            <dd class="mt-1 text-sm text-slate-700">
+              {{ $anamneseMama->achado_nodulo_localizacao_esq ?? '—' }}
+            </dd>
+          </div>
+
+        </dl>
       </div>
 
-      <div>
-        <a href="{{ route('anamnese-mama.index') }}" class="text-sm font-medium text-blue-600 hover:text-blue-700">
-          ← Voltar para a lista
+      <!-- BOTÕES -->
+      <div class="flex items-center justify-end gap-3 pb-4">
+
+        <a
+          href="{{ route('anamnese-mama.pdf', $anamneseMama->id_sismama) }}"
+          class="rounded-lg border border-emerald-200 px-5 py-2.5 text-sm font-medium text-emerald-600 transition hover:bg-emerald-50"
+        >
+          Baixar PDF
         </a>
+
+        <a
+          href="{{ route('anamnese-mama.edit', $anamneseMama->id_sismama) }}"
+          class="rounded-lg border border-slate-200 px-5 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
+        >
+          Editar
+        </a>
+
       </div>
 
     </div>
   </div>
+    <!-- Lucide Icon Library & Initialization -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      // Initialize Lucide icons on load
+      lucide.createIcons();
+
+      // Mobile Sidebar Toggle Logic
+      const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+      const mobileMenuClose = document.getElementById('mobile-menu-close');
+      const sidebar = document.getElementById('sidebar');
+      const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+      function openSidebar() {
+        sidebar.classList.remove('-translate-x-full');
+        sidebarOverlay.classList.remove('hidden');
+        setTimeout(() => {
+          sidebarOverlay.classList.add('opacity-100');
+        }, 10);
+      }
+
+      function closeSidebar() {
+        sidebar.classList.add('-translate-x-full');
+        sidebarOverlay.classList.remove('opacity-100');
+        setTimeout(() => {
+          sidebarOverlay.classList.add('hidden');
+        }, 300);
+      }
+
+      if (mobileMenuToggle && mobileMenuClose && sidebar && sidebarOverlay) {
+        mobileMenuToggle.addEventListener('click', openSidebar);
+        mobileMenuClose.addEventListener('click', closeSidebar);
+        sidebarOverlay.addEventListener('click', closeSidebar);
+      }
+
+       const hoje = new Date();
+       const formatoData = hoje.toLocaleDateString('pt-BR')
+       document.getElementById('data-atual').textContent = formatoData;
+    </script>
 </x-layout>

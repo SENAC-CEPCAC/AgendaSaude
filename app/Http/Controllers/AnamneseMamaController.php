@@ -35,11 +35,39 @@ class AnamneseMamaController extends Controller
     }
 
     /**
+     * Lista os prontuários com agendamento de mamografia, prontos para receber a anamnese
+     */
+    public function selecionarProntuario()
+    {
+        $prontuarios = DB::table('fato_prontuario as p')
+            ->join('fato_cronogramas as c', 'p.id_agenda', '=', 'c.id_agenda')
+            ->join('dim_vagas as v', 'c.Vagas_id_vagas', '=', 'v.id_vagas')
+            ->join('dim_pacientes as pac', 'p.cpf_paciente', '=', 'pac.cpf_paciente')
+            ->where('v.tipo_exame', 'like', '%mamo%')
+            ->select(
+                'p.id_prontuario',
+                'pac.nome_completo',
+                'pac.cpf_paciente as cpf',
+                'c.data_atendimento',
+                'c.municipio_atendimento'
+            )
+            ->orderBy('c.data_atendimento')
+            ->get();
+
+        return view('anamnese-mama.selecionar', ['prontuarios' => $prontuarios]);
+    }
+
+    /**
      * Mostra o formulário de criação
      */
     public function create($id_prontuario)
     {
-        return view('anamnese.mama', ['id_prontuario' => $id_prontuario]);
+        $prontuario = \App\Models\Prontuario::with('paciente')->findOrFail($id_prontuario);
+
+        return view('anamnese.mama', [
+            'id_prontuario' => $id_prontuario,
+            'paciente' => $prontuario->paciente,
+        ]);
     }
 
     /**
@@ -71,7 +99,7 @@ class AnamneseMamaController extends Controller
         DB::transaction(function () use ($dados) {
             $fato = FatoAnamnese::create([
                 'id_prontuario' => $dados['id_prontuario'],
-                'id_profissional' => auth()->id() ?? DB::table('dim_profissionais')->value('id_profissional'), // TEMPORÁRIO: fixo até o login estar pronto
+                'id_profissional' => auth()->id() ?? 1, // TEMPORÁRIO: fixo até o login estar pronto
                 'tipo_anamnese' => 'sismama',
                 'data_realizacao' => $dados['data_realizacao'],
             ]);
@@ -106,6 +134,67 @@ class AnamneseMamaController extends Controller
         $anamneseMama = AnamneseMama::with('fatoAnamnese.prontuario.paciente')->findOrFail($id);
 
         return view('anamnese-mama.detalhes', ['anamneseMama' => $anamneseMama]);
+    }
+
+    public function edit($id)
+    {
+        $anamneseMama = AnamneseMama::with('fatoAnamnese')->findOrFail($id);
+
+        return view('anamnese-mama.editar', ['anamneseMama' => $anamneseMama]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $dados = $request->validate([
+            'id_prontuario' => 'required|integer',
+            'data_realizacao' => 'required|date',
+            'nodulo_mama_direita' => 'required|boolean',
+            'nodulo_mama_esquerda' => 'required|boolean',
+            'risco_elevado_cancer' => 'required|boolean',
+            'mamas_examinadas_anteriormente' => 'required|boolean',
+            'fez_mamografia_anterior' => 'required|boolean',
+            'ano_ultima_mamografia' => 'nullable|integer|digits:4',
+            'fez_radioterapia_mama' => 'required|boolean',
+            'fez_cirurgia_mama' => 'required|boolean',
+            'tipo_mamografia' => 'nullable|string|max:30',
+            'achado_descarga_papilar_dir' => 'nullable|string|max:30',
+            'achado_descarga_papilar_esq' => 'nullable|string|max:30',
+            'achado_nodulo_localizacao_dir' => 'nullable|string|max:30',
+            'achado_nodulo_localizacao_esq' => 'nullable|string|max:30',
+            'achado_linfonodo_palpavel_dir' => 'nullable|string|max:30',
+            'achado_linfonodo_palpavel_esq' => 'nullable|string|max:30',
+        ]);
+
+        DB::transaction(function () use ($dados, $id) {
+            $anamneseMama = AnamneseMama::findOrFail($id);
+
+            $anamneseMama->fatoAnamnese()->update([
+                'id_prontuario' => $dados['id_prontuario'],
+                'data_realizacao' => $dados['data_realizacao'],
+            ]);
+
+            $anamneseMama->update([
+                'nodulo_mama_direita' => $dados['nodulo_mama_direita'],
+                'nodulo_mama_esquerda' => $dados['nodulo_mama_esquerda'],
+                'risco_elevado_cancer' => $dados['risco_elevado_cancer'],
+                'mamas_examinadas_anteriormente' => $dados['mamas_examinadas_anteriormente'],
+                'fez_mamografia_anterior' => $dados['fez_mamografia_anterior'],
+                'ano_ultima_mamografia' => $dados['ano_ultima_mamografia'] ?? null,
+                'fez_radioterapia_mama' => $dados['fez_radioterapia_mama'],
+                'fez_cirurgia_mama' => $dados['fez_cirurgia_mama'],
+                'tipo_mamografia' => $dados['tipo_mamografia'] ?? null,
+                'achado_descarga_papilar_dir' => $dados['achado_descarga_papilar_dir'] ?? null,
+                'achado_descarga_papilar_esq' => $dados['achado_descarga_papilar_esq'] ?? null,
+                'achado_nodulo_localizacao_dir' => $dados['achado_nodulo_localizacao_dir'] ?? null,
+                'achado_nodulo_localizacao_esq' => $dados['achado_nodulo_localizacao_esq'] ?? null,
+                'achado_linfonodo_palpavel_dir' => $dados['achado_linfonodo_palpavel_dir'] ?? null,
+                'achado_linfonodo_palpavel_esq' => $dados['achado_linfonodo_palpavel_esq'] ?? null,
+            ]);
+        });
+
+        return redirect()
+            ->route('anamnese-mama.index')
+            ->with('sucesso', 'Anamnese de mama atualizada com sucesso!');
     }
 
     public function destroy($id)

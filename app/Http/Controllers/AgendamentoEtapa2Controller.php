@@ -46,18 +46,20 @@ class AgendamentoEtapa2Controller extends Controller
 
         // 2. Busca cronogramas cadastrados pelo Gestor
         $query = Cronograma::with(['unidade', 'turno', 'vaga', 'prontuarios']);
-        if ($id_cnes_unidade) {
-            $query->where('id_cnes_unidade', $id_cnes_unidade);
-        }
         if ($id_vagas) {
             $query->where('Vagas_id_vagas', $id_vagas);
+        }
+        if ($id_cnes_unidade) {
+            $query->where('id_cnes_unidade', $id_cnes_unidade);
         }
 
         $cronogramas = $query->orderBy('data_atendimento', 'asc')->get();
 
-        // Se não houver cronograma para o filtro específico, busca todos os cronogramas existentes
-        if ($cronogramas->isEmpty()) {
+        // Se não houver cronograma na unidade escolhida, tenta em outras unidades —
+        // mas NUNCA abandona o filtro de tipo de exame (isso trocaria a escolha do paciente sem avisar)
+        if ($cronogramas->isEmpty() && $id_cnes_unidade && $id_vagas) {
             $cronogramas = Cronograma::with(['unidade', 'turno', 'vaga', 'prontuarios'])
+                ->where('Vagas_id_vagas', $id_vagas)
                 ->orderBy('data_atendimento', 'asc')
                 ->get();
         }
