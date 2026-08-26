@@ -166,4 +166,7 @@ Route::middleware('auth.nivel:4')->group(function () {
     Route::post('/unidadesmoveis', [CnesUnidadeController::class, 'store'])->name('unidadesmoveis.store');
     Route::put('/unidadesmoveis/{cnesUnidade}', [CnesUnidadeController::class, 'update'])->name('unidadesmoveis.update');
     Route::delete('/unidadesmoveis/{cnesUnidade}', [CnesUnidadeController::class, 'destroy'])->name('unidadesmoveis.destroy');
+
+    Route::get('/agendamentos/{id}/documento/{tipo}', [\App\Http\Controllers\ListaAgendamentoController::class, 'verDocumento'])->name('agendamentos.documento');
 });
+

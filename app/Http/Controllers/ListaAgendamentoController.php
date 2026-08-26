@@ -303,4 +303,42 @@ class ListaAgendamentoController extends Controller
 
         return redirect()->back()->with('success', 'Agendamento cancelado com sucesso.');
     }
+
+    public function verDocumento($id, $tipo)
+    {
+        $agendamento = DB::table('fato_prontuario')
+            ->where('id_prontuario', $id)
+            ->orWhere('numero_sequencial', $id)
+            ->first();
+
+        if (!$agendamento) {
+            abort(404, 'Agendamento não encontrado.');
+        }
+
+        $coluna = ($tipo === 'rg' || $tipo === 'rg_cpf') ? 'caminho_documento_rg_cpf' : 'caminho_documento_requisicao';
+        $caminhoBanco = $agendamento->$coluna ?? null;
+
+        if (!$caminhoBanco) {
+            abort(404, 'Documento não informado.');
+        }
+
+        // Extrai apenas o nome do arquivo caso venha com caminho completo
+        $nomeArquivo = basename($caminhoBanco);
+
+        // Lista de locais onde o arquivo pode estar localizado
+        $candidatos = [
+            storage_path('app/public/documentos_agendamentos/' . $nomeArquivo),
+            storage_path('app/public/documentos_agendamentos/' . $caminhoBanco),
+        ];
+
+        foreach ($candidatos as $path) {
+            if (file_exists($path)) {
+                return response()->file($path, [
+                    'Cache-Control' => 'no-cache, private',
+                ]);
+            }
+        }
+
+        abort(404, 'Arquivo não encontrado no servidor: ' . $nomeArquivo);
+    }
 }
