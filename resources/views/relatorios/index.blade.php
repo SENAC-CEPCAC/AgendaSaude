@@ -45,7 +45,7 @@
         }
     }">
       
-      <!-- Top Bar / Header -->
+      <!-- Top Bar / Header
       <header id="top-bar" class="h-16 bg-white border-b border-slate-100 px-4 md:px-8 flex items-center justify-between sticky top-0 z-20 shadow-xs">
         <div class="flex items-center gap-3">
           <div id="breadcrumb" class="flex items-center gap-2 text-xs text-slate-400 font-medium">
@@ -71,15 +71,23 @@
             </div>
           </div>
         </div>
-      </header>
+      </header> -->
+
+  <button id="mobile-menu-toggle" type="button" class="fixed left-3 top-3 z-[60] flex items-center justify-center rounded-lg bg-blue-600 p-2 text-white shadow-sm transition hover:bg-blue-800 sm:left-5 sm:top-5" aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menu">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="menu" aria-hidden="true" class="lucide lucide-menu h-4 w-4">
+      <path d="M4 5h16"></path>
+      <path d="M4 12h16"></path>
+      <path d="M4 19h16"></path>
+    </svg>
+  </button>
 
       <!-- Conteúdo Principal -->
       <main id="main-content" class="max-w-7xl w-full mx-auto p-6 md:p-8 space-y-6">
-        
+        @include('sidebar.sidebar_n4')
         <!-- Cabeçalho e Ações -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 class="text-2xl font-bold uppercase tracking-wide text-[#0f172a]">Relatórios</h1>
+            <h1 class="text-2xl font-bold uppercase tracking-wide text-[#0f172a]">Dashboard</h1>
             <p class="text-xs text-slate-500 mt-1">Visão consolidada dividida em <strong>Área de Cronograma</strong> e <strong>Área de Atendimentos</strong>.</p>
           </div>
 
@@ -683,5 +691,25 @@
         lucide.createIcons();
       });
     </script>
+
+    <script>
+    const sidebar = document.getElementById('sidebar');
+    const menuToggle = document.getElementById('mobile-menu-toggle');
+    const menuClose = document.getElementById('mobile-menu-close');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+    function setSidebarExpanded(expanded) {
+      sidebar.classList.toggle('-translate-x-full', !expanded);
+      sidebarOverlay.classList.toggle('hidden', !expanded);
+      menuToggle.setAttribute('aria-expanded', String(expanded));
+      menuClose.setAttribute('aria-expanded', String(expanded));
+      sidebarOverlay.setAttribute('aria-hidden', String(!expanded));
+    }
+
+    menuToggle.addEventListener('click', () => setSidebarExpanded(true));
+    menuClose.addEventListener('click', () => setSidebarExpanded(false));
+    sidebarOverlay.addEventListener('click', () => setSidebarExpanded(false));
+  </script>
+  
   </body>
 </html>
