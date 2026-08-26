@@ -206,13 +206,7 @@ Route::resource('anamnese-colo', AnamneseColoController::class)->except(['create
 
 Route::get('/anamnese-mama/{id}/pdf', [AnamneseMamaController::class, 'pdf'])->name('anamnese-mama.pdf');
 Route::get('/anamnese-mama/create/{id_prontuario}', [AnamneseMamaController::class, 'create'])->name('anamnese-mama.create');
-<<<<<<< HEAD
 Route::resource('anamnese-mama', AnamneseMamaController::class)->except(['create']);
-=======
-Route::get('/anamnese-mama/agendamentos', [AnamneseMamaController::class, 'selecionarProntuario'])->name('anamnese-mama.selecionar');
-Route::resource('anamnese-mama', AnamneseMamaController::class)->except(['create']);
-
->>>>>>> 9762f9bacfdc3aecc910244c9e3dbe86887ce9e6
 
 Route::get('/anamnese-dia', [AnamneseDoDiaController::class, 'index'])
     ->name('anamnese-dia.index');
