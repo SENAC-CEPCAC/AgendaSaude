@@ -20,7 +20,11 @@ use App\Http\Controllers\CronogramaGestaoController;
 use App\Http\Controllers\ProntuarioVisualizacaoController;
 use App\Http\Controllers\CnesUnidadeController;
 use App\Http\Controllers\FeedbackController;
+<<<<<<< HEAD
 use App\Http\Controllers\PoliticaController;
+=======
+use App\Http\Controllers\PacientePerfilController;
+>>>>>>> 4d75c02 (tela perfil, e tela hiostorico agendamento)
 
 // ==========================================
 // 1. ÁREA PÚBLICA & ACESSO
@@ -99,6 +103,11 @@ Route::middleware('auth.nivel:1,2,3,4')->group(function () {
     })->name('agendamento.confirmado');
 
     Route::get('/agendamentos', [ListaAgendamentoController::class, 'index'])->name('agendamento.agendamentos');
+    Route::post('/agendamentos/{id}/cancelar', [ListaAgendamentoController::class, 'cancelarPeloPaciente'])->name('agendamentos.cancelar');
+
+    // Perfil do Paciente
+    Route::get('/perfil', [PacientePerfilController::class, 'index'])->name('paciente.perfil');
+    Route::put('/perfil', [PacientePerfilController::class, 'update'])->name('paciente.perfil.update');
 });
 
 // ==========================================

@@ -57,6 +57,44 @@ class UsuariosTesteSeeder extends Seeder
             ]
         );
 
+        // Agendamentos de demonstração para a paciente
+        $cronograma1 = DB::table('fato_cronogramas')->first();
+        $cronograma2 = DB::table('fato_cronogramas')->skip(1)->first() ?? $cronograma1;
+
+        if ($cronograma1) {
+            DB::table('fato_prontuario')->updateOrInsert(
+                [
+                    'cpf_paciente' => $cpfPaciente,
+                    'id_agenda' => $cronograma1->id_agenda,
+                ],
+                [
+                    'numero_sequencial' => 101,
+                    'status_comparecimento' => 'confirmado',
+                    'status_agendamento' => 'confirmado',
+                    'status_documento' => 'aprovado',
+                    'updated_at' => now(),
+                    'created_at' => now(),
+                ]
+            );
+        }
+
+        if ($cronograma2 && $cronograma2->id_agenda !== $cronograma1?->id_agenda) {
+            DB::table('fato_prontuario')->updateOrInsert(
+                [
+                    'cpf_paciente' => $cpfPaciente,
+                    'id_agenda' => $cronograma2->id_agenda,
+                ],
+                [
+                    'numero_sequencial' => 102,
+                    'status_comparecimento' => 'espera',
+                    'status_agendamento' => 'em_espera',
+                    'status_documento' => 'pendente',
+                    'updated_at' => now(),
+                    'created_at' => now(),
+                ]
+            );
+        }
+
         // =========================================================================
         // 2. OPERADOR / RECEPÇÃO (NÍVEL 2)
         // Login em: /logincolaborador (E-mail: operador@agendasaude.com | Senha: password)

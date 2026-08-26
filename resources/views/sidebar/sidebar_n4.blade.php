@@ -76,6 +76,12 @@
                         Permissão de Acesso
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('paciente.perfil') }}" class="flex items-center gap-3 px-14 py-3 rounded-lg {{ request()->routeIs('paciente.perfil*') ? 'bg-blue-900 text-white font-semibold' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 font-medium hover:text-[#003E7E]' }} font-['Inter'] text-sm transition-all active:scale-95 transition-transform">
+                        <span class="material-symbols-outlined"></span>
+                        Meu Perfil
+                    </a>
+                </li>
             </ul>
             <div method="POST" action="{{ route('logout') }}" class="mt-auto px-3 border-t border-slate-200 dark:border-slate-800 pt-4">
                 <form method="POST" action="{{ route('logout') }}">
