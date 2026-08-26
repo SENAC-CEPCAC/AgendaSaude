@@ -38,11 +38,11 @@ $usuarioNome = $usuario?->nome
                 class="flex h-10 w-10
                        items-center justify-center
                        rounded-xl
-                       border border-blue-400
-                       bg-blue-600
+                       border border-blue-800
+                       bg-blue-900
                        text-xl font-extrabold
                        text-white
-                       shadow-lg shadow-blue-500/30">
+                       shadow-md shadow-blue-950/20">
                 G
             </div>
 
@@ -60,7 +60,7 @@ $usuarioNome = $usuario?->nome
 
                     @elseif ((int) $nivelUsuario === 2)
 
-                    Portal do colaborador
+                    Portal do Colaborador
 
                     @endif
 
@@ -105,18 +105,16 @@ $usuarioNome = $usuario?->nome
 
 
     <!-- MENU -->
-    <nav class="flex-1 p-4 overflow-y-auto">
+    <nav class="flex-1 p-4 overflow-y-auto space-y-1.5">
 
+        <!-- Agendamentos -->
         <a
-            href="{{ route('agendamentos.index') }}"
+            href="{{ (int) $nivelUsuario === 1 ? route('agendamento.agendamentos') : route('agendamentos.index') }}"
             class="flex items-center gap-3
                    px-3 py-2.5
                    rounded-lg
-                   text-slate-800
-                   hover:bg-blue-500
-                   hover:text-white
+                   {{ request()->routeIs('agendamento.agendamentos', 'agendamentos.*') ? 'bg-blue-900 text-white font-semibold shadow-xs' : 'text-slate-700 hover:bg-blue-50 hover:text-blue-900 font-medium' }}
                    transition-all
-                   font-medium
                    text-sm">
 
             <svg
@@ -162,6 +160,73 @@ $usuarioNome = $usuario?->nome
             </span>
 
         </a>
+
+        <!-- Meu Perfil -->
+        <a
+            href="{{ route('paciente.perfil') }}"
+            class="flex items-center gap-3
+                   px-3 py-2.5
+                   rounded-lg
+                   {{ request()->routeIs('paciente.perfil*') ? 'bg-blue-900 text-white font-semibold shadow-xs' : 'text-slate-700 hover:bg-blue-50 hover:text-blue-900 font-medium' }}
+                   transition-all
+                   text-sm">
+
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="w-5 h-5">
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+
+            <span>
+                Meu Perfil
+            </span>
+
+        </a>
+
+        @if ((int) $nivelUsuario === 1)
+        <!-- Novo Agendamento -->
+        <a
+            href="{{ route('agendamento.etapa1') }}"
+            target="_blank"
+            class="flex items-center gap-3
+                   px-3 py-2.5
+                   rounded-lg
+                   text-slate-700
+                   hover:bg-blue-50
+                   hover:text-blue-900
+                   font-medium
+                   transition-all
+                   text-sm">
+
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="w-5 h-5">
+                <path d="M12 5v14M5 12h14"></path>
+            </svg>
+
+            <span>
+                Novo Agendamento
+            </span>
+
+        </a>
+        @endif
 
     </nav>
 

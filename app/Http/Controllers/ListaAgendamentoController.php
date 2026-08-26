@@ -60,6 +60,24 @@ class ListaAgendamentoController extends Controller
                 '=',
                 'fato_cronogramas.id_agenda'
             )
+            ->leftJoin(
+                'dim_vagas',
+                'fato_cronogramas.Vagas_id_vagas',
+                '=',
+                'dim_vagas.id_vagas'
+            )
+            ->leftJoin(
+                'dim_cnes_unidades',
+                'fato_cronogramas.id_cnes_unidade',
+                '=',
+                'dim_cnes_unidades.id_cnes_unidade'
+            )
+            ->leftJoin(
+                'dim_turno',
+                'fato_cronogramas.Turno_id_turno',
+                '=',
+                'dim_turno.id_turno'
+            )
             ->select(
                 'fato_prontuario.id_prontuario as id',
                 'fato_prontuario.id_prontuario as numero_agendamento',
@@ -68,6 +86,11 @@ class ListaAgendamentoController extends Controller
                 'dim_pacientes.nome_completo as nome_paciente',
                 'dim_pacientes.cartao_sus',
                 'fato_cronogramas.data_atendimento as horario_agendamento',
+                'fato_cronogramas.data_atendimento',
+                'fato_cronogramas.municipio_atendimento',
+                'dim_vagas.tipo_exame as especialidade',
+                'dim_cnes_unidades.nome_unidade',
+                'dim_turno.turno',
                 'fato_prontuario.status_comparecimento',
                 'fato_prontuario.status_comparecimento as status',
                 'fato_prontuario.status_documento as status_documentos',
