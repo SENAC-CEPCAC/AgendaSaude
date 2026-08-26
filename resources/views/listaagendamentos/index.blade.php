@@ -26,16 +26,11 @@
   </script>
 </head>
 
-<<<<<<< HEAD
 <body class="bg-[#f8fafc]">
-=======
-<body class="bg-[#f8fafc] text-slate-800 font-sans antialiased min-h-screen">
->>>>>>> 4d75c02 (tela perfil, e tela hiostorico agendamento)
 
   @php
     $usuario = auth()->user();
     if (! $usuario && session('colaborador_id')) {
-<<<<<<< HEAD
       $usuario = \App\Models\UserColaborador::find(session('colaborador_id'));
     }
     $usuarioNome = $usuario?->nome ?? $usuario?->name ?? 'Usuário';
@@ -45,24 +40,12 @@
   <!-- Botão Menu Mobile -->
   <button id="mobile-menu-toggle" type="button" class="fixed left-3 top-3 z-[60] flex items-center justify-center rounded-lg bg-blue-600 p-2 text-white shadow-sm transition hover:bg-blue-800 sm:left-5 sm:top-5" aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menu">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="menu" aria-hidden="true" class="lucide lucide-menu h-4 w-4">
-=======
-        $usuario = \App\Models\UserColaborador::find(session('colaborador_id'));
-    }
-    $usuarioNome = $usuario?->nome ?? $usuario?->name ?? 'Usuário';
-    $nivelUsuario = (int) ($usuario?->nivel ?? $usuario?->permissao ?? 1);
-  @endphp
-
-  <!-- BOTÃO DO MENU HAMBÚRGUER (Mesma cor do botão Novo Agendamento: bg-blue-900) -->
-  <button id="mobile-menu-toggle" type="button" class="fixed left-3 top-3 z-[60] flex items-center justify-center rounded-lg bg-blue-900 p-2 text-white shadow-md transition hover:bg-blue-800 sm:left-5 sm:top-5 cursor-pointer" aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menu">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
->>>>>>> 4d75c02 (tela perfil, e tela hiostorico agendamento)
       <path d="M4 5h16"></path>
       <path d="M4 12h16"></path>
       <path d="M4 19h16"></path>
     </svg>
   </button>
 
-<<<<<<< HEAD
   <!-- Inclusão Condicional da Sidebar conforme o Nível -->
   @if ((int) $nivelUsuario === 4)
     @include('sidebar.sidebar_n4')
@@ -71,21 +54,6 @@
   @endif
 
   <div id="app-root" class="min-h-screen bg-[#f8fafc] text-slate-800 font-sans antialiased">
-=======
-  <!-- Overlay para fechar sidebar mobile -->
-  <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/50 z-40 hidden opacity-0 transition-opacity duration-300"></div>
-
-  <!-- Sidebar Dinâmica conforme Nível de Acesso -->
-  @if ($nivelUsuario === 4)
-    @include('sidebar.sidebar_n4')
-  @elseif ($nivelUsuario === 3)
-    @include('sidebar.sidebar_n3')
-  @else
-    @include('sidebar.sidebar_n1_n2')
-  @endif
-
-  <div id="app-root" class="min-h-screen bg-[#f8fafc]">
->>>>>>> 4d75c02 (tela perfil, e tela hiostorico agendamento)
 
     <!-- Top Bar / Header -->
     <header id="top-bar" class="h-16 px-4 md:px-8 flex items-center justify-between sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-slate-100 shadow-xs">
@@ -101,7 +69,6 @@
         @endif
       </div>
 
-<<<<<<< HEAD
     </header>
 
     <!-- Conteúdo Principal -->
@@ -116,19 +83,12 @@
         <div>
           <a href="{{ route('agendamento.etapa1') }}" target="_blank" class="inline-flex items-center gap-2 bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold px-4 py-2.5 rounded-lg shadow-sm transition-all">
             <i data-lucide="plus-circle" class="w-4 h-4"></i>
-=======
-      <div class="flex items-center gap-3">
-        @if ($nivelUsuario === 1)
-          <a href="{{ route('agendamento.etapa1') }}" target="_blank" class="inline-flex items-center gap-1.5 bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold px-3.5 py-2 rounded-xl shadow-xs transition">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
->>>>>>> 4d75c02 (tela perfil, e tela hiostorico agendamento)
             Novo Agendamento
           </a>
+        </div>
         @endif
       </div>
-    </header>
 
-<<<<<<< HEAD
       <!-- Filtros e Busca -->
       <form id="filterForm" method="GET" action="{{ url()->current() }}" class="bg-white rounded-xl border border-slate-100 p-4 md:p-6 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xs">
         @if($nivelUsuario !== 1)
@@ -171,58 +131,8 @@
             <option value="validar_no_ato" {{ request('status_documentos') == 'validar_no_ato' ? 'selected' : '' }}>Validar no Ato</option>
             <option value="rejeitado" {{ request('status_documentos') == 'rejeitado' ? 'selected' : '' }}>Rejeitado</option>
           </select>
-=======
-    @if ($nivelUsuario === 1)
-      <!-- ========================================================================= -->
-      <!-- VISÃO DO PACIENTE (CARDS RESPONSIVOS CONFORME O DESIGN)                   -->
-      <!-- ========================================================================= -->
-      <main id="main-content" class="max-w-xl w-full mx-auto p-4 sm:p-6 space-y-5 pb-20">
-
-        <!-- Notificações de Sucesso / Feedback -->
-        @if (session('success'))
-          <div class="rounded-xl bg-emerald-50 border border-emerald-200 p-4 text-emerald-800 flex items-start gap-3 shadow-xs">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-              <polyline points="22 4 12 14.01 9 11.01"></polyline>
-            </svg>
-            <div class="text-xs sm:text-sm font-medium">
-              {{ session('success') }}
-            </div>
-          </div>
-        @endif
-
-        @if (session('info'))
-          <div class="rounded-xl bg-blue-50 border border-blue-200 p-4 text-blue-800 flex items-start gap-3 shadow-xs">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-600 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="16" x2="12" y2="12"></line>
-              <line x1="12" y1="8" x2="12.01" y2="8"></line>
-            </svg>
-            <div class="text-xs sm:text-sm font-medium">
-              {{ session('info') }}
-            </div>
-          </div>
-        @endif
-
-        <!-- Card de Aviso Importante (Exatamente como o design) -->
-        <div class="bg-[#f0f4f9] border border-[#d6e2ee] rounded-2xl p-4 sm:p-5 flex items-start gap-3 shadow-xs">
-          <div class="text-blue-900 mt-0.5 shrink-0">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="8" x2="12" y2="12"></line>
-              <line x1="12" y1="16" x2="12.01" y2="16"></line>
-            </svg>
-          </div>
-          <div class="text-xs sm:text-sm text-slate-700 leading-relaxed space-y-1">
-            <h3 class="font-bold text-slate-900 tracking-wide text-xs sm:text-sm uppercase">AVISO IMPORTANTE</h3>
-            <p class="text-slate-600">
-              Cancelamentos ou remarcações devem ser feitos com no mínimo <strong class="font-bold text-slate-900">24 horas de antecedência</strong> para liberar a vaga para outro paciente.
-            </p>
-          </div>
->>>>>>> 4d75c02 (tela perfil, e tela hiostorico agendamento)
         </div>
 
-<<<<<<< HEAD
       <!-- Tabela Principal -->
       <div class="bg-white rounded-xl border border-slate-100 shadow-xs overflow-hidden">
         <div class="overflow-x-auto">
@@ -257,100 +167,23 @@
                     @endif
                   </div>
                 </td>
-=======
-        <!-- Lista de Agendamentos do Paciente -->
-        <div class="space-y-4">
-          @forelse($showAgendamentos as $agendamento)
-            @php
-              $statusRaw = strtolower($agendamento->status_comparecimento ?? $agendamento->status ?? 'agendado');
+                <!-- CPF -->
+                <td class="py-4 px-6 font-mono text-xs">{{ $agendamento->cpf_paciente ?? $agendamento->cpf ?? '-' }}</td>
 
-              // Mapeamento visual das bordas e badges
-              if ($statusRaw === 'confirmado' || $statusRaw === 'presente') {
-                  $borderAccent = 'border-l-[5px] border-l-blue-900';
-                  $badgeClass = 'bg-blue-100 text-blue-900';
-                  $badgeIcon = 'check';
-                  $badgeLabel = 'CONFIRMADO';
-              } elseif ($statusRaw === 'espera' || $statusRaw === 'em_espera') {
-                  $borderAccent = 'border-l-[5px] border-l-amber-500';
-                  $badgeClass = 'bg-amber-100 text-amber-900';
-                  $badgeIcon = 'clock';
-                  $badgeLabel = 'EM ESPERA';
-              } elseif (str_contains($statusRaw, 'cancel')) {
-                  $borderAccent = 'border-l-[5px] border-l-rose-500';
-                  $badgeClass = 'bg-rose-100 text-rose-800';
-                  $badgeIcon = 'x';
-                  $badgeLabel = 'CANCELADO';
-              } else {
-                  $borderAccent = 'border-l-[5px] border-l-blue-900';
-                  $badgeClass = 'bg-slate-100 text-slate-800';
-                  $badgeIcon = 'clock';
-                  $badgeLabel = strtoupper(str_replace('_', ' ', $statusRaw));
-              }
+                <!-- Paciente -->
+                <td class="py-4 px-6 font-semibold text-slate-700">
+                  {{ $agendamento->nome_paciente ?? $agendamento->nome_completo ?? 'Paciente' }}
+                </td>
 
-              // Formatação de data em português (ex: 24 OUT 2023 • 14:30)
-              $dataObj = !empty($agendamento->data_atendimento ?? $agendamento->horario_agendamento)
-                  ? \Carbon\Carbon::parse($agendamento->data_atendimento ?? $agendamento->horario_agendamento)
-                  : null;
->>>>>>> 4d75c02 (tela perfil, e tela hiostorico agendamento)
-
-              $mesesPt = [
-                  1 => 'OUT', 2 => 'FEV', 3 => 'MAR', 4 => 'ABR', 5 => 'MAI', 6 => 'JUN',
-                  7 => 'JUL', 8 => 'AGO', 9 => 'SET', 10 => 'OUT', 11 => 'NOV', 12 => 'DEZ'
-              ];
-
-              $dataFormatada = $dataObj ? ($dataObj->format('d') . ' ' . ($mesesPt[$dataObj->month] ?? $dataObj->format('M')) . ' ' . $dataObj->format('Y')) : 'Data a definir';
-              $horaFormatada = $dataObj ? ($dataObj->format('H:i') !== '00:00' ? $dataObj->format('H:i') : ($agendamento->turno ?? 'Manhã')) : ($agendamento->turno ?? 'Horário a definir');
-
-<<<<<<< HEAD
                 <!-- Horário -->
-                <td class="py-4 px-6 text-xs">
+                <td class="py-4 px-6 text-xs font-medium">
                   @if(!empty($agendamento->horario_agendamento) || !empty($agendamento->data_atendimento))
                     {{ \Carbon\Carbon::parse($agendamento->horario_agendamento ?? $agendamento->data_atendimento)->format('d/m/Y - H:i') }}
                   @else
-                    <span class="text-slate-400 italic">Fila de Espera</span>
-=======
-              $especialidadeNome = $agendamento->especialidade ?: ($agendamento->tipo_exame ?: 'Consulta / Exame Preventivo');
-              $unidadeNome = $agendamento->nome_unidade ?: 'Unidade Móvel Centro';
-              $enderecoLocal = $agendamento->municipio_atendimento ?: 'Praça da Matriz, ao lado do coreto';
-            @endphp
-
-            <article class="bg-white rounded-2xl border border-slate-200 {{ $borderAccent }} shadow-sm p-5 sm:p-6 space-y-4 transition hover:shadow-md">
-              
-              <!-- Cabeçalho: Data / Horário e Status Badge -->
-              <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-700 font-mono">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
-                    <line x1="16" x2="16" y1="2" y2="6"></line>
-                    <line x1="8" x2="8" y1="2" y2="6"></line>
-                    <line x1="3" x2="21" y1="10"></line>
-                  </svg>
-                  <span>{{ $dataFormatada }} • {{ $horaFormatada }}</span>
-                </div>
-
-                <span class="inline-flex items-center gap-1.5 text-[11px] font-bold px-3 py-1 rounded-full {{ $badgeClass }}">
-                  @if ($badgeIcon === 'check')
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                      <circle cx="12" cy="12" r="10" fill="currentColor" opacity="0.2"/>
-                      <polyline points="9 11 12 14 22 4"></polyline>
-                    </svg>
-                  @elseif ($badgeIcon === 'clock')
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <polyline points="12 6 12 12 16 14"></polyline>
-                    </svg>
-                  @elseif ($badgeIcon === 'x')
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                      <line x1="18" y1="6" x2="6" y2="18"></line>
-                      <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
->>>>>>> 4d75c02 (tela perfil, e tela hiostorico agendamento)
+                    <span class="text-slate-400 italic">Lista de Espera</span>
                   @endif
-                  {{ $badgeLabel }}
-                </span>
-              </div>
+                </td>
 
-<<<<<<< HEAD
                 <!-- Status Documentos -->
                 <td class="py-4 px-4 text-center">
                   @php
@@ -550,347 +383,35 @@
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
             <button onclick="validarDoc('aprovado')" class="py-2.5 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl text-xs cursor-pointer shadow-xs">
               Aprovar Imediato
-=======
-              <!-- Especialidade / Procedimento -->
-              <div>
-                <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-                  {{ $especialidadeNome }}
-                </h2>
-              </div>
-
-              <!-- Localização (Box cinza claro arredondado) -->
-              <div class="bg-slate-50 border border-slate-100 rounded-xl p-3.5 sm:p-4 flex items-start gap-3">
-                <div class="text-slate-400 mt-0.5 shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
-                    <circle cx="12" cy="10" r="3"></circle>
-                  </svg>
-                </div>
-                <div class="text-xs sm:text-sm text-slate-600 leading-snug space-y-0.5">
-                  <p class="font-bold text-slate-800">{{ $unidadeNome }}</p>
-                  <p class="text-slate-500">{{ $enderecoLocal }}</p>
-                </div>
-              </div>
-
-              <hr class="border-slate-100">
-
-              <!-- Ações: Remarcar e Cancelar -->
-              <div class="flex items-center gap-3 pt-1">
-                <a href="{{ route('agendamento.etapa1') }}"
-                   class="flex-1 inline-flex items-center justify-center gap-2 border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-semibold py-2.5 px-3 rounded-xl shadow-xs transition">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
-                    <line x1="16" x2="16" y1="2" y2="6"></line>
-                    <line x1="8" x2="8" y1="2" y2="6"></line>
-                    <line x1="3" x2="21" y1="10"></line>
-                  </svg>
-                  Remarcar
-                </a>
-
-                @if (!str_contains($statusRaw, 'cancel'))
-                  <form action="{{ route('agendamentos.cancelar', $agendamento->id ?? $agendamento->numero_agendamento) }}" method="POST"
-                        onsubmit="return confirm('Tem certeza que deseja cancelar este agendamento?');" class="flex-1">
-                    @csrf
-                    <button type="submit"
-                            class="w-full inline-flex items-center justify-center gap-1.5 text-xs sm:text-sm font-semibold text-rose-600 hover:text-rose-700 hover:bg-rose-50 py-2.5 px-3 rounded-xl transition cursor-pointer">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-rose-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="15" y1="9" x2="9" y2="15"></line>
-                        <line x1="9" y1="9" x2="15" y2="15"></line>
-                      </svg>
-                      Cancelar
-                    </button>
-                  </form>
-                @else
-                  <span class="flex-1 text-center text-xs font-semibold text-rose-600 py-2.5">
-                    Cancelado
-                  </span>
-                @endif
-              </div>
-
-            </article>
-          @empty
-            <div class="bg-white rounded-2xl border border-slate-200 p-8 sm:p-12 text-center space-y-4 shadow-xs">
-              <div class="w-16 h-16 rounded-full bg-blue-50 text-blue-900 flex items-center justify-center mx-auto">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
-                  <line x1="16" x2="16" y1="2" y2="6"></line>
-                  <line x1="8" x2="8" y1="2" y2="6"></line>
-                  <line x1="3" x2="21" y1="10"></line>
-                </svg>
-              </div>
-              <div class="space-y-1 max-w-sm mx-auto">
-                <h3 class="text-lg font-bold text-slate-800">Nenhum agendamento ativo</h3>
-                <p class="text-xs text-slate-500">Você ainda não possui consultas ou exames agendados no momento.</p>
-              </div>
-              <a href="{{ route('agendamento.etapa1') }}" class="inline-flex items-center gap-2 bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold px-5 py-2.5 rounded-xl shadow-sm transition">
-                Fazer Novo Agendamento
-              </a>
-            </div>
-          @endforelse
-        </div>
-
-        <!-- Paginação -->
-        @if(isset($showAgendamentos) && method_exists($showAgendamentos, 'links'))
-          <div class="pt-2">
-            {{ $showAgendamentos->links() }}
-          </div>
-        @endif
-
-      </main>
-
-    @else
-      <!-- ========================================================================= -->
-      <!-- VISÃO DO OPERADOR / RECEPÇÃO / GESTOR (NÍVEIS 2, 3 E 4)                   -->
-      <!-- ========================================================================= -->
-      <main id="main-content" class="max-w-7xl w-full mx-auto p-6 md:p-8 space-y-6">
-
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h1 class="text-2xl font-bold uppercase tracking-wide text-[#0f172a]">Agendamentos</h1>
-            <p class="text-xs text-slate-500 mt-1">Gestão da fila inteligente, validação de documentos e controle de 24h.</p>
-          </div>
-          @if ($nivelUsuario !== 3)
-            <div>
-              <a href="{{ route('agendamento.etapa1') }}" target="_blank" class="inline-flex items-center gap-2 bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold px-4 py-2.5 rounded-lg shadow-sm transition-all">
-                Novo Agendamento
-              </a>
-            </div>
-          @endif
-        </div>
-
-        <!-- Filtros e Busca -->
-        <form id="filterForm" method="GET" action="{{ url()->current() }}" class="bg-white rounded-xl border border-slate-100 p-4 md:p-6 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xs">
-          <div class="relative w-full md:w-96 flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-4 text-slate-400 w-5 h-5 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input
-              type="text"
-              name="search"
-              id="searchInput"
-              value="{{ request('search') }}"
-              class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 pl-12 pr-4 text-sm text-slate-600 placeholder:text-slate-400 focus:outline-none focus:border-sky-500 focus:bg-white transition-all"
-              placeholder="Buscar por paciente, CPF ou Nº...">
-          </div>
-          <div class="flex flex-wrap items-center gap-3 w-full md:w-auto justify-end">
-
-            <!-- Filtro Status Documentos -->
-            <select
-              name="status_documentos"
-              onchange="this.form.submit()"
-              class="bg-white border border-slate-200 text-slate-600 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-sky-500 transition-all cursor-pointer">
-              <option value="">Todos os Status Documentos</option>
-              <option value="aprovado" {{ request('status_documentos') == 'aprovado' ? 'selected' : '' }}>Aprovado</option>
-              <option value="pendente" {{ request('status_documentos') == 'pendente' ? 'selected' : '' }}>Pendente</option>
-              <option value="validar_no_ato" {{ request('status_documentos') == 'validar_no_ato' ? 'selected' : '' }}>Validar no Ato</option>
-              <option value="rejeitado" {{ request('status_documentos') == 'rejeitado' ? 'selected' : '' }}>Rejeitado</option>
-            </select>
-
-            <!-- Filtro Status Agendamento -->
-            <select
-              name="status"
-              onchange="this.form.submit()"
-              class="bg-white border border-slate-200 text-slate-600 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-sky-500 transition-all cursor-pointer">
-              <option value="">Todos os Status Agendamento</option>
-              <option value="confirmado" {{ request('status') == 'confirmado' ? 'selected' : '' }}>Confirmado</option>
-              <option value="aguardando_confirmacao" {{ request('status') == 'aguardando_confirmacao' ? 'selected' : '' }}>Aguardando 24h</option>
-              <option value="presente" {{ request('status') == 'presente' ? 'selected' : '' }}>Presente</option>
-              <option value="em_espera" {{ request('status') == 'espera' ? 'selected' : '' }}>Espera</option>
-              <option value="cancelado" {{ request('status') == 'cancelado' ? 'selected' : '' }}>Cancelado</option>
-            </select>
-
-          </div>
-        </form>
-
-        <!-- Tabela Principal -->
-        <div class="bg-white rounded-xl border border-slate-100 shadow-xs overflow-hidden">
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-              <thead>
-                <tr class="bg-slate-50 border-b border-slate-100 text-[11px] font-bold tracking-wider text-slate-500 uppercase">
-                  <th class="py-4 px-6 w-[12%]">Nº Agendamento</th>
-                  <th class="py-4 px-6 w-[16%]">CPF</th>
-                  <th class="py-4 px-6 w-[28%]">Paciente</th>
-                  <th class="py-4 px-6 w-[16%]">Horário</th>
-                  <th class="py-4 px-4 w-[14%] text-center">Status Documentos</th>
-                  <th class="py-4 px-4 w-[14%] text-center">Status Agendamento</th>
-                </tr>
-              </thead>
-              <tbody id="agendamentosTable" class="divide-y divide-slate-100 text-sm text-slate-600">
-                @forelse($showAgendamentos as $agendamento)
-                  <tr
-                    onclick="abrirModalAgendamento({{ $agendamento->numero_agendamento ?? $agendamento->id ?? $agendamento->numero_sequencial }})"
-                    class="hover:bg-slate-50 transition-colors cursor-pointer">
-                    <!-- Nº Agendamento -->
-                    <td class="py-4 px-6 font-medium text-slate-700">
-                      <div class="flex items-center gap-1.5">
-                        <span class="font-mono">#{{ $agendamento->numero_agendamento ?? $agendamento->numero_sequencial ?? $agendamento->id }}</span>
-                        @if(!empty($agendamento->promovido_da_fila))
-                          <span class="text-[9px] px-1.5 py-0.5 rounded-full font-bold bg-purple-100 text-purple-700">
-                            Auto
-                          </span>
-                        @endif
-                      </div>
-                    </td>
-
-                    <!-- CPF -->
-                    <td class="py-4 px-6 font-mono text-xs">{{ $agendamento->cpf_paciente ?? $agendamento->cpf ?? '-' }}</td>
-
-                    <!-- Paciente -->
-                    <td class="py-4 px-6 font-semibold text-slate-700">
-                      {{ $agendamento->nome_paciente ?? $agendamento->nome_completo ?? 'Paciente' }}
-                    </td>
-
-                    <!-- Horário -->
-                    <td class="py-4 px-6 text-xs">
-                      @if(!empty($agendamento->horario_agendamento) || !empty($agendamento->data_atendimento))
-                        {{ \Carbon\Carbon::parse($agendamento->horario_agendamento ?? $agendamento->data_atendimento)->format('d/m/Y - H:i') }}
-                      @else
-                        <span class="text-slate-400 italic">Fila de Espera</span>
-                      @endif
-                    </td>
-
-                    <!-- Status Documentos -->
-                    <td class="py-4 px-4 text-center">
-                      @php
-                        $statusDoc = strtolower($agendamento->status_documentos ?? 'pendente');
-                      @endphp
-
-                      @if($statusDoc === 'aprovado')
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700">
-                          Aprovado
-                        </span>
-                      @elseif($statusDoc === 'validar_no_ato')
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-700">
-                          No Ato
-                        </span>
-                      @elseif($statusDoc === 'rejeitado')
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-700">
-                          Rejeitado
-                        </span>
-                      @else
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700">
-                          Pendente
-                        </span>
-                      @endif
-                    </td>
-
-                    <!-- Status Agendamento -->
-                    <td class="py-4 px-4 text-center">
-                      @php
-                        $statusAgend = strtolower($agendamento->status_agendamento ?? $agendamento->status ?? 'em_espera');
-                      @endphp
-
-                      @if($statusAgend === 'confirmado' || $statusAgend === 'agendado')
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-green-700">
-                          Confirmado
-                        </span>
-                      @elseif($statusAgend === 'espera' || $statusAgend === 'em_espera')
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300">
-                          Lista de Espera
-                        </span>
-                      @elseif($statusAgend === 'aguardando_confirmacao')
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-yellow-100 text-yellow-700">
-                          Aguardando 24h
-                        </span>
-                      @elseif(str_contains($statusAgend, 'cancelado'))
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-700">
-                          Cancelado
-                        </span>
-                      @else
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700">
-                          {{ ucfirst(str_replace('_', ' ', $statusAgend)) }}
-                        </span>
-                      @endif
-                    </td>
-                  </tr>
-                @empty
-                  <tr>
-                    <td colspan="6" class="py-8 text-center text-slate-500 font-medium">
-                      Nenhum agendamento encontrado com os filtros selecionados.
-                    </td>
-                  </tr>
-                @endforelse
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Paginação -->
-        @if(isset($showAgendamentos) && method_exists($showAgendamentos, 'links'))
-          <div class="pt-2">
-            {{ $showAgendamentos->links() }}
-          </div>
-        @endif
-
-      </main>
-
-      <!-- Modal com Validação dos Documentos pelo Operador -->
-      <div id="agendamentoModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden items-center justify-center p-4">
-        <div class="bg-white w-full max-w-xl rounded-2xl shadow-2xl border border-slate-100 overflow-hidden">
-          <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <span id="modalNumero" class="font-mono font-bold text-sky-400">#00</span>
-              <h3 id="modalNome" class="font-bold text-white text-base">Paciente</h3>
-            </div>
-            <button onclick="fecharModal()" class="text-slate-400 hover:text-white p-1 cursor-pointer">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
->>>>>>> 4d75c02 (tela perfil, e tela hiostorico agendamento)
+            </button>
+            <button onclick="validarDoc('validar_no_ato')" class="py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs cursor-pointer shadow-xs">
+              Validar no Ato
+            </button>
+            <button onclick="validarDoc('rejeitado')" class="py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs cursor-pointer shadow-xs">
+              Rejeitar Documento
             </button>
           </div>
-
-          <div class="p-6 space-y-4 text-xs text-slate-600 max-h-[75vh] overflow-y-auto">
-            <div class="p-4 bg-slate-50 rounded-xl space-y-2 border border-slate-100">
-              <p><strong>CPF:</strong> <span id="modalCpf">-</span></p>
-              <p><strong>Cartão SUS:</strong> <span id="modalSus">-</span></p>
-              <p><strong>Procedimento/Vaga:</strong> <span id="modalExame">-</span></p>
-              <p><strong>Horário de Atendimento:</strong> <span id="modalHorario">-</span></p>
-              <p><strong>Status Documentos Atual:</strong> <span id="modalStatusDoc" class="font-bold text-slate-800">-</span></p>
-            </div>
-
-            <div class="border-t border-slate-100 pt-4 space-y-2">
-              <label class="font-bold text-slate-700 block">Validação dos Documentos pelo Operador:</label>
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                <button onclick="validarDoc('aprovado')" class="py-2.5 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl text-xs cursor-pointer shadow-xs">
-                  Aprovar Imediato
-                </button>
-                <button onclick="validarDoc('validar_no_ato')" class="py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs cursor-pointer shadow-xs">
-                  Validar no Ato
-                </button>
-                <button onclick="validarDoc('rejeitado')" class="py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs cursor-pointer shadow-xs">
-                  Rejeitar Documento
-                </button>
-              </div>
-              <p class="text-[11px] text-slate-400">
-                * Ao aprovar, o paciente é liberado para confirmar a presença no portal dele.
-              </p>
-            </div>
-          </div>
-
-          <div class="px-6 py-3 bg-slate-50 border-t border-slate-100 flex justify-end">
-            <button onclick="fecharModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-xl text-xs cursor-pointer">
-              Fechar
-            </button>
-          </div>
+          <p class="text-[11px] text-slate-400">
+            * Ao aprovar, o paciente é liberado para confirmar a presença no portal dele.
+          </p>
         </div>
+
       </div>
-    @endif
 
-<<<<<<< HEAD
       <!-- Rodapé do Modal -->
       <div class="px-6 py-3 bg-slate-50 border-t border-slate-100 flex justify-end shrink-0">
         <button onclick="fecharModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-xl text-xs cursor-pointer">
           Fechar
         </button>
       </div>
+
+    </div>
+  </div>
     </div>
   </div>
 
   <!-- Scripts -->
   <script src="https://unpkg.com/lucide@latest"></script>
-=======
-  </div>
-
->>>>>>> 4d75c02 (tela perfil, e tela hiostorico agendamento)
   <script>
     // Controle da Sidebar Mobile
     const sidebar = document.getElementById('sidebar');
@@ -1063,7 +584,6 @@
 
       agendamentoSelecionadoId = id;
       document.getElementById('modalNumero').innerText = '#' + id;
-<<<<<<< HEAD
       document.getElementById('containerDocRgCpf').innerHTML = '<span class="text-slate-400 italic">Carregando visualizador...</span>';
       document.getElementById('containerDocRequisicao').innerHTML = '<span class="text-slate-400 italic">Carregando visualizador...</span>';
       
@@ -1071,10 +591,6 @@
 
       document.getElementById('agendamentoModal').classList.remove('hidden');
       document.getElementById('agendamentoModal').classList.add('flex');
-=======
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
->>>>>>> 4d75c02 (tela perfil, e tela hiostorico agendamento)
 
       fetch('/agendamentos/' + id)
         .then(res => res.json())
@@ -1155,7 +671,6 @@
       });
     }
   </script>
-<<<<<<< HEAD
 
   <!-- Script da Sidebar Mobile -->
 <script>
@@ -1245,8 +760,6 @@
 
   
 
-=======
->>>>>>> 4d75c02 (tela perfil, e tela hiostorico agendamento)
 </body>
 
 </html>

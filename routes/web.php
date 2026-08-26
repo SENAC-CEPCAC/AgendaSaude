@@ -20,8 +20,10 @@ use App\Http\Controllers\CronogramaGestaoController;
 use App\Http\Controllers\ProntuarioVisualizacaoController;
 use App\Http\Controllers\CnesUnidadeController;
 use App\Http\Controllers\FeedbackController;
-<<<<<<< HEAD
 use App\Http\Controllers\PoliticaController;
+=======
+use App\Http\Controllers\PacientePerfilController;
+>>>>>>> 4d75c02 (tela perfil, e tela hiostorico agendamento)
 
 // ==========================================
 // 1. ÁREA PÚBLICA & ACESSO
@@ -71,15 +73,12 @@ Route::get('/teste', function () {
     return view('pesquisa.teste');
 })->name('pesquisa.teste');
 
-// Pesquisa de Satisfação / Feedback
-//Route::get('/feedback', [FeedbackController::class, 'create'])->name('feedback.create');
-//Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
+// Pesquisa de Satisfação / Feedback / Política
+Route::get('/feedback', [FeedbackController::class, 'create'])->name('feedback.create');
+Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
 Route::get('/satisfacaocliente', function () {
     return view('pesquisa.satisfacaocliente');
 })->name('pesquisa.satisfacaocliente');
-
-
-
 Route::get('/politica', [PoliticaController::class, 'politica'])->name('politica');
 
 // ==========================================
@@ -102,7 +101,7 @@ Route::middleware('auth.nivel:1,2,3,4')->group(function () {
     Route::get('/agendamentos', [ListaAgendamentoController::class, 'index'])->name('agendamento.agendamentos');
     Route::post('/agendamentos/{id}/cancelar', [ListaAgendamentoController::class, 'cancelarPeloPaciente'])->name('agendamentos.cancelar');
 
-    // Perfil do Paciente
+    // Perfil do Paciente / Colaborador
     Route::get('/perfil', [PacientePerfilController::class, 'index'])->name('paciente.perfil');
     Route::put('/perfil', [PacientePerfilController::class, 'update'])->name('paciente.perfil.update');
 });
@@ -115,6 +114,7 @@ Route::middleware('auth.nivel:2,3,4')->group(function () {
     Route::get('/agendamentos/{id}', [ListaAgendamentoController::class, 'show'])->name('agendamentos.show');
     Route::post('/agendamentos/{id}/validar-documento', [ListaAgendamentoController::class, 'validarDocumentos'])->name('agendamentos.validar-documento');
     Route::post('/agendamentos/{id}/status-comparecimento', [ListaAgendamentoController::class, 'atualizarStatusComparecimento'])->name('agendamentos.status-comparecimento');
+    Route::post('/adm/colaboradores', [UserColaboradorController::class, 'store'])->name('adm.colaboradores.store');
 });
 
 // ==========================================
@@ -136,10 +136,12 @@ Route::middleware('auth.nivel:3,4')->group(function () {
 
     Route::get('/anamnese-mama/{id}/pdf', [AnamneseMamaController::class, 'pdf'])->name('anamnese-mama.pdf');
     Route::get('/anamnese-mama/create/{id_prontuario}', [AnamneseMamaController::class, 'create'])->name('anamnese-mama.create');
-    Route::resource('anamnese-mama', AnamneseMamaController::class)->except(['create', 'edit', 'update']);
+    Route::get('/anamnese-mama/agendamentos', [AnamneseMamaController::class, 'selecionarProntuario'])->name('anamnese-mama.selecionar');
+    Route::resource('anamnese-mama', AnamneseMamaController::class)->except(['create']);
 
     Route::get('/anamnese-dia', [AnamneseDoDiaController::class, 'index'])->name('anamnese-dia.index');
     Route::get('/anamnese-dia/pdf', [AnamneseDoDiaController::class, 'pdf'])->name('anamnese-dia.pdf');
+    Route::get('/anamnese-paciente', [AnamneseDoDiaController::class, 'anamnesePaciente'])->name('anamnese.paciente');
 
     // Relatórios
     Route::get('/relatorios', [RelatorioController::class, 'index'])->name('relatorios.index');
@@ -158,7 +160,6 @@ Route::middleware('auth.nivel:4')->group(function () {
     Route::patch('/adm/{adm}', [AdmController::class, 'update'])->name('adm.update');
     Route::patch('/adm/{adm}/status', [AdmController::class, 'toggleStatus'])->name('adm.status');
     Route::delete('/adm/{adm}', [AdmController::class, 'destroy'])->name('adm.destroy');
-    Route::post('/adm/colaboradores', [UserColaboradorController::class, 'store'])->name('adm.colaboradores.store');
     Route::post('/permissao-colaborador/cadastro/store', [UserColaboradorController::class, 'store'])->name('permissao_colaborador.cadastro.store');
 
     // Gestão de Cronogramas e Vagas
@@ -173,6 +174,7 @@ Route::middleware('auth.nivel:4')->group(function () {
     Route::put('/unidadesmoveis/{cnesUnidade}', [CnesUnidadeController::class, 'update'])->name('unidadesmoveis.update');
     Route::delete('/unidadesmoveis/{cnesUnidade}', [CnesUnidadeController::class, 'destroy'])->name('unidadesmoveis.destroy');
 
+    // Visualização de Documentos pelo Gestor/Operador
     Route::get('/agendamentos/{id}/documento/{tipo}', [\App\Http\Controllers\ListaAgendamentoController::class, 'verDocumento'])->name('agendamentos.documento');
 });
 
@@ -212,7 +214,9 @@ Route::resource('anamnese-colo', AnamneseColoController::class)->except(['create
 
 Route::get('/anamnese-mama/{id}/pdf', [AnamneseMamaController::class, 'pdf'])->name('anamnese-mama.pdf');
 Route::get('/anamnese-mama/create/{id_prontuario}', [AnamneseMamaController::class, 'create'])->name('anamnese-mama.create');
+Route::get('/anamnese-mama/agendamentos', [AnamneseMamaController::class, 'selecionarProntuario'])->name('anamnese-mama.selecionar');
 Route::resource('anamnese-mama', AnamneseMamaController::class)->except(['create']);
+
 
 Route::get('/anamnese-dia', [AnamneseDoDiaController::class, 'index'])
     ->name('anamnese-dia.index');
@@ -225,5 +229,5 @@ Route::get('/unidadesmoveis', function () {
 })->name('anamnese.unidadesmoveis');
 
 
-Route::get('/anamnese-paciente', [AnamnesePacienteController::class, 'index'])
-    ->name('anamnese.paciente');
+Route::get('/anamnese-paciente', [AnamneseDoDiaController::class, 'anamnesePaciente'])->name('anamnese.paciente');
+
