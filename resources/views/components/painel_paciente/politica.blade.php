@@ -1,5 +1,3 @@
-@vite(['resources/css/app.css'])
-
 <!-- Inicio Modal Politicas de Privacidade -->
 <div class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
     

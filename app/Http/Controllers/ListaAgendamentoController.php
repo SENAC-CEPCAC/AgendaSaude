@@ -47,6 +47,14 @@ class ListaAgendamentoController extends Controller
         }
 
 
+        $temColunaHorario = \Illuminate\Support\Facades\Schema::hasColumn('fato_prontuario', 'horario_agendamento');
+        $selectHorario = $temColunaHorario
+            ? DB::raw("COALESCE(fato_prontuario.horario_agendamento, dim_turno.turno, '08:00') as horario_agendamento")
+            : DB::raw("COALESCE(dim_turno.turno, '08:00') as horario_agendamento");
+        $selectHoraEspecifica = $temColunaHorario
+            ? DB::raw("fato_prontuario.horario_agendamento as hora_especifica")
+            : DB::raw("dim_turno.turno as hora_especifica");
+
         $query = DB::table('fato_prontuario')
             ->join(
                 'dim_pacientes',
@@ -85,8 +93,8 @@ class ListaAgendamentoController extends Controller
                 'dim_pacientes.cpf_paciente',
                 'dim_pacientes.nome_completo as nome_paciente',
                 'dim_pacientes.cartao_sus',
-                'fato_cronogramas.data_atendimento as horario_agendamento',
                 'fato_cronogramas.data_atendimento',
+                $selectHoraEspecifica,
                 'fato_cronogramas.municipio_atendimento',
                 'dim_vagas.tipo_exame as especialidade',
                 'dim_cnes_unidades.nome_unidade',
@@ -95,6 +103,11 @@ class ListaAgendamentoController extends Controller
                 'fato_prontuario.status_comparecimento as status',
                 'fato_prontuario.status_documento as status_documentos',
                 'fato_prontuario.status_agendamento',
+                'fato_prontuario.caminho_documento_rg_cpf as documento_rg_cpf',
+                'fato_prontuario.caminho_documento_requisicao as documento_requisicao',
+                'fato_prontuario.caminho_documento_rg_cpf as url_documento_rg_cpf',
+                'fato_prontuario.caminho_documento_requisicao as url_documento_requisicao',
+                $selectHorario,
                 DB::raw("
                 CASE 
                     WHEN fato_prontuario.status_comparecimento = 'confirmado'
@@ -178,10 +191,16 @@ class ListaAgendamentoController extends Controller
      */
     public function show($id)
     {
+        $temColunaHorario = \Illuminate\Support\Facades\Schema::hasColumn('fato_prontuario', 'horario_agendamento');
+        $selectHorario = $temColunaHorario
+            ? DB::raw("COALESCE(fato_prontuario.horario_agendamento, dim_turno.turno, '08:00') as horario_agendamento")
+            : DB::raw("COALESCE(dim_turno.turno, '08:00') as horario_agendamento");
+
         $agendamento = DB::table('fato_prontuario')
             ->join('dim_pacientes', 'fato_prontuario.cpf_paciente', '=', 'dim_pacientes.cpf_paciente')
             ->join('fato_cronogramas', 'fato_prontuario.id_agenda', '=', 'fato_cronogramas.id_agenda')
             ->leftJoin('dim_vagas', 'fato_cronogramas.Vagas_id_vagas', '=', 'dim_vagas.id_vagas')
+            ->leftJoin('dim_turno', 'fato_cronogramas.Turno_id_turno', '=', 'dim_turno.id_turno')
             ->where('fato_prontuario.id_prontuario', $id)
             ->orWhere('fato_prontuario.numero_sequencial', $id)
             ->select(
@@ -190,7 +209,8 @@ class ListaAgendamentoController extends Controller
                 'dim_pacientes.cpf_paciente',
                 'dim_pacientes.nome_completo as nome_paciente',
                 'dim_pacientes.cartao_sus',
-                'fato_cronogramas.data_atendimento as horario_agendamento',
+                'fato_cronogramas.data_atendimento',
+                $selectHorario,
                 'dim_vagas.tipo_exame as nome_vaga',
                 'fato_prontuario.status_documento as status_documentos',
                 'fato_prontuario.status_comparecimento',

@@ -164,14 +164,64 @@
         </section>
 
         <!-- Botão de Ação para Avançar -->
-        <div class="mt-8 pt-4">
+        <div class="mt-8 pt-4 pb-8">
             <button
                 type="submit"
-                class="w-full h-12 bg-primary text-on-primary font-bold rounded-full flex items-center justify-center hover:bg-primary/90 active:scale-[0.98] transition-all uppercase tracking-wider shadow-md"
+                class="w-full h-12 bg-primary text-on-primary font-bold rounded-full flex items-center justify-center hover:bg-primary/90 active:scale-[0.98] transition-all uppercase tracking-wider shadow-md cursor-pointer"
             >
                 Continuar para Data e Horário
             </button>
         </div>
     </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const btn = document.getElementById('btn-especialidade');
+            const lista = document.getElementById('lista-especialidades');
+            const texto = document.getElementById('texto-especialidade');
+            const icone = document.getElementById('icone-especialidade');
+            const inputVagas = document.getElementById('input-id-vagas');
+            const opcoes = document.querySelectorAll('.opcao-especialidade');
+
+            if (!btn || !lista) return;
+
+            function toggleLista(abrir) {
+                const aberta = abrir !== undefined ? abrir : lista.classList.contains('pointer-events-none');
+                if (aberta) {
+                    lista.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+                    lista.classList.add('opacity-100', 'scale-100');
+                    if (icone) icone.style.transform = 'rotate(180deg)';
+                    btn.setAttribute('aria-expanded', 'true');
+                } else {
+                    lista.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+                    lista.classList.remove('opacity-100', 'scale-100');
+                    if (icone) icone.style.transform = 'rotate(0deg)';
+                    btn.setAttribute('aria-expanded', 'false');
+                }
+            }
+
+            btn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                toggleLista();
+            });
+
+            opcoes.forEach(function (op) {
+                op.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    const nome = this.getAttribute('data-especialidade');
+                    const id = this.getAttribute('data-id');
+                    if (texto) texto.innerText = nome;
+                    if (inputVagas) inputVagas.value = id;
+                    toggleLista(false);
+                });
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!lista.contains(e.target) && !btn.contains(e.target)) {
+                    toggleLista(false);
+                }
+            });
+        });
+    </script>
 
 </x-layouts.agendamento>

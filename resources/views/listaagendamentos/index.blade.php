@@ -148,7 +148,7 @@
                   $borderAccent = 'border-l-[5px] border-l-amber-500';
                   $badgeClass = 'bg-amber-100 text-amber-900';
                   $badgeIcon = 'clock';
-                  $badgeLabel = 'EM ESPERA';
+                  $badgeLabel = 'LISTA DE ESPERA';
               } elseif (str_contains($statusRaw, 'cancel')) {
                   $borderAccent = 'border-l-[5px] border-l-rose-500';
                   $badgeClass = 'bg-rose-100 text-rose-800';
@@ -161,37 +161,55 @@
                   $badgeLabel = strtoupper(str_replace('_', ' ', $statusRaw));
               }
 
-              $dataObj = !empty($agendamento->data_atendimento ?? $agendamento->horario_agendamento)
-                  ? \Carbon\Carbon::parse($agendamento->data_atendimento ?? $agendamento->horario_agendamento)
-                  : null;
+              $dataObj = null;
+              if (!empty($agendamento->data_atendimento)) {
+                  try {
+                      $dataObj = \Carbon\Carbon::parse($agendamento->data_atendimento);
+                  } catch (\Throwable $e) {
+                      $dataObj = null;
+                  }
+              }
 
-              $mesesPt = [
-                  1 => 'JAN', 2 => 'FEV', 3 => 'MAR', 4 => 'ABR', 5 => 'MAI', 6 => 'JUN',
-                  7 => 'JUL', 8 => 'AGO', 9 => 'SET', 10 => 'OUT', 11 => 'NOV', 12 => 'DEZ'
+              $diasSemanaPt = [
+                  0 => 'Domingo', 1 => 'Segunda-feira', 2 => 'Terça-feira', 3 => 'Quarta-feira',
+                  4 => 'Quinta-feira', 5 => 'Sexta-feira', 6 => 'Sábado'
               ];
 
-              $dataFormatada = $dataObj ? ($dataObj->format('d') . ' ' . ($mesesPt[$dataObj->month] ?? $dataObj->format('M')) . ' ' . $dataObj->format('Y')) : 'Data a definir';
-              $horaFormatada = $dataObj ? ($dataObj->format('H:i') !== '00:00' ? $dataObj->format('H:i') : ($agendamento->turno ?? 'Manhã')) : ($agendamento->turno ?? 'Horário a definir');
+              $mesesPt = [
+                  1 => 'Janeiro', 2 => 'Fevereiro', 3 => 'Março', 4 => 'Abril', 5 => 'Maio', 6 => 'Junho',
+                  7 => 'Julho', 8 => 'Agosto', 9 => 'Setembro', 10 => 'Outubro', 11 => 'Novembro', 12 => 'Dezembro'
+              ];
+
+              $dataFormatada = $dataObj 
+                  ? ($dataObj->format('d') . ' de ' . ($mesesPt[$dataObj->month] ?? $dataObj->format('F')) . ' de ' . $dataObj->format('Y'))
+                  : 'Data a definir';
+
+              $diaSemanaTexto = $dataObj ? ($diasSemanaPt[$dataObj->dayOfWeek] ?? '') : '';
+
+              // Formatação de Horário exato selecionado
+              $horaFormatada = !empty($agendamento->horario_agendamento) && $agendamento->horario_agendamento !== '00:00'
+                  ? $agendamento->horario_agendamento
+                  : ($dataObj && $dataObj->format('H:i') !== '00:00' ? $dataObj->format('H:i') : ($agendamento->turno ?? '08:00'));
+
               $especialidadeNome = $agendamento->especialidade ?: ($agendamento->tipo_exame ?: 'Consulta / Exame Preventivo');
-              $unidadeNome = $agendamento->nome_unidade ?: 'Unidade Móvel Centro';
-              $enderecoLocal = $agendamento->municipio_atendimento ?: 'Praça da Matriz, ao lado do coreto';
+              $unidadeNome = $agendamento->nome_unidade ?: 'Unidade Móvel de Saúde';
+              $enderecoLocal = $agendamento->municipio_atendimento ?: 'Ponto de Atendimento Itinerante';
+              $statusDoc = strtolower($agendamento->status_documentos ?? $agendamento->status_documento ?? 'pendente');
             @endphp
 
             <article class="bg-white rounded-2xl border border-slate-200 {{ $borderAccent }} shadow-sm p-5 sm:p-6 space-y-4 transition hover:shadow-md">
               
-              <!-- Cabeçalho: Data / Horário e Status Badge -->
-              <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-700 font-mono">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
-                    <line x1="16" y1="2" y2="6"></line>
-                    <line x1="8" y1="2" y2="6"></line>
-                    <line x1="3" y1="10"></line>
-                  </svg>
-                  <span>{{ $dataFormatada }} • {{ $horaFormatada }}</span>
+              <!-- Cabeçalho: Nº Protocolo, Data/Horário e Status Badge -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-100">
+                <div class="flex items-center gap-2 text-xs font-bold text-slate-700">
+                  <span class="font-mono bg-slate-100 text-slate-800 px-2 py-0.5 rounded-md text-[11px]">
+                    #{{ $agendamento->numero_agendamento ?? $agendamento->id }}
+                  </span>
+                  <span class="text-slate-400">•</span>
+                  <span class="text-slate-600">{{ $diaSemanaTexto }}</span>
                 </div>
 
-                <span class="inline-flex items-center gap-1.5 text-[11px] font-bold px-3 py-1 rounded-full {{ $badgeClass }}">
+                <span class="inline-flex items-center self-start sm:self-auto gap-1.5 text-[11px] font-bold px-3 py-1 rounded-full {{ $badgeClass }}">
                   @if ($badgeIcon === 'check')
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                       <polyline points="20 6 9 17 4 12"></polyline>
@@ -213,23 +231,74 @@
 
               <!-- Especialidade / Procedimento -->
               <div>
-                <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-blue-900/80">Procedimento / Exame</span>
+                <h2 class="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight mt-0.5">
                   {{ $especialidadeNome }}
                 </h2>
               </div>
 
-              <!-- Localização -->
-              <div class="bg-slate-50 border border-slate-100 rounded-xl p-3.5 sm:p-4 flex items-start gap-3">
-                <div class="text-slate-400 mt-0.5 shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
-                    <circle cx="12" cy="10" r="3"></circle>
+              <!-- Grid de Data, Horário e Localização -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <!-- Box Data & Horário -->
+                <div class="bg-blue-50/60 border border-blue-100 rounded-xl p-3.5 flex items-start gap-3">
+                  <div class="text-blue-900 mt-0.5 shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                      <line x1="16" y1="2" y2="6"></line>
+                      <line x1="8" y1="2" y2="6"></line>
+                      <line x1="3" y1="10"></line>
+                    </svg>
+                  </div>
+                  <div class="text-xs text-slate-700 leading-snug space-y-0.5">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-blue-900 block">Data e Horário</span>
+                    <strong class="text-slate-900 text-xs sm:text-sm font-bold block">{{ $dataFormatada }}</strong>
+                    <span class="text-blue-900 font-semibold block text-xs">Horário / Turno: {{ $horaFormatada }}</span>
+                  </div>
+                </div>
+
+                <!-- Box Localização / Unidade -->
+                <div class="bg-slate-50 border border-slate-200/70 rounded-xl p-3.5 flex items-start gap-3">
+                  <div class="text-slate-500 mt-0.5 shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+                      <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                  </div>
+                  <div class="text-xs text-slate-600 leading-snug space-y-0.5">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">Local de Atendimento</span>
+                    <p class="font-bold text-slate-800 text-xs sm:text-sm">{{ $unidadeNome }}</p>
+                    <p class="text-slate-500 text-xs">{{ $enderecoLocal }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Status dos Documentos Enviados -->
+              <div class="p-3 bg-slate-50/80 rounded-xl border border-slate-100 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
                   </svg>
+                  <span class="text-xs text-slate-600 font-medium">Documentos (RG/CPF e Requisição):</span>
                 </div>
-                <div class="text-xs sm:text-sm text-slate-600 leading-snug space-y-0.5">
-                  <p class="font-bold text-slate-800">{{ $unidadeNome }}</p>
-                  <p class="text-slate-500">{{ $enderecoLocal }}</p>
-                </div>
+
+                @if($statusDoc === 'aprovado')
+                  <span class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full">
+                    Aprovados
+                  </span>
+                @elseif($statusDoc === 'validar_no_ato')
+                  <span class="inline-flex items-center gap-1 text-[11px] font-bold text-purple-700 bg-purple-100 px-2.5 py-0.5 rounded-full">
+                    Validar no Local
+                  </span>
+                @elseif($statusDoc === 'rejeitado')
+                  <span class="inline-flex items-center gap-1 text-[11px] font-bold text-rose-700 bg-rose-100 px-2.5 py-0.5 rounded-full">
+                    Rejeitado
+                  </span>
+                @else
+                  <span class="inline-flex items-center gap-1 text-[11px] font-bold text-amber-700 bg-amber-100 px-2.5 py-0.5 rounded-full">
+                    Em Análise
+                  </span>
+                @endif
               </div>
 
               <hr class="border-slate-100">
@@ -258,12 +327,12 @@
                         <line x1="15" y1="9" x2="9" y2="15"></line>
                         <line x1="9" y1="9" x2="15" y2="15"></line>
                       </svg>
-                      Cancelar
+                      Cancelar Agendamento
                     </button>
                   </form>
                 @else
-                  <span class="flex-1 text-center text-xs font-semibold text-rose-600 py-2.5">
-                    Cancelado
+                  <span class="flex-1 text-center text-xs font-semibold text-rose-600 py-2.5 bg-rose-50 rounded-xl">
+                    Agendamento Cancelado
                   </span>
                 @endif
               </div>
@@ -402,10 +471,22 @@
                       {{ $agendamento->nome_paciente ?? $agendamento->nome_completo ?? 'Paciente' }}
                     </td>
 
-                    <!-- Horário -->
+                    <!-- Data e Horário -->
                     <td class="py-4 px-6 text-xs font-medium">
-                      @if(!empty($agendamento->horario_agendamento) || !empty($agendamento->data_atendimento))
-                        {{ \Carbon\Carbon::parse($agendamento->horario_agendamento ?? $agendamento->data_atendimento)->format('d/m/Y - H:i') }}
+                      @php
+                        $dataAtendFormatada = null;
+                        if (!empty($agendamento->data_atendimento)) {
+                            try {
+                                $dataAtendFormatada = \Carbon\Carbon::parse($agendamento->data_atendimento)->format('d/m/Y');
+                            } catch (\Throwable $e) {
+                                $dataAtendFormatada = $agendamento->data_atendimento;
+                            }
+                        }
+                        $horaAtend = $agendamento->hora_especifica ?? ($agendamento->horario_agendamento ?? ($agendamento->turno ?? '08:00'));
+                      @endphp
+                      @if($dataAtendFormatada)
+                        <div class="font-semibold text-slate-800">{{ $dataAtendFormatada }}</div>
+                        <div class="text-slate-500 text-[11px] font-mono">{{ $horaAtend }}</div>
                       @else
                         <span class="text-slate-400 italic">Lista de Espera</span>
                       @endif

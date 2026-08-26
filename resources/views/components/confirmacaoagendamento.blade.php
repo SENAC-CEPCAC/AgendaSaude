@@ -1,6 +1,3 @@
-@vite(['resources/css/app.css'])
-
-
   <!--Inicio Confirmação Agendamento-->
 
   <!-- Botão fechar -->

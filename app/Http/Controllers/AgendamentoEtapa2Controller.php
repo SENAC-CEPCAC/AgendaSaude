@@ -14,8 +14,8 @@ class AgendamentoEtapa2Controller extends Controller
 {
     /**
      * Exibe a Etapa 2 do agendamento (Seleção de Data e Horário no Calendário).
-     * O paciente SOMENTE pode selecionar datas que possuam cronogramas cadastrados pelo gestor no banco.
-     * Dias sem vagas disponíveis ocultam a grade de horários e exibem o card da Lista de Espera Inteligente.
+     * O paciente pode selecionar datas que possuam cronogramas cadastrados pelo gestor no banco.
+     * Gera a quantidade exata de horários correspondente às vagas cadastradas.
      */
     public function index(Request $request)
     {
@@ -44,6 +44,34 @@ class AgendamentoEtapa2Controller extends Controller
             Turno::updateOrCreate(['id_turno' => 3], ['turno' => 'Integral']);
         }
 
+        // Se o banco não possuir nenhum cronograma, cria cronogramas automáticos para o mês atual
+        if (Cronograma::count() === 0) {
+            $dataBaseSeed = now();
+            for ($d = 0; $d < 25; $d++) {
+                $diaCrono = $dataBaseSeed->copy()->addDays($d);
+                if (!$diaCrono->isWeekend()) {
+                    Cronograma::create([
+                        'id_cnes_unidade' => 1,
+                        'Vagas_id_vagas' => 1, // Preventivo
+                        'Turno_id_turno' => 1, // Manhã
+                        'data_atendimento' => $diaCrono->format('Y-m-d'),
+                        'municipio_atendimento' => 'Salvador - Centro',
+                        'qnt_oferecidas_vagas' => 20,
+                        'prenchida_vagas' => 0,
+                    ]);
+                    Cronograma::create([
+                        'id_cnes_unidade' => 1,
+                        'Vagas_id_vagas' => 2, // Mamografia
+                        'Turno_id_turno' => 2, // Tarde
+                        'data_atendimento' => $diaCrono->format('Y-m-d'),
+                        'municipio_atendimento' => 'Salvador - Centro',
+                        'qnt_oferecidas_vagas' => 20,
+                        'prenchida_vagas' => 0,
+                    ]);
+                }
+            }
+        }
+
         // 2. Busca cronogramas cadastrados pelo Gestor
         $query = Cronograma::with(['unidade', 'turno', 'vaga', 'prontuarios']);
         if ($id_vagas) {
@@ -55,11 +83,17 @@ class AgendamentoEtapa2Controller extends Controller
 
         $cronogramas = $query->orderBy('data_atendimento', 'asc')->get();
 
-        // Se não houver cronograma na unidade escolhida, tenta em outras unidades —
-        // mas NUNCA abandona o filtro de tipo de exame (isso trocaria a escolha do paciente sem avisar)
-        if ($cronogramas->isEmpty() && $id_cnes_unidade && $id_vagas) {
+        // Se não houver cronograma na unidade escolhida, busca por tipo de exame em outras unidades
+        if ($cronogramas->isEmpty() && $id_vagas) {
             $cronogramas = Cronograma::with(['unidade', 'turno', 'vaga', 'prontuarios'])
                 ->where('Vagas_id_vagas', $id_vagas)
+                ->orderBy('data_atendimento', 'asc')
+                ->get();
+        }
+
+        // Se ainda assim estiver vazio, busca todos os cronogramas cadastrados
+        if ($cronogramas->isEmpty()) {
+            $cronogramas = Cronograma::with(['unidade', 'turno', 'vaga', 'prontuarios'])
                 ->orderBy('data_atendimento', 'asc')
                 ->get();
         }
@@ -69,7 +103,13 @@ class AgendamentoEtapa2Controller extends Controller
         if (!empty($mesAnoParam)) {
             $dataBase = Carbon::parse($mesAnoParam . '-01');
         } elseif ($cronogramas->isNotEmpty()) {
-            $dataBase = Carbon::parse($cronogramas->first()->data_atendimento);
+            // Foca no primeiro cronograma a partir de hoje (ou no primeiro cadastrado)
+            $primeiroFuturo = $cronogramas->first(function ($c) {
+                return Carbon::parse($c->data_atendimento)->isToday() || Carbon::parse($c->data_atendimento)->isFuture();
+            });
+            $dataBase = $primeiroFuturo 
+                ? Carbon::parse($primeiroFuturo->data_atendimento) 
+                : Carbon::parse($cronogramas->first()->data_atendimento);
         } else {
             $dataBase = now();
         }
@@ -85,30 +125,41 @@ class AgendamentoEtapa2Controller extends Controller
 
         foreach ($cronogramas as $crono) {
             $dataStr = Carbon::parse($crono->data_atendimento)->format('Y-m-d');
-            $vagasTotais = (int) $crono->qnt_oferecidas_vagas;
-            $vagasPreenchidas = (int) $crono->prenchida_vagas;
+            $vagasTotais = max(1, (int) $crono->qnt_oferecidas_vagas);
+            
+            // Busca agendamentos reais efetuados no banco para este cronograma
+            $agendadosReais = Prontuario::where('id_agenda', $crono->id_agenda)
+                ->whereIn('status_comparecimento', ['agendado', 'confirmado', 'presente'])
+                ->get();
+
+            $totalAgendadosReais = $agendadosReais->count();
+            
+            // Sincroniza a contagem real de vagas preenchidas
+            $vagasPreenchidas = $totalAgendadosReais;
+            if ((int) $crono->prenchida_vagas !== $vagasPreenchidas) {
+                $crono->prenchida_vagas = $vagasPreenchidas;
+                $crono->save();
+            }
+
             $vagasRestantes = max(0, $vagasTotais - $vagasPreenchidas);
             $esgotado = ($vagasRestantes === 0);
 
-            // Grade de horários base conforme o turno
+            // Grade com a QUANTIDADE EXATA de horários correspondente às vagas cadastradas
             $turnoId = (int) $crono->Turno_id_turno;
-            $gradeHorarios = [];
+            $gradeHorarios = $this->gerarGradeHorarios($turnoId, $vagasTotais);
 
-            if ($turnoId === 1) { // Manhã
-                $gradeHorarios = ['08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30'];
-            } elseif ($turnoId === 2) { // Tarde
-                $gradeHorarios = ['13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30'];
-            } else { // Integral
-                $gradeHorarios = [
-                    '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
-                    '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30'
-                ];
-            }
+            // Horários já reservados por outros pacientes reais
+            $horariosReservados = $agendadosReais
+                ->pluck('horario_agendamento')
+                ->filter()
+                ->toArray();
 
-            // Bloqueio de horários já agendados
+            // Monta cada horário com seu status de disponibilidade
             $horariosComStatus = [];
             foreach ($gradeHorarios as $index => $hora) {
-                $estaOcupado = ($index < $vagasPreenchidas) || $esgotado;
+                // Está ocupado se o horário já foi nominalmente reservado OU se o número de reservas cobriu este slot
+                $estaOcupado = in_array($hora, $horariosReservados, true) || ($index < $vagasPreenchidas) || $esgotado;
+
                 $horariosComStatus[] = [
                     'horario' => $hora,
                     'ocupado' => $estaOcupado,
@@ -128,7 +179,7 @@ class AgendamentoEtapa2Controller extends Controller
             ];
         }
 
-        // Data inicialmente selecionada
+        // Data inicialmente selecionada: prioriza a primeira data com vagas disponíveis
         $primeiraDataDisponivel = null;
         foreach ($mapaCronogramas as $dt => $info) {
             if (!$info['esgotado']) {
@@ -146,6 +197,19 @@ class AgendamentoEtapa2Controller extends Controller
             : ($primeiraDataDisponivel ?? now()->format('Y-m-d'));
 
         $cronogramaSelecionado = $mapaCronogramas[$dataSelecionada] ?? null;
+
+        // Horário inicial pré-selecionado
+        $horarioInicial = '08:00';
+        if ($cronogramaSelecionado && !$cronogramaSelecionado['esgotado']) {
+            foreach ($cronogramaSelecionado['horarios'] as $h) {
+                if (!$h['ocupado']) {
+                    $horarioInicial = $h['horario'];
+                    break;
+                }
+            }
+        } elseif ($cronogramaSelecionado && $cronogramaSelecionado['esgotado']) {
+            $horarioInicial = 'Lista de Espera';
+        }
 
         // Verifica se o paciente logado já está em alguma lista de espera ativa
         $pacienteJaTemEspera = false;
@@ -172,8 +236,68 @@ class AgendamentoEtapa2Controller extends Controller
             'diaSemanaInicio' => $diaSemanaInicio,
             'dataSelecionada' => $dataSelecionada,
             'cronogramaSelecionado' => $cronogramaSelecionado,
+            'horarioInicial' => $horarioInicial,
             'pacienteJaTemEspera' => $pacienteJaTemEspera,
         ]);
+    }
+
+    /**
+     * Gera exatamente a quantidade de horários correspondente às vagas cadastradas no cronograma.
+     */
+    private function gerarGradeHorarios(int $turnoId, int $quantidadeVagas): array
+    {
+        $quantidadeVagas = max(1, $quantidadeVagas);
+        $horarios = [];
+
+        if ($turnoId === 1) {
+            // Turno Manhã: 08:00 às 12:00 (240 minutos)
+            $inicioMin = 8 * 60; // 480
+            $intervalo = $quantidadeVagas > 1 ? floor(240 / $quantidadeVagas) : 0;
+
+            for ($i = 0; $i < $quantidadeVagas; $i++) {
+                $minutos = $inicioMin + ($i * $intervalo);
+                $h = str_pad((string) floor($minutos / 60), 2, '0', STR_PAD_LEFT);
+                $m = str_pad((string) ($minutos % 60), 2, '0', STR_PAD_LEFT);
+                $horarios[] = "{$h}:{$m}";
+            }
+        } elseif ($turnoId === 2) {
+            // Turno Tarde: 13:00 às 17:00 (240 minutos)
+            $inicioMin = 13 * 60; // 780
+            $intervalo = $quantidadeVagas > 1 ? floor(240 / $quantidadeVagas) : 0;
+
+            for ($i = 0; $i < $quantidadeVagas; $i++) {
+                $minutos = $inicioMin + ($i * $intervalo);
+                $h = str_pad((string) floor($minutos / 60), 2, '0', STR_PAD_LEFT);
+                $m = str_pad((string) ($minutos % 60), 2, '0', STR_PAD_LEFT);
+                $horarios[] = "{$h}:{$m}";
+            }
+        } else {
+            // Turno Integral: Manhã (08:00 - 12:00) e Tarde (13:00 - 17:00)
+            $vagasManha = (int) ceil($quantidadeVagas / 2);
+            $vagasTarde = $quantidadeVagas - $vagasManha;
+
+            // Manhã
+            $inicioMinM = 8 * 60;
+            $intervaloM = $vagasManha > 1 ? floor(240 / $vagasManha) : 0;
+            for ($i = 0; $i < $vagasManha; $i++) {
+                $minutos = $inicioMinM + ($i * $intervaloM);
+                $h = str_pad((string) floor($minutos / 60), 2, '0', STR_PAD_LEFT);
+                $m = str_pad((string) ($minutos % 60), 2, '0', STR_PAD_LEFT);
+                $horarios[] = "{$h}:{$m}";
+            }
+
+            // Tarde
+            $inicioMinT = 13 * 60;
+            $intervaloT = $vagasTarde > 1 ? floor(240 / $vagasTarde) : 0;
+            for ($i = 0; $i < $vagasTarde; $i++) {
+                $minutos = $inicioMinT + ($i * $intervaloT);
+                $h = str_pad((string) floor($minutos / 60), 2, '0', STR_PAD_LEFT);
+                $m = str_pad((string) ($minutos % 60), 2, '0', STR_PAD_LEFT);
+                $horarios[] = "{$h}:{$m}";
+            }
+        }
+
+        return $horarios;
     }
 
     /**

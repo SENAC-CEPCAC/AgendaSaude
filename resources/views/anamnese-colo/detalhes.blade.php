@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!doctype html>
 <html lang="pt-BR">
 
@@ -5,6 +6,24 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lista de Agendamentos - Agenda Saúde</title>
+=======
+<x-layout sidebar="n3">
+  <div class="mx-auto max-w-3xl px-8 py-8">
+    <header class="mb-6 flex items-center justify-between">
+      <div>
+        <h1 class="text-lg font-semibold text-slate-800">
+          Anamnese · Detalhes
+        </h1>
+        <p class="mt-1 text-sm text-slate-400">
+          Prontuário #{{ $anamneseColo->fatoAnamnese?->id_prontuario ?? '—' }} ·
+          {{ optional($anamneseColo->fatoAnamnese?->data_realizacao)->format('d/m/Y') ?? '—' }}
+        </p>
+      </div>
+      <a href="{{ route('anamnese-colo.index') }}" class="text-sm font-medium text-blue-600 hover:text-blue-700">
+        ← Voltar à lista
+      </a>
+    </header>
+>>>>>>> 9b6173c (feat: sincronizacao de vagas e horarios, correcoes de performance e datas)
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

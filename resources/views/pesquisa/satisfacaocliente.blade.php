@@ -1,4 +1,3 @@
-@vite(['resources/css/app.css'])
 <x-layout>
 
   <!--Inicio Satisfação do Cliente-->

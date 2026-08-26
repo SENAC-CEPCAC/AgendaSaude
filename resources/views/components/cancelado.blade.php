@@ -1,4 +1,3 @@
-@vite(['resources/css/app.css'])
   <!--Início Cancelado-->
   <!-- Overlay do modal -->
   <div class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">

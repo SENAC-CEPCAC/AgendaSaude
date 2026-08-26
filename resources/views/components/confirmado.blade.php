@@ -1,5 +1,3 @@
-@vite(['resources/css/app.css'])
-
 @php
     $ehEspera = session('eh_espera', false);
 @endphp

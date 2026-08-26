@@ -206,9 +206,10 @@ class AgendamentoEtapa3Controller extends Controller
                 $status_agendamento,
                 $caminho_documento_rg_cpf,
                 $caminho_documento_requisicao,
-                $cronograma
+                $cronograma,
+                $horarioSelecionado
             ) {
-                Prontuario::create([
+                $dadosProntuario = [
                     'cpf_paciente' => $cpf_paciente,
                     'id_agenda' => $id_agenda,
                     'status_comparecimento' => $status_comparecimento,
@@ -218,7 +219,13 @@ class AgendamentoEtapa3Controller extends Controller
                     'caminho_documento_requisicao' => $caminho_documento_requisicao,
                     'status_documento' => 'pendente',
                     'motivo_rejeicao_documento' => null,
-                ]);
+                ];
+
+                if (\Illuminate\Support\Facades\Schema::hasColumn('fato_prontuario', 'horario_agendamento')) {
+                    $dadosProntuario['horario_agendamento'] = !empty($horarioSelecionado) ? $horarioSelecionado : '08:00';
+                }
+
+                Prontuario::create($dadosProntuario);
 
                 // Se for vaga titular, incrementa o total preenchido
                 if ($status_comparecimento === 'agendado' && $cronograma) {

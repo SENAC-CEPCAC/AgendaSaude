@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!doctype html>
 <html lang="pt-BR">
 
@@ -54,6 +55,9 @@
   @endif
 
 
+=======
+<x-layout sidebar="n3">
+>>>>>>> 9b6173c (feat: sincronizacao de vagas e horarios, correcoes de performance e datas)
   <div class="mx-auto max-w-6xl px-8 py-8">
 
     <header class="mb-6 flex items-center justify-between">

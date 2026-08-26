@@ -25,7 +25,11 @@ class Prontuario extends Model
     protected $fillable = [
         'cpf_paciente',
         'id_agenda',
+        'horario_agendamento',
         'status_comparecimento',
+        'status_agendamento',
+        'status_documentos',
+        'numero_sequencial',
         'caminho_documento_rg_cpf',
         'caminho_documento_requisicao',
         'status_documento',

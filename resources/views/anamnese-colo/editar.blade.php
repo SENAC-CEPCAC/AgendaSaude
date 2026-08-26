@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 
 <x-sidebar-principal>
+=======
+<x-layout sidebar="n3">
+>>>>>>> 9b6173c (feat: sincronizacao de vagas e horarios, correcoes de performance e datas)
 
     @php
         $fato = $anamneseColo->fatoAnamnese;

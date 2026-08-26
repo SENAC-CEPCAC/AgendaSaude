@@ -1,5 +1,3 @@
-@vite(['resources/css/app.css', 'resources/js/app.js'])
-
 <x-layout sidebar="n3">
   <div class="mx-auto max-w-6xl px-8 py-8">
     <header class="mb-6 flex items-center justify-between">
