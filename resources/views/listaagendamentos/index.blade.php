@@ -638,25 +638,92 @@
   </script>
 
   <!-- Script da Sidebar Mobile -->
-  <script>
-    const sidebar = document.getElementById('sidebar');
-    const menuToggle = document.getElementById('mobile-menu-toggle');
-    const menuClose = document.getElementById('mobile-menu-close');
-    const sidebarOverlay = document.getElementById('sidebar-overlay');
+<script>
+  const sidebar = document.getElementById('sidebar');
+  const menuToggle = document.getElementById('mobile-menu-toggle');
+  const menuClose = document.getElementById('mobile-menu-close');
+  const sidebarOverlay = document.getElementById('sidebar-overlay');
 
-    function setSidebarExpanded(expanded) {
-      if (!sidebar) return;
-      sidebar.classList.toggle('-translate-x-full', !expanded);
-      if (sidebarOverlay) sidebarOverlay.classList.toggle('hidden', !expanded);
-      if (menuToggle) menuToggle.setAttribute('aria-expanded', String(expanded));
-      if (menuClose) menuClose.setAttribute('aria-expanded', String(expanded));
-      if (sidebarOverlay) sidebarOverlay.setAttribute('aria-hidden', String(!expanded));
+  function setSidebarExpanded(expanded) {
+    if (!sidebar) return;
+
+    // Abre/fecha a sidebar
+    sidebar.classList.toggle('-translate-x-full', !expanded);
+
+    // Mostra/esconde o overlay
+    if (sidebarOverlay) {
+      sidebarOverlay.classList.toggle('hidden', !expanded);
+      sidebarOverlay.setAttribute('aria-hidden', String(!expanded));
     }
 
-    if (menuToggle) menuToggle.addEventListener('click', () => setSidebarExpanded(true));
-    if (menuClose) menuClose.addEventListener('click', () => setSidebarExpanded(false));
-    if (sidebarOverlay) sidebarOverlay.addEventListener('click', () => setSidebarExpanded(false));
-  </script>
+    // Esconde o hambúrguer quando o menu estiver aberto
+    if (menuToggle) {
+      menuToggle.classList.toggle('hidden', expanded);
+      menuToggle.setAttribute('aria-expanded', String(expanded));
+      menuToggle.setAttribute(
+        'aria-label',
+        expanded ? 'Fechar menu' : 'Abrir menu'
+      );
+    }
+
+    // Atualiza botão de fechar, se existir
+    if (menuClose) {
+      menuClose.setAttribute('aria-expanded', String(expanded));
+    }
+
+    // Evita scroll da página enquanto o menu está aberto
+    document.body.classList.toggle('overflow-hidden', expanded);
+  }
+
+  // Abrir menu
+  if (menuToggle) {
+    menuToggle.addEventListener('click', function (event) {
+      event.stopPropagation();
+      setSidebarExpanded(true);
+    });
+  }
+
+  // Botão X dentro da sidebar
+  if (menuClose) {
+    menuClose.addEventListener('click', function (event) {
+      event.stopPropagation();
+      setSidebarExpanded(false);
+    });
+  }
+
+  // Clicar no overlay fecha o menu
+  if (sidebarOverlay) {
+    sidebarOverlay.addEventListener('click', function () {
+      setSidebarExpanded(false);
+    });
+  }
+
+  // Clicar fora da sidebar fecha o menu
+  document.addEventListener('click', function (event) {
+    if (!sidebar || sidebar.classList.contains('-translate-x-full')) {
+      return;
+    }
+
+    const clicouDentroDaSidebar = sidebar.contains(event.target);
+    const clicouNoBotaoMenu = menuToggle && menuToggle.contains(event.target);
+
+    if (!clicouDentroDaSidebar && !clicouNoBotaoMenu) {
+      setSidebarExpanded(false);
+    }
+  });
+
+  // ESC também fecha o menu
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') {
+      setSidebarExpanded(false);
+    }
+  });
+
+  // Estado inicial
+  setSidebarExpanded(false);
+</script>
+
+  
 
 </body>
 
