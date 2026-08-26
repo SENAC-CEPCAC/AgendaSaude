@@ -40,16 +40,7 @@ $nivelUsuario = (int) ($usuario?->nivel ?? $usuario?->permissao ?? 0);
     @endif
 
     <main id="main-content" class="min-h-screen flex-1 flex flex-col p-4 md:p-8 md:ml-64">
-      <!-- Top Bar -->
-      <header id="top-bar" class="h-16 bg-white border border-slate-200/80 px-4 md:px-6 flex items-center justify-between sticky top-4 z-20 shadow-sm rounded-xl mb-6">
-        <div class="flex items-center gap-3">
-          <div id="breadcrumb" class="flex items-center gap-2 text-xs text-slate-400 font-medium">
-            <span>Portal Gestão</span>
-            <span>/</span>
-            <span class="text-slate-700 font-semibold">Anamnese · Pacientes do Dia</span>
-          </div>
-        </div>
-      </header>
+     
 
       <div class="max-w-7xl w-full mx-auto space-y-6">
 

@@ -1,6 +1,6 @@
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-<x-layout sidebar="n3">
+<x-sidebar-principal>
 
     @php
         $fato = $anamneseColo->fatoAnamnese;
@@ -259,37 +259,6 @@
       // Initialize Lucide icons on load
       lucide.createIcons();
 
-      // Mobile Sidebar Toggle Logic
-      const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-      const mobileMenuClose = document.getElementById('mobile-menu-close');
-      const sidebar = document.getElementById('sidebar');
-      const sidebarOverlay = document.getElementById('sidebar-overlay');
-
-      function openSidebar() {
-        sidebar.classList.remove('-translate-x-full');
-        sidebarOverlay.classList.remove('hidden');
-        setTimeout(() => {
-          sidebarOverlay.classList.add('opacity-100');
-        }, 10);
-      }
-
-      function closeSidebar() {
-        sidebar.classList.add('-translate-x-full');
-        sidebarOverlay.classList.remove('opacity-100');
-        setTimeout(() => {
-          sidebarOverlay.classList.add('hidden');
-        }, 300);
-      }
-
-      if (mobileMenuToggle && mobileMenuClose && sidebar && sidebarOverlay) {
-        mobileMenuToggle.addEventListener('click', openSidebar);
-        mobileMenuClose.addEventListener('click', closeSidebar);
-        sidebarOverlay.addEventListener('click', closeSidebar);
-      }
-
-       const hoje = new Date();
-       const formatoData = hoje.toLocaleDateString('pt-BR')
-       document.getElementById('data-atual').textContent = formatoData;
     </script>
 
-</x-layout>
+</x-sidebar-principal>
