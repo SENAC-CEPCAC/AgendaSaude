@@ -40,28 +40,7 @@ $nivelUsuario = (int) ($usuario?->nivel ?? $usuario?->permissao ?? 0);
     @endif
 
     <main id="main-content" class="min-h-screen flex-1 flex flex-col p-4 md:p-8 md:ml-64">
-      <!-- Top Bar -->
-      <header id="top-bar" class="h-16 bg-white border border-slate-200/80 px-4 md:px-6 flex items-center justify-between sticky top-4 z-20 shadow-sm rounded-xl mb-6">
-        <div class="flex items-center gap-3">
-          <div id="breadcrumb" class="flex items-center gap-2 text-xs text-slate-400 font-medium">
-            <span>Portal Gestão N1</span>
-            <span>/</span>
-            <span class="text-slate-700 font-semibold">Triagem de Prontuários & Documentos</span>
-          </div>
-        </div>
-
-        <div id="top-bar-actions" class="flex items-center gap-4">
-          <div class="flex items-center gap-3 pl-4 border-l border-slate-100">
-            <div class="w-9 h-9 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center font-bold text-blue-900 text-xs">
-              OP
-            </div>
-            <div class="hidden sm:block text-left">
-              <p class="text-xs font-bold text-slate-700">Operador Triagem</p>
-              <p class="text-[10px] text-slate-400 font-semibold leading-none mt-0.5">Nível 1 - Recepção</p>
-            </div>
-          </div>
-        </div>
-      </header>
+     
 
       <div class="max-w-7xl w-full mx-auto space-y-6">
 

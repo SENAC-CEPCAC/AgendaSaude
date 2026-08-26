@@ -64,12 +64,12 @@
                         Cronograma
                     </a>
                 </li>
-                <li>
+                <!-- <li>
                     <a class="flex items-center gap-3 px-14 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 font-['Inter'] text-sm font-medium hover:text-[#003E7E] dark:hover:text-blue-300 transition-all active:scale-95 transition-transform">
                         <span class="material-symbols-outlined"></span>
                         Relatórios
                     </a>
-                </li>
+                </li> -->
                 <li>
                     <a href="{{ route('adm.adm') }}" class="flex items-center gap-3 px-7 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 font-['Inter'] text-sm font-medium hover:text-[#003E7E] dark:hover:text-blue-300 transition-all active:scale-95 transition-transform">
                         <span class="material-symbols-outlined"></span>
