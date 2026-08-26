@@ -15,7 +15,7 @@ export default defineConfig({
         host: '0.0.0.0',
 
         hmr: {
-            host: '172.23.11.93',
+            host: '192.168.11.21',
         },
 
         watch: {
