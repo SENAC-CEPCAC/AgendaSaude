@@ -8,7 +8,7 @@ class PoliticaController extends Controller
 {
     public function politica() {
 
-        return view('components.painel_paciente.politica');
+        return view('acesso.cadastro');
 
     }
 }

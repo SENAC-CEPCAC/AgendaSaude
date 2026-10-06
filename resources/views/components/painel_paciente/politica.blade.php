@@ -1,3 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Politica</title>
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Injeta duas customizações no ecossistema do Tailwind -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors:{
+                'azul': '#004c99',
+                'amarelo': '#f6be00',
+                'cinza-escuro': '#747678',
+                'cinza-claro': '#d0d0ce',
+                'branco': '#fafafa', 
+            },
+            fontFamily: {
+              sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+              mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+            },
+            spacing: {
+              '4.5': '1.125rem',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+        :root {
+            --azul: #004c99;
+            --amarelo: #f6be00;
+            --cinza-escuro: #30567c;
+            --cinza-claro: #d0d0ce;
+            --branco: #fafafa;
+            --sans: 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif';
+            --mono: 'JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace';
+        }
+        body{
+            background-color: #ccd7ef;
+        }
+
+        @media (max-width:768px) {
+            .hero {
+                padding: 10px 15px !important;
+                flex-direction: column !important;
+                gap: 10px !important;
+            }
+
+            .hero_conteudo {
+                justify-content: center !important;
+                align-items: center !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+</body>
 <!-- Inicio Modal Politicas de Privacidade -->
 <div class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
     
@@ -187,3 +253,7 @@
         sidebarOverlay.addEventListener('click', closeSidebar);
     }
 </script>
+
+   
+</body>
+</html>

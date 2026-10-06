@@ -77,6 +77,7 @@ Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.s
 Route::get('/satisfacaocliente', function () {
     return view('pesquisa.satisfacaocliente');
 })->name('pesquisa.satisfacaocliente');
+
 Route::get('/politica', [PoliticaController::class, 'politica'])->name('politica');
 
 // ==========================================

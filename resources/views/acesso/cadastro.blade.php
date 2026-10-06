@@ -453,6 +453,211 @@
             });
         @endif
     </script>
+
+<div
+    id="modalPolitica"
+    style="
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.65);
+    "
+>
+    <div
+        style="
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.30);
+            display: flex;
+            flex-direction: column;
+        "
+    >
+
+        {{-- CABEÇALHO --}}
+        <div
+            style="
+                padding: 20px 24px;
+                border-bottom: 1px solid #e5e7eb;
+                background: #ffffff;
+            "
+        >
+            <h2
+                style="
+                    margin: 0;
+                    font-size: 22px;
+                    font-weight: 700;
+                    color: #1f2937;
+                "
+            >
+                Política de Privacidade
+            </h2>
+
+            <p
+                style="
+                    margin: 6px 0 0;
+                    font-size: 14px;
+                    color: #6b7280;
+                "
+            >
+                Leia atentamente antes de realizar seu cadastro.
+            </p>
+        </div>
+
+
+        {{-- CONTEÚDO --}}
+        <div
+            style="
+                padding: 24px;
+                overflow-y: auto;
+                flex: 1;
+                color: #374151;
+                font-size: 15px;
+                line-height: 1.6;
+            "
+        >
+
+            {{-- 
+                COLOQUE AQUI O CONTEÚDO DA SUA POLÍTICA
+                QUE JÁ ESTAVA NO MODAL.
+            --}}
+
+            <p>
+                Ao realizar o cadastro, você declara estar ciente
+                das informações apresentadas nesta Política de Privacidade.
+            </p>
+
+            <p>
+                As informações fornecidas serão utilizadas exclusivamente
+                para as finalidades relacionadas ao atendimento e aos serviços
+                disponibilizados pelo sistema.
+            </p>
+
+            <p>
+                Leia todas as informações antes de selecionar a opção
+                "Aceito".
+            </p>
+
+        </div>
+
+
+        {{-- RODAPÉ --}}
+        <div
+            style="
+                padding: 16px 24px;
+                border-top: 1px solid #e5e7eb;
+                background: #f9fafb;
+                display: flex;
+                justify-content: flex-end;
+                gap: 12px;
+            "
+        >
+
+            {{-- NÃO ACEITO --}}
+            <button
+                type="button"
+                id="btnNaoAceitoPolitica"
+                style="
+                    padding: 10px 20px;
+                    border-radius: 8px;
+                    border: 1px solid #d1d5db;
+                    background: #ffffff;
+                    color: #374151;
+                    font-weight: 600;
+                    cursor: pointer;
+                "
+            >
+                Não aceito
+            </button>
+
+
+            {{-- ACEITO --}}
+            <button
+                type="button"
+                id="btnAceitoPolitica"
+                style="
+                    padding: 10px 24px;
+                    border-radius: 8px;
+                    border: none;
+                    background: #0d9488;
+                    color: #ffffff;
+                    font-weight: 600;
+                    cursor: pointer;
+                "
+            >
+                Aceito
+            </button>
+
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const modal = document.getElementById('modalPolitica');
+    const btnAceito = document.getElementById('btnAceitoPolitica');
+    const btnNaoAceito = document.getElementById('btnNaoAceitoPolitica');
+
+    if (!modal) {
+        console.error('Modal de política não encontrado.');
+        return;
+    }
+
+    /*
+     * O modal já começa aberto.
+     * Impede a rolagem da página enquanto ele estiver aberto.
+     */
+    document.body.style.overflow = 'hidden';
+
+
+    /*
+     * ACEITO
+     */
+    if (btnAceito) {
+
+        btnAceito.addEventListener('click', function () {
+
+            console.log('Botão Aceito clicado.');
+
+            // Fecha o modal
+            modal.style.display = 'none';
+
+            // Libera a rolagem
+            document.body.style.overflow = '';
+
+        });
+
+    }
+
+
+    /*
+     * NÃO ACEITO
+     */
+    if (btnNaoAceito) {
+
+        btnNaoAceito.addEventListener('click', function () {
+
+            window.location.href = '/home';
+
+        });
+
+    }
+
+});
+</script>
+
+
+
 </body>
 
 </html>
